@@ -1,0 +1,3085 @@
+      *%CSTD===========================================================*
+      ** Application. : EMAGE      Logiciel métier DS Smith            *
+      ** Composant. . : DEV003£                       Type: RPG        *
+      **===============================================================*
+      ** Sous-système :                                                *
+      ** Fonction . . :                                                *
+      ** Sous-fonction:                                                *
+      **%S=============================================================*
+      ** Description des fonctionnalités:                              *
+      **                                                               *
+      **                                                               *
+      **                                                               *
+      **%E=============================================================*
+      ** AUTEUR:                          00:00                        *
+      ** MODIFS: 03 NOUZIERES  24/08/2023 11:57  90.99.00 FM 23/  119  *
+      **           nouveau fenetre papier blanc                        *
+      **         02 TMAAQU     28/03/2023 15:24  01.09.20 FM 23/   40  *
+      **           Ajout Code H BRANO 80grs                            *
+      **         01 NOUZIERES  02/03/2022 16:14  01.07.19 FM 22/   66  *
+      **           gestion des nouveaux tarifs                         *
+      *%ECSTD==========================================================*
+     **********************************************************
+     *                                                        *
+     *    SAISIE DES DEVIS  -  CHOIX TYPE TRAVAIL             *
+     *    -----------------------------------------           *
+     **                                                          *
+     **  AUTEUR !    DATE    ! OBJET DE LA MODIFICATION          *
+     ** --------!------------!---------------------------------- *
+     ** PHILIPPE! 17-11-2015 ! Projet "Pose Accessoires":        *
+     **         !            ! Ajout du fichier des critères de  *
+     **         !            ! pose d'accessoires en MAJ/CRT     *
+     ** --------!------------!------------------------------- *
+     ** TMAFBU  ! 27-06-2016 ! - Projet "OFFSET 3B"                   *
+     ** --------!------------!---------------------------------- *
+     **********************************************************
+     H             /J
+     FDEV003D CF  E                    WORKSTN
+     F                                        RECNO KSFILE FMT4
+     F                                        RECNO KSFILE FMT12
+    FDEVISL1 UF  E           K        DISK         KINFDS DSDEV A    UC
+    FDEVISL2 UF  E           K        DISK                           UC
+     F            DEVISF1                           KRENAMEDEVSIM
+     FDEVISL3 IF  E           K        DISK                           UC
+     F            DEVISF1                           KRENAMEDEVSI3
+     FDEVISL6 IF  E           K        DISK
+     F            DEVISF1                           KRENAMEDEVENQ
+    FDEVIS2  IF  E           K        DISK                      A    UC
+    FDEVAMLL1IF  E           K        DISK                      A    UC
+     FOFFRES  IF  E           K        DISK
+     FOFFRES2 IF  E           K        DISK
+     FOFFAMLL1IF  E           K        DISK
+     FPRODUI2 IF  E           K        DISK
+     FPRODST2 IF  E           K        DISK
+     FPRODS3L1IF  E           K        DISK
+     *--- Début --- Philippe --- 17/11/2015 --- Projet "Pose Accessoires "---*
+     * - Fichier des critères définissant une pose d'accessoires         *
+     FPRODST6 IF  E           K        DISK
+     *--- Fin   --- Philippe --- 17/11/2015 --- Projet "Pose Accessoires "---*
+     FPREIMP2 IF  E           K        DISK
+     FCLIACHL1IF  E           K        DISK
+     FCLILIVL1IF  E           K        DISK
+     FCLISTAL1IF  E           K        DISK
+     FETIQUET IF  E           K        DISK
+     FCAISSEL1IF  E           K        DISK
+     FCODBARL2IF  E           K        DISK
+    FDEVIS   O   E                    DISK                           UC
+     F            DEVISF1                           KRENAMEDEVISS
+     FPALETTL1IF  E           K        DISK
+     E                    TPAP        5  3
+     E                    TGRA        5  3 0
+     E                    TADP        5  6
+     E                    TADG        5  3 0
+     E                    TN         14  2 0
+     E                    PRDI       14  3 2
+     E                    PRGR       14  3 2
+     E                    PROU       14  3 2
+     E                    PEFF       14  1 0
+     E                    PDEC       14  3 1
+     E                    OVR     1  34 50
+     E                    SB     80 160  1
+     E                    SB1    80 160  1
+     E                    SC1    80 160  1
+     E                    SC2    80 160  1
+     E                    SC3    80 160  1
+     IPRODUIF1
+     I              AGENT                           WW1
+     I              PDSRE                           PDSGAR
+     IPRODSTF2
+     I              NOPRO                           NOPROX
+     I              PRODOR                          NOPRO
+     I              SS                              WW11
+     I              PRDI                            WW12
+     I              PRGR                            WW13
+     I              PROU                            WW14
+     I              PEFF                            WW15
+     I              PDEC                            WW16
+     I              SSD1                            WSD1
+     I              PRDID1                          WRDID1
+     I              PRGRD1                          WRGRD1
+     I              PROUD1                          WROUD1
+     I              PEFFD1                          WEFFD1
+     I              PDECD1                          WDECD1
+     I              RETPD1                          WETPD1
+     I              ROCAD1                          WOCAD1
+     I              SSD2                            WSD2
+     I              PRDID2                          WRDID2
+     I              PRGRD2                          WRGRD2
+     I              PROUD2                          WROUD2
+     I              PEFFD2                          WEFFD2
+     I              PDECD2                          WDECD2
+     I              RETPD2                          WETPD2
+     I              ROCAD2                          WOCAD2
+     I              SSDA                            WSDA
+     I              PRDIDA                          WRDIDA
+     I              PRGRDA                          WRGRDA
+     I              PROUDA                          WROUDA
+     I              PEFFDA                          WEFFDA
+     I              PDECDA                          WDECDA
+     I              RETPDA                          WETPDA
+     I              ROCADA                          WOCADA
+     I              SSDB                            WSDB
+     I              PRDIDB                          WRDIDB
+     I              PRGRDB                          WRGRDB
+     I              PROUDB                          WROUDB
+     I              PEFFDB                          WEFFDB
+     I              PDECDB                          WDECDB
+     I              RETPDB                          WETPDB
+     I              ROCADB                          WOCADB
+     IPREIMPF1
+     I              ETUDE                           WW2
+     I              SEQDE                           WW3
+     IPALETTF
+     I              EMBNAT                          PMBNAT
+     I              EMBTYP                          PMBTYP
+     I              EMBCON                          PMBCON
+     I              EMBLO                           PMBLO
+     I              EMBLA                           PMBLA
+     I              EMBHT                           PMBHT
+     I              ANDEV                           WW4
+     I              ETUDE                           WW5
+     I              SEQDE                           WW6
+     ICAISSEF
+     I              ANDEV                           WW4
+     I              ETUDE                           WW5
+     I              SEQDE                           WW6
+     IDEVAMLF
+     I              SEQDE                           SEQAML
+     *
+     I           SDS
+     I                                      254 263 £USER
+     *
+     I            DS
+     I                                        1   1 DEV012
+     *
+     I            DS
+     I                                        1  11 LAN064
+     I                                        1   2 N1
+     I I            0                         3   60NOCLI
+     I I            0                         7  100NOPRO
+     *
+     I            DS
+     I                                        1   1 DEV011
+     *
+     I            DS
+     I                                        1  21 DEV001
+     I                                        1   90RG
+     I                                       10  10 TRAV1
+     I                                       11  11 TRAV2
+     I                                       12  21 BL10
+     *
+     I            DS
+     I                                        1   8 DSSC
+     I I            0                         1   10STE
+     I I            0                         2   50NOCLIW
+     I I            0                         6   70SEQACH
+     I                                        8   8 INTOBS
+     *
+     I            DS
+     I                                        1   3 PAP
+     I                                        4   60GRA
+     I                                        7   9 LAI
+     I                                        1   4 NOI1
+     I                                        5   8 NOI2
+     I                                        9   9 LAI1
+     *
+     I            DS
+     I                                        1  15 TPAP
+     I                                        1   3 PAP1
+     I                                        4   6 PAP2
+     I                                        7   9 PAP3
+     I                                       10  12 PAP4
+     I                                       13  15 PAP5
+     *
+     I            DS
+     I I            0                         1  15 TGRA
+     I                                        1   30GRA1
+     I                                        4   60GRA2
+     I                                        7   90GRA3
+     I                                       10  120GRA4
+     I                                       13  150GRA5
+     *
+     I            DS
+     I                                        1  30 TADP
+     I                                        1   6 ADPA1
+     I                                        7  12 ADPA2
+     I                                       13  18 ADPA3
+     I                                       19  24 ADPA4
+     I                                       25  30 ADPA5
+     *
+     I            DS
+     I I            0                         1  15 TADG
+     I                                        1   30ADGR1
+     I                                        4   60ADGR2
+     I                                        7   90ADGR3
+     I                                       10  120ADGR4
+     I                                       13  150ADGR5
+     *
+     I            DS
+     I I            0                         1  28 TN
+     I                                        1   20SS1
+     I                                        3   40SS2
+     I                                        5   60SS3
+     I                                        7   80SS4
+     I                                        9  100SS5
+     I                                       11  120SS6
+     I                                       13  140SS7
+     I                                       15  160SS8
+     I                                       17  180SS9
+     I                                       19  200SS10
+     I                                       21  220SS11
+     I                                       23  240SS12
+     I                                       25  260SS13
+     I                                       27  280SS14
+     *
+     I            DS
+     I I            0                         1  42 PRDI
+     I                                        1   32PRDI1
+     I                                        4   62PRDI2
+     I                                        7   92PRDI3
+     I                                       10  122PRDI4
+     I                                       13  152PRDI5
+     I                                       16  182PRDI6
+     I                                       19  212PRDI7
+     I                                       22  242PRDI8
+     I                                       25  272PRDI9
+     I                                       28  302PRDI10
+     I                                       31  332PRDI11
+     I                                       34  362PRDI12
+     I                                       37  392PRDI13
+     I                                       40  422PRDI14
+     *
+     I            DS
+     I I            0                         1  42 PRGR
+     I                                        1   32PRGR1
+     I                                        4   62PRGR2
+     I                                        7   92PRGR3
+     I                                       10  122PRGR4
+     I                                       13  152PRGR5
+     I                                       16  182PRGR6
+     I                                       19  212PRGR7
+     I                                       22  242PRGR8
+     I                                       25  272PRGR9
+     I                                       28  302PRGR10
+     I                                       31  332PRGR11
+     I                                       34  362PRGR12
+     I                                       37  392PRGR13
+     I                                       40  422PRGR14
+     *
+     I            DS
+     I I            0                         1  42 PROU
+     I                                        1   32PROU1
+     I                                        4   62PROU2
+     I                                        7   92PROU3
+     I                                       10  122PROU4
+     I                                       13  152PROU5
+     I                                       16  182PROU6
+     I                                       19  212PROU7
+     I                                       22  242PROU8
+     I                                       25  272PROU9
+     I                                       28  302PROU10
+     I                                       31  332PROU11
+     I                                       34  362PROU12
+     I                                       37  392PROU13
+     I                                       40  422PROU14
+     *
+     I            DS
+     I I            0                         1  14 PEFF
+     I                                        1   10PEFF1
+     I                                        2   20PEFF2
+     I                                        3   30PEFF3
+     I                                        4   40PEFF4
+     I                                        5   50PEFF5
+     I                                        6   60PEFF6
+     I                                        7   70PEFF7
+     I                                        8   80PEFF8
+     I                                        9   90PEFF9
+     I                                       10  100PEFF10
+     I                                       11  110PEFF11
+     I                                       12  120PEFF12
+     I                                       13  130PEFF13
+     I                                       14  140PEFF14
+     *
+     I            DS
+     I I            0                         1  42 PDEC
+     I                                        1   31PDEC1
+     I                                        4   61PDEC2
+     I                                        7   91PDEC3
+     I                                       10  121PDEC4
+     I                                       13  151PDEC5
+     I                                       16  181PDEC6
+     I                                       19  211PDEC7
+     I                                       22  241PDEC8
+     I                                       25  271PDEC9
+     I                                       28  301PDEC10
+     I                                       31  331PDEC11
+     I                                       34  361PDEC12
+     I                                       37  391PDEC13
+     I                                       40  421PDEC14
+     *
+     I            DS
+     I I            0                         1   52POSF1
+     I                                        1   30POSF1A
+     I                                        4   40POSFIB
+     *
+     I            DS
+     I I            0                         1   52POSF2
+     I                                        1   30POSF2A
+     *
+     I            DS
+     I                                        1   6 CLII1
+     I                                        1   1 FIOND
+     I                                        2   3 GFRA2
+     I                                        4   5 TYPPCH
+     I I            '0'                       6   6 NBPCHA
+     *
+     ITYPPOI      DS
+     I                                        1   1 TYPPO1
+     I                                        2   2 TYPPO2
+     *
+     ITYPFEN      DS
+     I                                        1   1 TYPFE1
+     I                                        2   2 TYPFE2
+     *
+     IDSDEV       DS
+     I                                    B 397 4000RANG
+     *
+     I            DS
+     I                                        1   4 LGBAX
+     I                                        5   5 PSBAX
+     I                                        6   6 PELLI
+     I                                        7   7 AFFI
+     I                                        1  10 CALLIB
+     *
+     I            DS
+     I                                        1  40 OBSI6
+     I I            0                         1  106SUVEXX
+     *
+     I            DS
+     I                                        1   1 APLA7
+     I                                        2   3 ORCU7
+     I                                        4   4 RUV7
+     I                                        5   5 UV7
+     I                                        6  10 ZB87
+     I                                        1  106SUVENT
+     *  MATERM USINE OFFSET EXT + INT + NB COULEUR EXT REPIQUAGE
+     I            DS
+     I                                        1   50MATERM
+     I                                        1   10USIMAC
+     I I            0                         2   30NOTUSE
+     I                                        4   50ONBCER
+     C/EJECT
+     C           CLE1      KLIST
+     C                     KFLD           ANDEV
+     C                     KFLD           ETUDE
+     C                     KFLD           SEQDE
+    C*
+     C           CLE2      KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+    C*
+     C           CLE3      KLIST
+     C                     KFLD           TPAP,K
+     C                     KFLD           TGRA,K
+     C                     KFLD           TADP,K
+     C                     KFLD           TADG,K
+    C*
+     C           CLE4      KLIST
+     C                     KFLD           USINE
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+    C*
+     C           CLE5      KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           SEQACH
+     C           CLE6      KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           RGLIV
+     C           CLE7      KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           ANDEV
+     C                     KFLD           ETUDE
+     C                     KFLD           SEQDE
+     C           CLE8      KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C           CLE9      KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           SEQSTA
+    C*
+     C           CLE10     KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+    C*
+     C           CPREIM    KLIST
+     C                     KFLD           NPI1    40
+     C                     KFLD           NPI2    40
+     *--- Début --- Philippe --- 17/11/2015 --- Projet "Pose Accessoires" ---*
+     * - Clé d'accès à PRODST6
+     C           KPST6     KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     *--- Fin   --- Philippe --- 17/11/2015 --- Projet "Pose Accessoires" ---*
+     C/SPACE 3
+     *
+     *  OVR SUIVANT CHOIX
+     *  dltovr *all ...
+     C                     Z-ADD50        LONG
+D1  C           *INU5     IFNE '1'                        PAS OBJECTIF
+     C                     MOVELOVR,1     OVRDB  50
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG   155
+F1  C                     END
+    C*
+D1  C           *INU1     IFEQ '1'                        DEVIS
+     C                     MOVE £USER     Z10    10
+     C                     MOVEAZ10       SC1,65
+     C                     Z-ADD160       LNG    155
+     C                     MOVEASC1,1     SBM   160 P
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LNG
+    C*
+     C                     MOVELOVR,2     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,6     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,18    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,16    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+    C*
+     C                     MOVE 'D'       TRAV1
+F1  C                     END
+     *
+D1  C           *INU2     IFEQ '1'                        PANEL
+     C                     MOVELOVR,3     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,7     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,19    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,27    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVE 'P'       TRAV1
+F1  C                     END
+    C*
+D1  C           *INU3     IFEQ '1'                        SIMUL BE
+     C                     MOVE £USER     Z10    10
+     C                     MOVEAZ10       SC2,65
+     C                     Z-ADD160       LNG
+     C                     MOVEASC2,1     SBM   160 P
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LNG
+    C*
+     C                     MOVELOVR,4     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,8     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,20    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,28    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+    C*
+     C                     MOVE 'B'       TRAV1
+F1  C                     END
+    C*
+D1  C           *INU4     IFEQ '1'                        SIMUL AUTRES
+     C                     MOVE £USER     Z10    10
+     C                     MOVEAZ10       SC3,65
+     C                     Z-ADD160       LNG
+     C                     MOVEASC3,1     SBM   160 P
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LNG
+    C*
+     C                     MOVELOVR,5     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,9     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,21    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,29    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+    C*
+     C                     MOVE 'S'       TRAV1
+F1  C                     END
+    C*
+D1  C           *INU6     IFEQ '1'                        ENQUETE
+     C                     MOVELOVR,11    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,12    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,22    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,30    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVE 'E'       TRAV1
+F1  C                     END
+    C*
+D1  C           *INU7     IFEQ '1'                        PROD SOF.
+     C                     MOVELOVR,13    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,14    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,23    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,31    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVE 'C'       TRAV1
+F1  C                     END
+    C*
+D1  C           *INU8     IFEQ '1'                        PRE IMPRIME
+     C                     MOVELOVR,15    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,34    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,16    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,24    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,32    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVE 'I'       TRAV1
+F1  C                     END
+    C*
+D1  C           *INU5     IFEQ '1'                        OBJECTIF
+     C                     OPEN DEVIS
+X1  C                     ELSE
+     C                     OPEN DEVISL1
+     C                     OPEN DEVISL2
+D2  C           *INU8     IFEQ '1'
+     C                     OPEN DEVISL3
+F2  C                     END
+     C                     OPEN DEVIS2
+     C                     OPEN DEVAMLL1
+F1  C                     END
+     C           TAG0      TAG
+     *          ---------------
+     C   99N99             READ DEVIS2                   99
+     C   99N99             READ DEVAMLL1                 99
+    C*
+     C                     Z-ADD*ZEROS    NOCLI
+     C                     Z-ADD*ZEROS    NOPRO
+     C                     Z-ADD*ZEROS    ANDEV
+     C                     Z-ADD*ZEROS    ETUDE
+     C                     Z-ADD*ZEROS    SEQDE
+     *--------------------------------------------------------*
+     *   1° FORMAT - CHOIX TRAVAIL                            *
+     *--------------------------------------------------------*
+     C   U1                SETON                     31
+     C   U2                SETON                     32
+     C   U3                SETON                     33
+     C   U4                SETON                     34
+     C   U5                SETON                     35
+     C   U6                SETON                     36
+     C   U7                SETON                     37
+     C   U8                SETON                     38
+     C                     SETOF                     01
+     C           DEB0      TAG
+     *          ---------------
+     C                     CLEARFMT1A
+     C                     CLEARFMT1B
+     C                     CLEARFMT1C
+     C                     CLEARFMT1D
+     C                     CLEARFMT1F
+     C                     CLEARFMT1G
+     C                     CLEARFMT1H
+    C*
+     C                     WRITEFMT3
+     C           DEB1      TAG
+     *          ---------------
+     C   31                EXFMTFMT1A
+     C   32                EXFMTFMT1B
+     C   33                EXFMTFMT1C
+     C   34                EXFMTFMT1D
+     C   35                EXFMTFMT1E
+     C   36                EXFMTFMT1F
+     C   37                EXFMTFMT1G
+     C   38                EXFMTFMT1H
+    C           *IN03     CABEQ'1'       FINPG
+     C                     MOVEA'0000000' *IN,61
+     C                     MOVEA'00'      *IN,68
+     C/SPACE 3
+    C* DEVIS
+    C*-------------------------
+D1  C           *IN31     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 12
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'00000000'*IN,11
+     C                     MOVEA'0000'    *IN,19
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'
+     C                     MOVE 'S'       TRAV2            SAISIE
+     C                     Z-ADD5         TYPDEV
+     C                     EXSR APPEL
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     61    OFFRES
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        VARIANTE
+     C                     SETON                     62    PRODUITS
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        VARIANTE
+     C                     SETON                     63    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        VARIANTE
+     C                     SETON                     67    SIMPLIFIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        SAISIE A PARTIR
+     C                     SETON                     64    SIMPLIFIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        SAISIE A PARTIR
+     C                     SETON                     65    ETIQUETTE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN18     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN19     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'1'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN20     IFEQ '1'                        CALCUL
+     C                     MOVEA'A6'      SB,76               FICH TEC.
+     C                     MOVEA'CALFTECH'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN21     IFEQ '1'                        MISE EN SUSPENS
+     C                     EXSR SPSUS
+    C                     GOTO TAG0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN22     IFEQ '1'                        CALCUL DEVIS
+     C                     MOVEA'A0'      SB,76
+     C                     MOVEA'CALDEVIS'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+F1  C                     END
+     C/SPACE 3
+    C* PANEL
+    C*-------------------------
+D1  C           *IN32     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 9
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'00000000'*IN,11
+     C                     MOVEA'000'     *IN,19
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'
+     C                     MOVE 'S'       TRAV2            SAISIE
+     C                     EXSR APPEL
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     61    OFFRES
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        VARIANTE
+     C                     SETON                     62    PRODUITS
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        VARIANTE
+     C                     SETON                     63    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'2'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        SUSPENSION
+     C                     EXSR SPSUS
+    C                     GOTO TAG0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN18     IFEQ '1'                        CALCUL
+     C                     MOVEA'B3'      SB,76               PRU
+     C                     MOVEA'CALPANEL'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN19     IFEQ '1'                        CALCUL
+     C                     MOVEA'A3'      SB,76               PVS
+     C                     MOVEA'CALPANEL'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+F1  C                     END
+     C/SPACE 3
+    C* SIMUL BE
+    C*-------------------------
+D1  C           *IN33     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 8
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'00000000'*IN,11
+     C                     MOVEA'000'     *IN,19
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'
+     C                     MOVE 'S'       TRAV2            SAISIE
+     C                     Z-ADD5         TYPDEV
+     C                     EXSR APPEL
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     61    OFFRES
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        VARIANTE
+     C                     SETON                     62    PRODUITS
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        VARIANTE
+     C                     SETON                     63    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        SAISIE A PARTIR
+     C                     SETON                     64    SIMPLIFIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'3'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN18     IFEQ '1'                        CALCUL
+     C                     MOVEA'A1'      SB,76
+     C                     MOVEA'CALSIMBE'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+F1  C                     END
+     C/SPACE 3
+    C* SIMUL AUTRE BE
+    C*-------------------------
+D1  C           *IN34     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 8
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'00000000'*IN,11
+     C                     MOVEA'000'     *IN,19
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'                        VARIANTE
+     C                     SETON                     61    OFFRES
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     62    PRODUITS
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        VARIANTE
+     C                     SETON                     67    DEVIS SIMP.
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'4'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        CALCUL
+     C                     MOVEA'AC'      SB,76
+     C                     MOVEA'CALSIMUL'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'2'       DEV011             PANEL
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN18     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'6'       DEV011             OFFRES/ETUDE
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+F1  C                     END
+     C/SPACE 3
+    C* OBJECTIF DE PRODUCTION
+    C*-------------------------
+D1  C           *IN35     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 7
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'0000000' *IN,11
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'                        SUR OFFRES
+     C                     SETON                     61
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        SUR PRODUIT
+     C                     SETON                     62
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        SUR DEVIS
+     C                     MOVELOVR,2     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,18    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,26    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     SETON                     63
+     C                     OPEN DEVISL1
+     C                     OPEN DEVIS2
+     C                     OPEN DEVAMLL1
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        SUR SIMUL BE
+     C                     MOVELOVR,4     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,20    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,28    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     SETON                     63
+     C                     OPEN DEVISL1
+     C                     OPEN DEVIS2
+     C                     OPEN DEVAMLL1
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        SUR SIMUL COM.
+     C                     MOVELOVR,5     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,21    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,29    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     SETON                     63
+     C                     OPEN DEVISL1
+     C                     OPEN DEVIS2
+     C                     OPEN DEVAMLL1
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        SUR PANEL
+     C                     MOVELOVR,3     OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,19    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,27    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     SETON                     63
+     C                     OPEN DEVISL1
+     C                     OPEN DEVIS2
+     C                     OPEN DEVAMLL1
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        SUR ENQUETE
+     C                     MOVELOVR,11    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,22    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     MOVELOVR,30    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG
+     C                     SETON                     63
+     C                     OPEN DEVISL1
+     C                     OPEN DEVIS2
+     C                     OPEN DEVAMLL1
+F2  C                     END
+     C/SPACE 1
+F1  C                     END
+     C/SPACE 3
+    C* ENQUETE
+    C*-------------------------
+D1  C           *IN36     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 9
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+D2  C           CHOIX     IFLE 4
+    C           CHOIX     OREQ 6
+D3  C           STE       IFGT 0
+    C           NOCLI     ORGT 0
+     C                     SETON                     53
+    C                     GOTO DEB1
+F3  C                     END
+F2  C                     END
+    C           *IN04     CASEQ'1'       TRTAID         25
+    C                     END
+    C           *IN25     CABEQ'1'       DEB1
+     C                     MOVEA'00000000'*IN,11
+     C                     MOVEA'00'      *IN,19
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C                     MOVELSTE       Z5      5
+     C                     MOVE NOCLI     Z5
+     C           Z5        COMP '00000'              68
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'
+     C                     MOVE 'S'       TRAV2            SAISIE
+     C                     EXSR APPEL
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     61    OFFRES
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        VARIANTE
+     C                     SETON                     62    PRODUITS
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        VARIANTE
+     C                     SETON                     63    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'7'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        MISE EN SUSPENS
+     C                     SETON                     69    ENQUETE
+     C                     EXSR SPSUS
+    C                     GOTO TAG0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN18     IFEQ '1'                        CALCUL
+     C                     MOVE STE       Z1      1
+     C                     MOVE NOCLI     Z4      4
+     C                     MOVEAZ1        SB1,78
+     C                     MOVEAZ4        SB1,84
+     C                     Z-ADD160       LONG
+     C                     MOVEASB1,1     SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN19     IFEQ '1'                        BASCULEMENT ENQ.
+     C                     CALL 'DEV016L'
+     C                     PARM           Z5
+    C                     GOTO TAG0
+F2  C                     END
+F1  C                     END
+     C/SPACE 3
+    C* PANEL PRODUITS SOFHUNIC
+    C*-------------------------
+D1  C           *IN37     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 9
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'00000000'*IN,11
+     C                     MOVEA'000'     *IN,19
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'
+     C                     MOVE 'S'       TRAV2            SAISIE
+     C                     EXSR APPEL
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     61    OFFRES
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        VARIANTE
+     C                     SETON                     62    PRODUITS
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        VARIANTE
+     C                     SETON                     63    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'9'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        SUSPENSION
+     C                     EXSR SPSUS
+    C                     GOTO TAG0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN18     IFEQ '1'                        CALCUL
+     C                     MOVEA'E3'      SB,76               PRU
+     C                     MOVEA'CALPANPS'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN19     IFEQ '1'                        CALCUL
+     C                     MOVEA'D3'      SB,76               PVS
+     C                     MOVEA'CALPANPS'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+F1  C                     END
+     C/SPACE 3
+    C* PRE-IMPRIME STOCKE
+    C*-------------------------
+D1  C           *IN38     IFEQ '1'
+D2  C           CHOIX     IFEQ *ZERO
+    C           CHOIX     ORGT 7
+     C                     SETON                     50
+    C                     GOTO DEB1
+F2  C                     END
+     C                     MOVEA'00000000'*IN,11
+     C           10        ADD  CHOIX     IN      20
+     C                     MOVEA'1'       *IN,IN
+     C/SPACE 1
+D2  C           *IN11     IFEQ '1'
+     C                     MOVE 'S'       TRAV2            SAISIE
+     C                     EXSR APPEL
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN12     IFEQ '1'                        VARIANTE
+     C                     SETON                     63    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN13     IFEQ '1'                        MODIFICATION
+     C                     SETON                     66    SAISIE
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN14     IFEQ '1'                        INTEROGATION
+     C                     MOVEL'8'       DEV011
+     C                     CALL 'DEV011£'
+     C                     PARM           DEV011
+    C                     GOTO DEB0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN15     IFEQ '1'                        CALCUL
+     C                     MOVEA'I6'      SB,76               FICH TEC.
+     C                     MOVEA'CALFTEPI'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN16     IFEQ '1'                        MISE EN SUSPENS
+     C                     EXSR SPSUS
+    C                     GOTO TAG0
+F2  C                     END
+     C/SPACE 1
+D2  C           *IN17     IFEQ '1'                        CALCUL DEVIS
+     C                     MOVEA'I0'      SB,76
+     C                     MOVEA'CALDEVPI'SB,12
+     C                     Z-ADD160       LONG
+     C                     MOVEASB,1      SBM   160
+     C                     CALL 'QCMDEXC'
+     C                     PARM           SBM
+     C                     PARM           LONG
+    C                     GOTO FINPG
+F2  C                     END
+F1  C                     END
+     C/EJECT
+     *--------------------------------------------------------*
+     *   2° FORMAT - DEMANDE N°                               *
+     *--------------------------------------------------------*
+     C           DEB2      TAG
+     *          ---------------
+D1  C           *IN68     IFEQ '1'
+     C                     MOVELZ5        STE
+     C                     MOVE Z5        NOCLI
+F1  C                     END
+     C                     SETON                     01
+     C                     WRITEFMT3
+     C   31                WRITEFMT1A
+     C   32                WRITEFMT1B
+     C   33                WRITEFMT1C
+     C   34                WRITEFMT1D
+     C   35                WRITEFMT1E
+     C   36                WRITEFMT1F
+     C   37                WRITEFMT1G
+     C   38                WRITEFMT1H
+     C           TAG21     TAG
+     *          ---------------
+     C                     EXFMTFMT2
+    C           *IN03     CABEQ'1'       FINPG
+D1  C           *IN02     IFEQ '1'
+D2  C           *IN35     IFEQ '1'
+    C           *IN63     ANDEQ'1'
+     C                     EXSR DLTOV
+F2  C                     END
+    C                     GOTO TAG0
+F1  C                     END
+    C           *IN04     CASEQ'1'       TRTAID         25
+    C                     END
+    C           *IN25     CABEQ'1'       DEB2
+     C/SPACE 3
+     * SI OFFRE
+     *-------------------------
+D1  C           *IN61     IFEQ '1'
+     C                     Z-ADDANDEV     ANDEVS  20
+     C                     Z-ADDETUDE     ETUDES  40
+     C                     Z-ADDSEQDE     SEQDES  40
+     C                     CLEARDEVISF1
+     C                     Z-ADDANDEVS    ANDEV
+     C                     Z-ADDETUDES    ETUDE
+     C                     Z-ADDSEQDES    SEQDE
+     C           CLE1      CHAINOFFRES               5197
+    C   51                GOTO TAG21
+    C   97                GOTO TAG21
+D2  C           *IN35     IFEQ '0'
+     C                     MOVE 'O'       TAG4
+    C*  34                Z-ADD1         TYPDEV
+     C                     Z-ADDQTTOT     QTTOT1
+     C                     Z-ADDNBIMP     NBIMP1
+     C                     Z-ADDNBIRE     NBIRE1
+     C                     Z-ADDNBFACO    NBFAC1
+     C                     Z-ADDNBLIV     NBLIV1
+     C                     Z-ADDFRLIV     FRLIV1
+     C                     Z-ADD1         SEQSTA
+     C           CLE9      CHAINCLISTAL1             55
+     C                     WRITEDEVISF1
+     C           CLE1      CHAINOFFRES2              70
+     C  N70                WRITEDEVIS2F1
+     C           CLE1      CHAINOFFAMLL1             70
+D3  C           *IN70     DOWEQ'0'
+     C                     Z-ADD0         SEQAML
+     C                     WRITEDEVAMLF
+     C           CLE1      READEOFFAMLL1                 70
+F3  C                     END
+     C                     MOVE 'V'       TRAV2            VARIANTE
+     C                     EXSR APPEL
+X2  C                     ELSE
+     C                     Z-ADD1         TYPDEV
+     C                     WRITEDEVISS
+     C                     EXSR APPEL2
+F2  C                     END
+    C                     GOTO DEB2
+F1  C                     END
+     C/SPACE 1
+     * SI VARIANTE DEVIS SIMPLIFIE
+     *-------------------------
+D1  C           *IN67     IFEQ '1'
+     C           CLE1      CHAINDEVISL2              5197
+    C   51                GOTO TAG21
+    C   97                GOTO TAG21
+     C                     WRITEDEVISF1
+     C                     MOVE 'V'       TRAV2            VARIANTE A PARTIR
+     C                     EXSR APPEL                      SIMPLIFIE
+    C                     GOTO DEB2
+F1  C                     END
+     C/SPACE 1
+     * SI DEVIS SIMPLIFIE
+     *-------------------------
+D1  C           *IN64     IFEQ '1'
+     C           CLE1      CHAINDEVISL2              5197
+    C   51                GOTO TAG21
+    C   97                GOTO TAG21
+     C                     Z-ADD1         TYPDEV
+     C                     MOVE *BLANKS   TAG1
+     C                     MOVE *BLANKS   TAG2
+     C                     MOVEL£USER     DIRPRF
+     C                     EXCPTMAJDES
+     C           CLE1      CHAINDEVISL1              51
+     C  N51                EXCPTMAJBID
+     C                     MOVE 'C'       TRAV2            CREATION A PARTIR
+     C                     EXSR APPEL                      SIMPLIFIE
+    C                     GOTO DEB2
+F1  C                     END
+     C/SPACE 1
+     * SI ETIQUETTES
+     *-------------------------
+D1  C           *IN65     IFEQ '1'
+     C                     Z-ADDANDEV     ANDEVS  20
+     C                     Z-ADDETUDE     ETUDES  40
+     C                     Z-ADDSEQDE     SEQDES  40
+     C                     CLEARDEVISF1
+     C                     Z-ADDANDEVS    ANDEV
+     C                     Z-ADDETUDES    ETUDE
+     C                     Z-ADDSEQDES    SEQDE
+     C           CLE1      CHAINETIQUET              5197
+    C   51                GOTO TAG21
+    C   97                GOTO TAG21
+     C                     WRITEDEVISF1
+     C                     MOVE 'E'       TRAV2            CREATION A PARTIR
+     C                     EXSR APPEL                      ETIQUETTE
+    C                     GOTO DEB2
+F1  C                     END
+     C/SPACE 1
+     * SI PRODUIT
+     *-------------------------
+D1  C           *IN62     IFEQ '1'
+     C                     Z-ADDNOCLI     NOCLIS  40
+     C                     Z-ADDNOPRO     NOPROS  40
+     C                     CLEARDEVISF1
+     C                     Z-ADDNOCLIS    NOCLI
+     C                     Z-ADDNOPROS    NOPRO
+     C           CLE2      CHAINPRODUI2              5297
+    C   97                GOTO TAG21
+     C  N52      GARNT     COMP 'PP'                     52
+    C   52                GOTO TAG21
+     *--- Début --- Philippe --- 17/11/2015 --- Projet "Pose Accessoires "---*
+     * - Recherche si présence de critère définissant une pose d'accessoire
+     * pour le produit en cours
+     C           KPST6     CHAINPRODST6              52
+D2  C           *IN52     IFEQ '1'
+     C                     CLEAREYECOD
+     C                     CLEAREYEMOD
+     C                     CLEAREYENB
+     C                     CLEARCORCOD
+     C                     CLEARCORDNB
+     C                     CLEARBTPCOD
+     C                     CLEARBTPMOD
+     C                     CLEARBTPNB
+F2  C                     ENDIF
+     *--- Fin   --- Philippe --- 17/11/2015 --- Projet "Pose Accessoires "---*
+     C           CLE2      CHAINPRODST2              52
+     C                     EXSR PREPA
+     C                     Z-ADDNOPRO     NOPRS
+D2  C           *IN35     IFEQ '0'
+     C                     Z-ADD5         TYPDEV
+     C   34                Z-ADD1         TYPDEV
+D3  C           EMBA1     IFEQ 'S'
+     C                     Z-ADD4         TYPDEV
+     C                     Z-ADDSUVENT    SUVEXX
+F3  C                     END
+     C                     Z-ADD1         SEQSTA
+     C           CLE9      CHAINCLISTAL1             55
+     C                     WRITEDEVISF1
+     C           CLE2      CHAINPRODS3L1             70
+     C  N70                EXSR PROD3
+     C           CLE10     CHAINCODBARL2             70
+     C  N70                EXSR PROAML
+     C                     MOVE 'V'       TRAV2            VARIANTE
+     C                     EXSR APPEL
+X2  C                     ELSE
+     C                     Z-ADD1         TYPDEV
+     C                     WRITEDEVISS
+     C                     EXSR APPEL2
+F2  C                     END
+    C                     GOTO DEB2
+F1  C                     END
+     C/SPACE 1
+     * SI SAISIE EN COURS
+     *-------------------------
+D1  C           *IN63     IFEQ '1'
+    C           *IN66     OREQ '1'
+     C           CLE1      CHAINDEVISL1              5197
+D2  C           *IN38     IFEQ '1'
+     C           CLE1      CHAINDEVISL3              51
+F2  C                     END
+    C   51                GOTO TAG21
+    C   97                GOTO TAG21
+D2  C           *IN35     IFEQ '0'
+D3  C           *IN63     IFEQ '1'
+     C                     WRITEDEVISF1
+     C                     MOVE 'V'       TRAV2            VARIANTE
+X3  C                     ELSE
+     C                     MOVE 'M'       TRAV2            MODIFICATION
+     C                     EXCPTMAJBID
+F3  C                     END
+D3  C           *IN63     IFEQ '1'
+     C           CLE1      CHAINDEVIS2               70
+     C  N70                WRITEDEVIS2F1
+     C           CLE1      CHAINDEVAMLL1             70
+D4  C           *IN70     DOWEQ'0'
+     C                     Z-ADD0         SEQAML
+     C                     WRITEDEVAMLF
+     C           CLE1      READEDEVAMLL1                 70
+F4  C                     END
+F3  C                     END
+     C                     EXSR APPEL
+X2  C                     ELSE
+     C                     Z-ADD1         TYPDEV
+     C                     WRITEDEVISS
+     C                     EXSR APPEL2
+F2  C                     END
+    C                     GOTO DEB2
+F1  C                     END
+     C/EJECT
+     *--------------------------------------------------------*
+     *   FIN                                                  *
+     *--------------------------------------------------------*
+     C           FINPG     TAG
+     *          ---------------
+     C                     MOVELOVR,1     OVRDB
+     C                     Z-ADD50        LONG
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG   155
+D1  C           *IN31     IFEQ '1'
+    C           *IN33     OREQ '1'
+    C           *IN34     OREQ '1'
+     C                     Z-ADD50        LONG
+     C                     MOVELOVR,17    OVRDB
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG   155
+F1  C                     END
+    C*
+     C                     SETON                     LR
+     C/EJECT
+     *--------------------------------------------------------*
+     *   PREPARATION FICHIER DEVIS                            *
+     *--------------------------------------------------------*
+    C           PREPA     BEGSR
+     *          ---------------
+     C                     MOVE *BLANK    AMALFO
+     C                     Z-ADD1         SEQACH
+     C                     MOVELBLOC2     LIBPR1
+     C                     Z-ADDDECL      DAPP11
+     C                     MOVELBLOC4     LIBPR2
+     C                     MOVELBLOC5     LIBPR3
+     C                     Z-ADDDECH      DAPP21
+     C                     MOVE ZB15      KEASY
+    C*                    MOVE TDOCF     TTRACE
+     C                     Z-ADDDECFE     LGPLAT
+     C                     MOVE CFINIT    TVEI3
+     C                     MOVE NATMAD    TYPOPR
+     C                     Z-ADDDECTY     NBSSTS
+     C                     MOVE FSFAC     LGBAX
+     C                     MOVE RETS7     PSBAX
+     C                     MOVE NATMAI    AFFI
+     C                     MOVE TVEI2     CODBRA
+    C*
+     C           CLE5      CHAINCLIACHL1             52
+     C  N52                MOVELNOMACH    NOMCLI
+     C                     Z-ADD1         RGLIV
+     C           CLE6      CHAINCLILIVL1             50
+     C                     MOVELDEPLIV    LIEU
+D1  C           CPAYLV    IFGT 1
+     C                     Z-ADDCPAYLV    CPAYFO
+X1  C                     ELSE
+     C                     Z-ADD*ZEROS    CPAYFO
+F1  C                     END
+    C*
+D1  C           GARNT     IFNE *BLANKS
+     C                     MOVE GARNT     GARN1   1
+D2  C           GARN1     IFGT '1'
+     C                     MOVE *BLANKS   GARNT
+     C                     MOVE GARN1     GROUPA
+F2  C                     END
+D2  C           GARNT     IFEQ 'MH'
+    C           GARNT     OREQ 'MD'
+     C                     MOVE *BLANKS   GARNT
+     C                     MOVE GARN1     HOMOL
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           FORL2     IFNE *ZEROS
+     C                     Z-ADDFORL2     FORL
+     C                     Z-ADDFORH2     FORH
+X1  C                     ELSE
+D2  C           FORL3     IFNE *ZEROS
+     C                     Z-ADDFORL3     FORL
+     C                     Z-ADDFORH3     FORH
+X2  C                     ELSE
+D3  C           FORL6     IFNE *ZEROS
+     C                     Z-ADDFORL6     FORL
+     C                     Z-ADDFORH6     FORH
+X3  C                     ELSE
+D4  C           FORL5     IFNE *ZEROS
+     C                     Z-ADDFORL5     FORL
+     C                     Z-ADDFORH5     FORH
+F4  C                     END
+F3  C                     END
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           PROTO     IFNE *BLANKS
+     C                     MOVELPROTO     PROTO1  1
+D2  C           PROTO1    IFEQ 'P'
+     C                     MOVE 'X'       PROMO
+F2  C                     END
+D2  C           PROTO1    IFEQ 'T'
+     C                     MOVE 'X'       ZERO
+F2  C                     END
+F1  C                     END
+     C                     Z-ADDLAIZB     LARFEN
+     C                     Z-ADDLCOUP     LONFEN
+    C* PAPIERS
+    C*--------------------
+     C                     Z-ADD*ZERO     K       20
+D1  C           PAPI2     IFNE *BLANKS
+     C                     MOVE PAPI2     PAP
+     C                     Z-ADDGRAM2     GRA
+     C                     MOVE LAIZ2     LAI
+D2  C           LAI1      IFEQ *BLANK
+    C           FORL2     ANDEQ*ZEROS
+     C                     MOVE NOI1      NIMPE1
+     C                     MOVE NOI2      NIMPE2
+X2  C                     ELSE
+     C                     ADD  1         K
+     C                     MOVE PAPI2     TPAP,K
+     C                     Z-ADDGRAM2     TGRA,K
+     C                     MOVE ADPAP2    TADP,K
+     C                     Z-ADDADGRA2    TADG,K
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           PAPI3     IFNE *BLANKS
+     C                     MOVE PAPI3     PAP
+     C                     Z-ADDGRAM3     GRA
+     C                     MOVE LAIZ3     LAI
+D2  C           LAI1      IFEQ *BLANK
+    C           FORL3     ANDEQ*ZEROS
+     C                     MOVE NOI1      NIMPE1
+     C                     MOVE NOI2      NIMPE2
+X2  C                     ELSE
+     C                     ADD  1         K
+     C                     MOVE PAPI3     TPAP,K
+     C                     Z-ADDGRAM3     TGRA,K
+     C                     MOVE ADPAP3    TADP,K
+     C                     Z-ADDADGRA3    TADG,K
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           PAPI4     IFNE *BLANKS
+     C                     MOVE PAPI4     PAP
+     C                     Z-ADDGRAM4     GRA
+     C                     MOVE LAIZ4     LAI
+D2  C           LAI1      IFEQ *BLANK
+    C           FORL4     ANDEQ*ZEROS
+     C                     MOVE NOI1      NIMPI1
+     C                     MOVE NOI2      NIMPI2
+X2  C                     ELSE
+     C                     ADD  1         K
+     C                     MOVE PAPI4     TPAP,K
+     C                     Z-ADDGRAM4     TGRA,K
+     C                     MOVE ADPAP4    TADP,K
+     C                     Z-ADDADGRA4    TADG,K
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           PAPI5     IFNE *BLANKS
+     C                     MOVE PAPI5     PAP
+     C                     Z-ADDGRAM5     GRA
+     C                     MOVE LAIZ5     LAI
+D2  C           LAI1      IFEQ *BLANK
+    C           FORL5     ANDEQ*ZEROS
+     C                     MOVE NOI1      NIMPI1
+     C                     MOVE NOI2      NIMPI2
+X2  C                     ELSE
+     C                     ADD  1         K
+     C                     MOVE PAPI5     TPAP,K
+     C                     Z-ADDGRAM5     TGRA,K
+     C                     MOVE ADPAP5    TADP,K
+     C                     Z-ADDADGRA5    TADG,K
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           PAPI6     IFNE *BLANKS
+     C                     MOVE PAPI6     PAP
+     C                     Z-ADDGRAM6     GRA
+     C                     MOVE LAIZ6     LAI
+D2  C           LAI1      IFEQ *BLANK
+    C           FORL6     ANDEQ*ZEROS
+     C                     MOVE NOI1      NIMPI1
+     C                     MOVE NOI2      NIMPI2
+X2  C                     ELSE
+     C                     ADD  1         K
+     C                     MOVE PAPI6     TPAP,K
+     C                     Z-ADDGRAM6     TGRA,K
+     C                     MOVE ADPAP6    TADP,K
+     C                     Z-ADDADGRA6    TADG,K
+F2  C                     END
+F1  C                     END
+    C* COUPE ET APPRO
+    C*--------------------
+D1  C           COUP2     IFNE ' '
+D2  C           COUP2     IFEQ 'F'
+    C           COUP2     OREQ 'B'
+     C                     MOVE COUP2     APPEX
+X2  C                     ELSE
+     C                     MOVE COUP2     COUPEX
+F2  C                     END
+X1  C                     ELSE
+D2  C           COUP3     IFNE ' '
+D3  C           COUP3     IFEQ 'F'
+    C           COUP3     OREQ 'B'
+     C                     MOVE COUP3     APPEX
+X3  C                     ELSE
+     C                     MOVE COUP3     COUPEX
+F3  C                     END
+F2  C                     END
+F1  C                     END
+D1  C           COUP6     IFNE ' '
+D2  C           COUP6     IFEQ 'F'
+    C           COUP6     OREQ 'B'
+     C                     MOVE COUP6     APPIN
+X2  C                     ELSE
+     C                     MOVE COUP6     COUPIN
+F2  C                     END
+X1  C                     ELSE
+D2  C           COUP5     IFNE ' '
+D3  C           COUP5     IFEQ 'F'
+    C           COUP5     OREQ 'B'
+     C                     MOVE COUP5     APPIN
+X3  C                     ELSE
+     C                     MOVE COUP5     COUPIN
+F3  C                     END
+X2  C                     ELSE
+D3  C           COUP4     IFNE ' '
+D4  C           COUP4     IFEQ 'F'
+    C           COUP4     OREQ 'B'
+     C                     MOVE COUP4     APPIN
+X4  C                     ELSE
+     C                     MOVE COUP4     COUPIN
+F4  C                     END
+F3  C                     END
+F2  C                     END
+F1  C                     END
+    C* POIGNEE FENETRE
+    C*--------------------
+D1  C           COFEN     IFEQ 21
+     C                     MOVE 'F'       TYPFE1
+     C                     MOVE RHODO     TYPFE2
+D2  C           RHODO     IFEQ -1
+     C                     MOVE 'A'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -2
+     C                     MOVE 'B'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -3
+     C                     MOVE 'C'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -4
+     C                     MOVE 'D'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -5
+     C                     MOVE 'E'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -6
+     C                     MOVE 'F'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -7
+     C                     MOVE 'G'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -8
+     C                     MOVE 'H'       TYPFE2
+F2  C                     END
+D2  C           RHODO     IFEQ -9
+     C                     MOVE 'I'       TYPFE2
+F2  C                     END
+F1  C                     END
+D1  C           COFEN     IFEQ 22
+     C                     MOVE 'B'       TYPFE1
+     C                     MOVE RHODO     TYPFE2
+F1  C                     END
+D1  C           COFEN     IFEQ 20
+     C                     MOVE 'L'       TYPFE1
+     C                     MOVE RHODO     TYPFE2
+F1  C                     END
+D1  C           RINAL     IFNE *BLANK
+     C                     MOVE 'R'       TYPPO1
+     C                     MOVE RINAL     TYPPO2
+F1  C                     END
+D1  C           TYPPCH    IFNE *BLANK
+     C                     MOVE 'C'       TYPPO1
+     C                     MOVE *BLANK    TYPPO2
+F1  C                     END
+D1  C           COAS1     IFEQ 31
+    C           COAS1     OREQ 33
+     C                     MOVE 'P'       TYPPO1
+     C                     MOVE COLA1     TYPPO2
+     C                     Z-ADDLPAT1     LONPOI
+     C                     MOVE *BLANKS   COLA1
+     C                     Z-ADD*ZEROS    LPAT1
+F1  C                     END
+D1  C           COAS2     IFEQ 31
+    C           COAS2     OREQ 33
+     C                     MOVE 'P'       TYPPO1
+     C                     MOVE COLA2     TYPPO2
+     C                     Z-ADDLPAT2     LONPOI
+     C                     MOVE *BLANKS   COLA2
+     C                     Z-ADD*ZEROS    LPAT2
+F1  C                     END
+    C* IMPRESSION
+    C*--------------------
+D1  C           TIMP2     IFNE *ZEROS
+     C                     Z-ADDTIMP2     TIMPEX
+     C                     MOVE COUL2     COUEX
+     C                     MOVELCOULD2    COUEX
+     C                     Z-ADDENCR2     ENCEX
+     C                     MOVE TS2       TSEXT
+     C                     MOVE TVER2     TVEEX
+     C                     Z-ADDCVER2     CVEEX
+     C                     Z-ADDOFPA12    GP1EX
+     C                     Z-ADDOFPA22    GP2EX
+     C                     Z-ADDOFPA32    GP3EX
+     C                     MOVE GRAP2     DDEEX
+     C                     MOVE APLA2     DAPEX
+     C                     MOVE UV2       UVEXT
+     C                     MOVE NATE2     NATEX
+     C                     MOVELORCU2     OREX
+     C                     MOVELESPE2     FLUEX
+     C                     Z-ADDCESPE2    CFLEX
+     C                     Z-ADDENSP2     ESPEX
+F1  C                     END
+D1  C           TREP2     IFNE *ZEROS
+     C                     Z-ADDTREP2     RIMPEX
+     C                     Z-ADDRCOU2     COUEXR
+     C                     Z-ADDRENC2     ENCEXR
+     C                     MOVE RVER2     TVEEXR
+     C                     Z-ADDRCVE2     CVEEXR
+     C                     Z-ADDROFP12    GP1EXR
+     C                     Z-ADDROFP22    GP2EXR
+     C                     MOVE RETS2     TSEXTR
+     C                     MOVE RUV2      UVEXTR
+     C                     MOVELRESPE2    FLUEXR
+     C                     Z-ADDRCESP2    CFLEXR
+     C                     MOVELRAPLA2    DAPEXR
+     C                     MOVELRGRA2     DDEEXR
+F1  C                     END
+    C*
+D1  C           TIMP3     IFNE *ZEROS
+     * OFFSET 3B
+D2  C           TIMP3     IFEQ 4
+    C           OTCO35    ANDGT0
+     C                     Z-ADDTIMP3     TIMPEX
+     C                     MOVE COUL3     COUEX
+     C                     MOVELCOULD3    COUEX
+     C                     MOVE OCOMEI    OCOMRV
+     C                     MOVE OTCO35    OTCOEP
+     C                     Z-ADDOUSI35    USIMAC
+     C                     MOVE OMAC35    OMACEP
+     C                     Z-ADDOGE3P1    OGEEP1
+     C                     Z-ADDOGE3P2    OGEEP2
+     C                     Z-ADDOGE3P3    OGEEP3
+     C                     MOVE OTE13P    OTE1EP
+     C                     MOVE ONE13P    ONE1EP
+     C                     Z-ADDOPE13P    OPE1EP
+     C                     MOVE OTE23P    OTE2EP
+     C                     MOVE ONE23P    ONE2EP
+     C                     Z-ADDOPE23P    OPE2EP
+     C                     MOVELOTOA3P    OTOAEP
+     C                     Z-ADDOPOA3P    OPOAEP
+     C                     MOVE OTEF3P    OTEFEP
+     C                     Z-ADDOPEF3P    OPEFEP
+     C                     Z-ADDOMES3P    OMESEP
+     C                     MOVE OTEM3P    OTEMEP
+     C                     Z-ADDOPEM3P    OPEMEP
+     C                     Z-ADDODP3P     ODPEP
+     C                     MOVE ODF13P    ODF1EP
+     C                     MOVE ODS13P    ODS1EP
+     C                     MOVE ODF23P    ODF2EP
+     C                     MOVE ODS23P    ODS2EP
+     C                     MOVE ODF33P    ODF3EP
+     C                     MOVE ODS33P    ODS3EP
+     C                     MOVE OTV13P    OTV1EP
+     C                     Z-ADDOPV13P    OPV1EP
+     C                     Z-ADDOMV13P    OMV1EP
+     C                     MOVE OV13P1    OV1EP1
+     C                     MOVE OV13P2    OV1EP2
+     C                     MOVE OV13P3    OV1EP3
+     C                     MOVE OTV23P    OTV2EP
+     C                     Z-ADDOPV23P    OPV2EP
+     C                     Z-ADDOMV23P    OMV2EP
+     C                     MOVE OV23P1    OV2EP1
+     C                     MOVE OV23P2    OV2EP2
+     C                     MOVE OV23P3    OV2EP3
+     C                     MOVE OTV33P    OTV3EP
+     C                     Z-ADDOPV33P    OPV3EP
+     C                     Z-ADDOMV33P    OMV3EP
+     C                     MOVE OV33P1    OV3EP1
+     C                     MOVE OV33P2    OV3EP2
+     C                     MOVE OV33P3    OV3EP3
+     C                     MOVE ODPR3P    ODPREP
+     C                     MOVE OTG3P     OTGEP
+     C                     MOVE OGG3P     OGGEP
+     C                     MOVE ODD3P     ODDEP
+     C                     MOVE ODA3P     ODAEP
+     C                     MOVE OTSS3P    OTSSEP
+     C                     MOVE OTM3P     OTMEP
+X2  C                     ELSE
+     C                     Z-ADDTIMP3     TIMPEX
+     C                     MOVE COUL3     COUEX
+     C                     MOVELCOULD3    COUEX
+     C                     Z-ADDENCR3     ENCEX
+     C                     MOVE TS3       TSEXT
+     C                     MOVE TVER3     TVEEX
+     C                     Z-ADDCVER3     CVEEX
+     C                     Z-ADDOFPA13    GP1EX
+     C                     Z-ADDOFPA23    GP2EX
+     C                     Z-ADDOFPA33    GP3EX
+     C                     MOVE GRAP3     DDEEX
+     C                     MOVE APLA3     DAPEX
+     C                     MOVE UV3       UVEXT
+     C                     MOVE NATE3     NATEX
+     C                     MOVELORCU3     OREX
+     C                     MOVELESPE3     FLUEX
+     C                     Z-ADDCESPE3    CFLEX
+     C                     Z-ADDENSP3     ESPEX
+F2  C                     END
+F1  C                     END
+D1  C           TREP3     IFNE *ZEROS
+     * OFFSET 3B
+D2  C           TREP3     IFEQ 4
+    C           OTCO35    ANDGT0
+     C                     Z-ADDTREP3     RIMPEX
+     C                     Z-ADDRCOU3     COUEXR
+     C                     Z-ADDOGE3R1    OGEER1
+     C                     Z-ADDOGE3R2    OGEER2
+     C                     Z-ADDOGE3R3    OGEER3
+     C                     MOVE OTE13R    OTE1ER
+     C                     MOVE ONE13R    ONE1ER
+     C                     Z-ADDOPE13R    OPE1ER
+     C                     MOVE OTE23R    OTE2ER
+     C                     MOVE ONE23R    ONE2ER
+     C                     Z-ADDOPE23R    OPE2ER
+     C                     MOVELOTOA3R    OTOAER
+     C                     Z-ADDOPOA3R    OPOAER
+     C                     MOVE OTEF3R    OTEFER
+     C                     Z-ADDOPEF3R    OPEFER
+     C                     Z-ADDOMES3R    OMESER
+     C                     MOVE OTEM3R    OTEMER
+     C                     Z-ADDOPEM3R    OPEMER
+     C                     Z-ADDODP3R     ODPER
+     C                     MOVE ODF13R    ODF1ER
+     C                     MOVE ODS13R    ODS1ER
+     C                     MOVE ODF23R    ODF2ER
+     C                     MOVE ODS23R    ODS2ER
+     C                     MOVE ODF33R    ODF3ER
+     C                     MOVE ODS33R    ODS3ER
+     C                     MOVE OTV13R    OTV1ER
+     C                     Z-ADDOPV13R    OPV1ER
+     C                     Z-ADDOMV13R    OMV1ER
+     C                     MOVE OV13R1    OV1ER1
+     C                     MOVE OV13R2    OV1ER2
+     C                     MOVE OV13R3    OV1ER3
+     C                     MOVE OTV23R    OTV2ER
+     C                     Z-ADDOPV23R    OPV2ER
+     C                     Z-ADDOMV23R    OMV2ER
+     C                     MOVE OV23R1    OV2ER1
+     C                     MOVE OV23R2    OV2ER2
+     C                     MOVE OV23R3    OV2ER3
+     C                     MOVE OTV33R    OTV3ER
+     C                     Z-ADDOPV33R    OPV3ER
+     C                     Z-ADDOMV33R    OMV3ER
+     C                     MOVE OV33R1    OV3ER1
+     C                     MOVE OV33R2    OV3ER2
+     C                     MOVE OV33R3    OV3ER3
+     C                     MOVE ODPR3R    ODPRER
+     C                     MOVE OTG3R     OTGER
+     C                     MOVE OGG3R     OGGER
+     C                     MOVE ODD3R     ODDER
+     C                     MOVE ODA3R     ODAER
+     C                     MOVE OTSS3R    OTSSER
+     C                     MOVE OTM3R     OTMER
+X2  C                     ELSE
+     C                     Z-ADDTREP3     RIMPEX
+     C                     Z-ADDRCOU3     COUEXR
+     C                     Z-ADDRENC3     ENCEXR
+     C                     MOVE RVER3     TVEEXR
+     C                     Z-ADDRCVE3     CVEEXR
+     C                     Z-ADDROFP13    GP1EXR
+     C                     Z-ADDROFP23    GP2EXR
+     C                     MOVE RETS3     TSEXTR
+     C                     MOVE RUV3      UVEXTR
+     C                     MOVELRESPE3    FLUEXR
+     C                     Z-ADDRCESP3    CFLEXR
+     C                     MOVELRAPLA3    DAPEXR
+     C                     MOVELRGRA3     DDEEXR
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           TIMP4     IFNE *ZEROS
+     C                     Z-ADDTIMP4     TIMPIN
+     C                     MOVE COUL4     COUIN
+     C                     MOVELCOULD4    COUIN
+     C                     Z-ADDENCR4     ENCIN
+     C                     MOVE TS4       TSINT
+     C                     MOVE TVER4     TVEIN
+     C                     Z-ADDCVER4     CVEIN
+     C                     Z-ADDOFPA14    GP1IN
+     C                     Z-ADDOFPA24    GP2IN
+     C                     Z-ADDOFPA34    GP3IN
+     C                     MOVE GRAP4     DDEIN
+     C                     MOVE APLA4     DAPIN
+     C                     MOVE UV4       UVINT
+     C                     MOVE NATE4     NATIN
+     C                     MOVELORCU4     ORIN
+     C                     MOVELESPE4     FLUIN
+     C                     Z-ADDCESPE4    CFLIN
+     C                     Z-ADDENSP4     ESPIN
+F1  C                     END
+D1  C           TREP4     IFNE *ZEROS
+     C                     Z-ADDTREP4     RIMPIN
+     C                     Z-ADDRCOU4     COUINR
+     C                     Z-ADDRENC4     ENCINR
+     C                     MOVE RVER4     TVEINR
+     C                     Z-ADDRCVE4     CVEINR
+     C                     Z-ADDROFP14    GP1INR
+     C                     Z-ADDROFP24    GP2INR
+     C                     MOVE RETS4     TSINTR
+     C                     MOVE RUV4      UVINTR
+     C                     MOVELRESPE4    FLUINR
+     C                     Z-ADDRCESP4    CFLINR
+     C                     MOVELRAPLA4    DAPINR
+     C                     MOVELRGRA4     DDEINR
+F1  C                     END
+    C*
+D1  C           TIMP5     IFNE *ZEROS
+     * OFFSET 3B
+D2  C           TIMP5     IFEQ 4
+    C           OTCO35    ANDGT0
+     C                     Z-ADDTIMP5     TIMPIN
+     C                     MOVE COUL5     COUIN
+     C                     MOVELCOULD5    COUIN
+     C                     MOVE OCOMEI    OCOMRV
+     C                     MOVE OTCO35    OTCOEP
+     C                     Z-ADDOUSI35    USIMAC
+     C                     MOVE OMAC35    OMACEP
+     C                     Z-ADDOGE5P1    OGEIP1
+     C                     Z-ADDOGE5P2    OGEIP2
+     C                     Z-ADDOGE5P3    OGEIP3
+     C                     MOVE OTE15P    OTE1IP
+     C                     MOVE ONE15P    ONE1IP
+     C                     Z-ADDOPE15P    OPE1IP
+     C                     MOVE OTE25P    OTE2IP
+     C                     MOVE ONE25P    ONE2IP
+     C                     Z-ADDOPE25P    OPE2IP
+     C                     MOVELOTOA5P    OTOAIP
+     C                     Z-ADDOPOA5P    OPOAIP
+     C                     MOVE OTEF5P    OTEFIP
+     C                     Z-ADDOPEF5P    OPEFIP
+     C                     Z-ADDOMES5P    OMESIP
+     C                     MOVE OTEM5P    OTEMIP
+     C                     Z-ADDOPEM5P    OPEMIP
+     C                     Z-ADDODP5P     ODPIP
+     C                     MOVE ODF15P    ODF1IP
+     C                     MOVE ODS15P    ODS1IP
+     C                     MOVE ODF25P    ODF2IP
+     C                     MOVE ODS25P    ODS2IP
+     C                     MOVE ODF35P    ODF3IP
+     C                     MOVE ODS35P    ODS3IP
+     C                     MOVE OTV15P    OTV1IP
+     C                     Z-ADDOPV15P    OPV1IP
+     C                     Z-ADDOMV1IP    OMV1IP
+     C                     MOVE OV15P1    OV1IP1
+     C                     MOVE OV15P2    OV1IP2
+     C                     MOVE OV1IP3    OV1IP3
+     C                     MOVE OTV25P    OTV2IP
+     C                     Z-ADDOPV25P    OPV2IP
+     C                     Z-ADDOMV25P    OMV2IP
+     C                     MOVE OV25P1    OV2IP1
+     C                     MOVE OV25P2    OV2IP2
+     C                     MOVE OV25P3    OV2IP3
+     C                     MOVE OTV35P    OTV3IP
+     C                     Z-ADDOPV35P    OPV3IP
+     C                     Z-ADDOMV35P    OMV3IP
+     C                     MOVE OV35P1    OV3IP1
+     C                     MOVE OV35P2    OV3IP2
+     C                     MOVE OV35P3    OV3IP3
+     C                     MOVE OTG5P     OTGIP
+     C                     MOVE OGG5P     OGGIP
+     C                     MOVE ODD5P     ODDIP
+     C                     MOVE ODA5P     ODAIP
+     C                     MOVE OTSS5P    OTSSIP
+     C                     MOVE OTM5P     OTMIP
+X2  C                     ELSE
+     C                     Z-ADDTIMP5     TIMPIN
+     C                     MOVE COUL5     COUIN
+     C                     MOVELCOULD5    COUIN
+     C                     Z-ADDENCR5     ENCIN
+     C                     MOVE TS5       TSINT
+     C                     MOVE TVER5     TVEIN
+     C                     Z-ADDCVER5     CVEIN
+     C                     Z-ADDOFPA15    GP1IN
+     C                     Z-ADDOFPA25    GP2IN
+     C                     Z-ADDOFPA35    GP3IN
+     C                     MOVE GRAP5     DDEIN
+     C                     MOVE APLA5     DAPIN
+     C                     MOVE UV5       UVINT
+     C                     MOVE NATE5     NATIN
+     C                     MOVELORCU5     ORIN
+     C                     MOVELESPE5     FLUIN
+     C                     Z-ADDCESPE5    CFLIN
+     C                     Z-ADDENSP5     ESPIN
+F2  C                     END
+F1  C                     END
+D1  C           TREP5     IFNE *ZEROS
+     * OFFSET 3B
+D2  C           TREP5     IFEQ 4
+    C           OTCO35    ANDGT0
+     C                     Z-ADDTREP5     RIMPIN
+     C                     Z-ADDRCOU5     COUINR
+     C                     Z-ADDOGE5R1    OGEIR1
+     C                     MOVE OTE15R    OTE1IR
+     C                     MOVE ONE15R    ONE1IR
+     C                     Z-ADDOPE15R    OPE1IR
+     C                     Z-ADDOMES5R    OMESIR
+     C                     MOVE OTV15R    OTV1IR
+     C                     Z-ADDOPV15R    OPV1IR
+     C                     Z-ADDOMV15R    OMV1IR
+X2  C                     ELSE
+     C                     Z-ADDTREP5     RIMPIN
+     C                     Z-ADDRCOU5     COUINR
+     C                     Z-ADDRENC5     ENCINR
+     C                     MOVE RVER5     TVEINR
+     C                     Z-ADDRCVE5     CVEINR
+     C                     Z-ADDROFP15    GP1INR
+     C                     Z-ADDROFP25    GP2INR
+     C                     MOVE RETS5     TSINTR
+     C                     MOVE RUV5      UVINTR
+     C                     MOVELRESPE5    FLUINR
+     C                     Z-ADDRCESP5    CFLINR
+     C                     MOVELRAPLA5    DAPINR
+     C                     MOVELRGRA5     DDEINR
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           TIMP6     IFNE *ZEROS
+     C                     Z-ADDTIMP6     TIMPIN
+     C                     MOVE COUL6     COUIN
+     C                     MOVELCOULD6    COUIN
+     C                     Z-ADDENCR6     ENCIN
+     C                     MOVE TS6       TSINT
+     C                     MOVE TVER6     TVEIN
+     C                     Z-ADDCVER6     CVEIN
+     C                     Z-ADDOFPA16    GP1IN
+     C                     Z-ADDOFPA26    GP2IN
+     C                     Z-ADDOFPA36    GP3IN
+     C                     MOVE GRAP6     DDEIN
+     C                     MOVE APLA6     DAPIN
+     C                     MOVE UV6       UVINT
+     C                     MOVE NATE6     NATIN
+     C                     MOVELORCU6     ORIN
+     C                     MOVELESPE6     FLUIN
+     C                     Z-ADDCESPE6    CFLIN
+     C                     Z-ADDENSP6     ESPIN
+F1  C                     END
+D1  C           TREP6     IFNE *ZEROS
+     C                     Z-ADDTREP6     RIMPIN
+     C                     Z-ADDRCOU6     COUINR
+     C                     Z-ADDRENC6     ENCINR
+     C                     MOVE RVER6     TVEINR
+     C                     Z-ADDRCVE6     CVEINR
+     C                     Z-ADDROFP16    GP1INR
+     C                     Z-ADDROFP26    GP2INR
+     C                     MOVE RETS6     TSINTR
+     C                     MOVE RUV6      UVINTR
+     C                     MOVELRESPE6    FLUINR
+     C                     Z-ADDRCESP6    CFLINR
+     C                     MOVELRAPLA6    DAPINR
+     C                     MOVELRGRA6     DDEINR
+F1  C                     END
+    C*
+D1  C           *IN35     IFEQ '1'
+D2  C           NIMPE1    IFNE *BLANKS
+     C                     MOVE NIMPE1    NPI1
+     C                     MOVE NIMPE2    NPI2
+     C           CPREIM    CHAINPREIMP2              95
+     C  N95                MOVE TVERS     TVEEX
+     C  N95                MOVE RVERS     TVEEXR
+F2  C                     END
+D2  C           NIMPI1    IFNE *BLANKS
+     C                     MOVE NIMPI1    NPI1
+     C                     MOVE NIMPI2    NPI2
+     C           CPREIM    CHAINPREIMP2              95
+     C  N95                MOVE TVERS     TVEIN
+     C  N95                MOVE RVERS     TVEINR
+F2  C                     END
+F1  C                     END
+    C*
+D1  C           TIMPEX    IFNE 0
+D2  C           NATMAI    IFEQ '1'
+     C                     MOVE 'C'       MATEC
+F2  C                     END
+D2  C           NATMAI    IFEQ '2'
+     C                     MOVE 'M'       MATEC
+F2  C                     END
+X1  C                     ELSE
+D2  C           TIMPIN    IFNE 0
+D3  C           NATMAI    IFEQ '1'
+     C                     MOVE 'C'       MATIC
+F3  C                     END
+D3  C           NATMAI    IFEQ '2'
+     C                     MOVE 'M'       MATIC
+F3  C                     END
+F2  C                     END
+F1  C                     END
+D1  C           NOFOR     IFNE *ZEROS
+     C                     MOVE 'E'       MATFC
+     C                     Z-ADDNOFOR     MATFM
+F1  C                     END
+    C* SOUS TRAITANCE
+    C*--------------------
+     C                     MOVE EMBA1     STCOD1
+     C                     Z-ADDSTREFA    STREG1
+     C                     Z-ADDSTROFA    STROU1
+     C                     MOVELNOPRUF    STCSO1
+     C                     MOVE PROSOF    STPSO1
+     C                     MOVE EMBA2     STCOD2
+     C                     Z-ADDSTREEX    STREG2
+     C                     Z-ADDSTROEX    STROU2
+     C                     MOVELNOPRUE    STCSO2
+     C                     MOVE QTEM1     STPSO2
+     C                     MOVE CAIS1     STCOD3
+     C                     Z-ADDSTREIN    STREG3
+     C                     Z-ADDSTROIN    STROU3
+     C                     MOVELNOPRUI    STCSO3
+     C                     MOVE QTEM2     STPSO3
+D1  C           STCSO1    IFEQ '0'
+     C                     MOVE *BLANK    STCSO1
+F1  C                     END
+D1  C           STCSO2    IFEQ '0'
+     C                     MOVE *BLANK    STCSO2
+F1  C                     END
+D1  C           STCSO3    IFEQ '0'
+     C                     MOVE *BLANK    STCSO3
+F1  C                     END
+    C* EMBALLAGE
+    C*--------------------
+     C           CLE4      CHAINPALETTL1             51
+     C  N51                MOVE PALTRA    IAEI3
+     C           CLE4      CHAINCAISSEL1             51
+    C* QUANTITE
+    C*--------------------
+     C                     Z-ADDQTTOT     QTTOT1
+D1  C           QTFAB     IFNE *ZEROS
+     C           QTTOT1    DIV  QTFAB     NBFAC1
+F1  C                     END
+     C                     Z-ADDNBLIV     NBLIV1
+D1  C           NBLIV1    IFEQ 0
+     C                     Z-ADDNBFAC1    NBLIV1
+F1  C                     END
+     C                     Z-ADDFRLIV     FRLIV1
+D1  C           FRLIV1    IFEQ 0
+     C                     Z-ADD1         FRLIV1
+F1  C                     END
+D1  C           QTPRE     IFNE *ZEROS
+     C                     Z-ADD1         NBIMP1
+F1  C                     END
+D1  C           QTREN     IFNE *ZEROS
+     C           QTTOT1    SUB  QTPRE     QTREST  70
+     C           QTREST    DIV  QTREN     NBIRE1
+F1  C                     END
+    C*
+D1  C           *IN35     IFEQ '1'
+D2  C           NIMPE1    IFNE *BLANKS
+    C           RIMPEX    ANDEQ*ZEROS
+     C                     MOVE NIMPE1    NPI1
+     C                     MOVE NIMPE2    NPI2
+     C           CPREIM    CHAINPREIMP2              95
+     C  N95                Z-ADDTIMPS     TIMPEX
+F2  C                     END
+D2  C           NIMPI1    IFNE *BLANKS
+    C           RIMPIN    ANDEQ*ZEROS
+     C                     MOVE NIMPI1    NPI1
+     C                     MOVE NIMPI2    NPI2
+     C           CPREIM    CHAINPREIMP2              95
+     C  N95                Z-ADDTIMPS     TIMPIN
+F2  C                     END
+F1  C                     END
+    C*
+    C                     ENDSR
+     C/EJECT
+     *--------------------------------------------------------*
+     *   APPEL PROGRAMME DEV001£                              *
+     *--------------------------------------------------------*
+    C           APPEL     BEGSR
+     *          ---------------
+     C                     Z-ADDRANG      RG
+D1  C           TYPDEV    IFEQ 4
+     C                     CALL 'DEV005£'
+     C                     PARM           DEV001
+X1  C                     ELSE
+     C                     CALL 'DEV001£'
+     C                     PARM           DEV001
+F1  C                     END
+     C                     CLEARDEVISF1
+     C                     Z-ADD*ZEROS    NOPRO
+    C                     ENDSR
+     C/EJECT
+     *--------------------------------------------------------*
+     *   APPEL PROGRAMME OBJECTIF PRODUCTION                  *
+     *--------------------------------------------------------*
+    C           APPEL2    BEGSR
+     *          ---------------
+     C                     MOVE CHOIX     DEV012
+     C                     CALL 'DEV012L'
+     C                     PARM           DEV012
+    C                     ENDSR
+      /EJECT
+     *--------------------------------------------------------*
+     * S/PROGRAMME : TOUCHE CDE 4                             *
+     *--------------------------------------------------------*
+    C           TRTAID    BEGSR
+     *          ---------------
+    C  N62      ZONZON    CASEQ'ANDEV '  AID1
+    C  N62      ZONZON    CASEQ'ETUDE '  AID1
+    C  N62      ZONZON    CASEQ'SEQDE '  AID1
+    C  N62      ZONZON    CASEQ'STE   '  AID3
+    C  N62      ZONZON    CASEQ'NOCLI '  AID3
+    C           *IN62     CASEQ'1'       AID2
+    C                     CAS            AID0
+    C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID0      BEGSR
+     *          ---------------
+     C                     WRITEWMINI
+     C                     EXFMTWERR
+    C                     ENDSR
+      /SPACE 2
+    C           AID1      BEGSR
+     *          ---------------
+     C                     Z-ADD0         RECNO   40
+     C                     Z-ADD0         CPT     40
+     C                     MOVE '1'       *IN93
+     C                     WRITEFMT5
+     C                     MOVEA'00'      *IN,93
+     C   61      CLE1      SETLLOFFRES
+     C   63
+     COR 66N68   CLE1      SETLLDEVISL1
+     C   66 68   CLE7      SETLLDEVISL6
+     C   67
+     COR 64      CLE1      SETLLDEVISL2
+     C   65      CLE1      SETLLETIQUET
+     C           STT3      TAG
+     C   61                READ OFFRES                 9899
+     C   63
+     COR 66N68             READ DEVISL1                9899
+     C   66 68   CLE8      READEDEVISL6                9899
+     C   67
+     COR 64                READ DEVISL2                9899
+     C   65                READ ETIQUET                9899
+    C           *IN98     CABEQ'1'       STT3
+D1  C           *IN99     DOWEQ'0'
+     C           DAID1     TAG
+     C           CLE5      CHAINCLIACHL1             52
+     C                     ADD  1         CPT
+     C                     ADD  1         RECNO
+     C                     MOVE '1'       *IN94
+     C                     WRITEFMT4
+     C           STT4      TAG
+     C   61                READ OFFRES                 9899
+     C   63
+     COR 66N68             READ DEVISL1                9899
+     C   66 68   CLE8      READEDEVISL6                9899
+     C   67
+     COR 64                READ DEVISL2                9899
+     C   65                READ ETIQUET                9899
+    C           *IN98     CABEQ'1'       STT4
+    C           CPT       CABGE17        STAID1
+F1  C                     END
+    C* AFFICHAGE SOUS FICHIER
+    C*-------------------------
+     C           STAID1    TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     EXFMTFMT5
+     C                     Z-ADD0         CPT
+    C           *IN09     CABEQ'1'       DAID1
+    C           *IN02     CABEQ'1'       FAID1
+     C           SAID1     TAG
+     C   94                READCFMT4                     99
+D1  C           CHX       IFEQ *BLANK
+    C  N99                GOTO SAID1
+F1  C                     END
+D1  C           *IN99     IFEQ '1'
+     C  N68                Z-ADD*ZEROS    NOCLI
+     C                     Z-ADD*ZEROS    NOPRO
+     C                     Z-ADD*ZEROS    ANDEV
+     C                     Z-ADD*ZEROS    ETUDE
+     C                     Z-ADD*ZEROS    SEQDE
+F1  C                     END
+    C           FAID1     ENDSR
+      /SPACE 2
+    C           AID2      BEGSR
+     *          ---------------
+     C                     MOVEL'N1'      N1
+     C                     MOVEL'0'       LAN064
+     C                     CALL 'LAN064£'
+     C                     PARM           LAN064
+    C                     ENDSR
+      /SPACE 2
+    C           AID3      BEGSR
+     *          ---------------
+     C                     CLEARDSSC
+     C                     Z-ADDNOCLI     NOCLIW
+     C                     MOVE 'N'       INTOBS
+     C                     CALL 'CLIE10£'
+     C                     PARM           DSSC
+D1  C           STE       IFLE *ZERO
+     C                     Z-ADD*ZEROS    STE
+     C                     Z-ADD*ZEROS    NOCLI
+X1  C                     ELSE
+     C                     Z-ADDNOCLIW    NOCLI
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           DLTOV     BEGSR
+     *          ---------------
+     C                     CLOSEDEVISL1
+     C                     CLOSEDEVIS2
+     C                     CLOSEDEVAMLL1
+D1  C           *IN38     IFEQ '1'
+     C                     CLOSEDEVISL3
+F1  C                     END
+     C                     MOVELOVR,10    OVRDB
+     C                     Z-ADD50        LONG
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG   155
+     C                     MOVELOVR,25    OVRDB
+     C                     Z-ADD50        LONG
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG   155
+     C                     MOVELOVR,33    OVRDB
+     C                     Z-ADD50        LONG
+     C                     CALL 'QCMDEXC'
+     C                     PARM           OVRDB
+     C                     PARM           LONG   155
+    C                     ENDSR
+     C/EJECT
+     *--------------------------------------------------------*
+     *   SOUS PROGRAMME MISE EN SUSPENS                       *
+     *--------------------------------------------------------*
+    C           SPSUS     BEGSR
+     *          ---------------
+     C                     Z-ADD0         RECNO   40
+     C                     MOVE '1'       *IN93
+     C                     WRITEFMT13
+     C                     MOVEA'00'      *IN,93
+     C  N69      *LOVAL    SETLLDEVISL1
+     C   69N68   *LOVAL    SETLLDEVISL6
+     C   69 68   CLE8      SETLLDEVISL6
+     C           STT1      TAG
+     C  N69                READ DEVISL1                9899
+     C   69N68             READ DEVISL6                9899
+     C   69 68   CLE8      READEDEVISL6                9899
+    C           *IN98     CABEQ'1'       STT1
+D1  C           *IN99     DOWEQ'0'
+     C                     ADD  1         RECNO
+     C                     MOVE '1'       *IN94
+     C                     SETON                     80
+     C                     MOVE ' '       BLQ
+     C                     MOVE ' '       FT
+D2  C           TAG1      IFEQ 'B'
+     C                     MOVE 'B'       BLQ
+     C                     MOVE '*'       FT
+     C                     SETOF                     80
+F2  C                     END
+D2  C           TAG1      IFEQ 'S'
+     C                     MOVE 'S'       BLQ
+     C                     MOVE '*'       FT
+     C                     SETOF                     80
+F2  C                     END
+D2  C           TAG1      IFEQ '*'
+     C                     MOVE '*'       FT
+     C                     SETOF                     80
+F2  C                     END
+     C   36                SETOF                     80
+     C   37                SETOF                     80
+     C   32                SETOF                     80
+     C           CLE5      CHAINCLIACHL1             52
+     C                     WRITEFMT12
+     C           STT2      TAG
+     C  N69                READ DEVISL1                9899
+     C   69N68             READ DEVISL6                9899
+     C   69 68   CLE8      READEDEVISL6                9899
+    C           *IN98     CABEQ'1'       STT2
+F1  C                     END
+    C* AFFICHAGE SOUS FICHIER
+    C*-------------------------
+     C                     Z-ADD1         AFFNO
+     C                     Z-ADD1         CPT
+     C                     Z-ADDRECNO     NBR     40
+     C                     EXFMTFMT13
+    C           *IN02     CABEQ'1'       TAG0
+    C           NBR       CABEQ*ZEROS    TAG0
+D1  C           CPT       DOWLENBR
+     C           CPT       CHAINFMT12                99
+     C  N99      CLE1      CHAINDEVISL1              99
+D2  C           *IN99     IFEQ '0'
+D3  C           BLQ       IFEQ 'B'
+     C                     MOVE 'B'       TAG1
+     C                     EXCPTMAJDEV
+X3  C                     ELSE
+D4  C           BLQ       IFEQ 'S'
+     C                     MOVE 'S'       TAG1
+     C                     EXCPTMAJDEV
+X4  C                     ELSE
+D5  C           BLQ       IFEQ ' '
+    C           FT        ANDEQ'*'
+     C                     MOVE '*'       TAG1
+     C                     EXCPTMAJDEV
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     C                     ADD  1         CPT
+F1  C                     END
+    C                     ENDSR
+     *--------------------------------------------------------*
+     *   SOUS PROGRAMME SI PRODST3                            *
+     *--------------------------------------------------------*
+    C           PROD3     BEGSR
+D1  C           *IN70     DOWEQ'0'
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE PAPA      PAPA1
+     C                     MOVE GRAA      GRAA1
+     C                     MOVE REFA      REFA1
+     C                     MOVE GRELA     GRELA1
+     C                     MOVE LA        LA1
+     C                     MOVE HA        HA1
+     C                     MOVE LAIA      LAIA1
+     C                     MOVE IMPA      IMPA1
+     C                     MOVE USA       USA1
+     C                     MOVE COUA      COUA1
+     C                     MOVE ENCA      ENCA1
+     C                     MOVE TSA       TSA1
+     C                     MOVE GRPA      GRPA1
+     C                     MOVE UVA       UVA1
+     C                     MOVE NATA      NATA1
+     C                     MOVE TVEA      TVEA1
+     C                     MOVE CVEA      CVEA1
+     C                     MOVE ORA       ORA1
+     C                     MOVE FLUA      FLUA1
+     C                     MOVE CFLA      CFLA1
+     C                     MOVE ESPA      ESPA1
+     C                     MOVE VSPA      VSPA1
+     C                     MOVE DDEA      DDEA1
+     C                     MOVE DAPA      DAPA1
+     C                     MOVE RIMA1     RIMA11
+     C                     MOVE COUAR     COUA1R
+     C                     MOVE ENCAR     ENCA1R
+     C                     MOVE TSAR      TSA1R
+     C                     MOVE GRPAR     GRPA1R
+     C                     MOVE UVAR      UVA1R
+     C                     MOVE NATAR     NATA1R
+     C                     MOVE TVEAR     TVEA1R
+     C                     MOVE CVEAR     CVEA1R
+     C                     MOVE ORAR      ORA1R
+     C                     MOVE FLUAR     FLUA1R
+     C                     MOVE CFLAR     CFLA1R
+     C                     MOVE ESPAR     ESPA1R
+     C                     MOVE VSPAR     VSPA1R
+     C                     MOVE DDEAR     DDEA1R
+     C                     MOVE DAPAR     DAPA1R
+     C                     MOVE CLIA      CLIA1
+     C                     MOVE CLIAR     CLIA1R
+     C                     MOVE GAUF1     GAUF11
+     C                     MOVE NOGF1     NOGF11
+     C                     MOVE GAUF2     GAUF21
+     C                     MOVE NOGF2     NOGF21
+     C                     MOVE MASSI     MASS11
+     C                     MOVE SSINT     SSINT1
+     C                     MOVE CXHAPI    CXHAI1
+     C                     MOVE USGF1     XSGF11  10
+     C                     MOVE USGF2     XSGF21  10
+     C                     MOVE USMAS     XSMAS1  10
+     C                     MOVE RASPA     RASA11
+     C                     MOVE PI1A      PI1A1
+     C                     MOVE PI2A      PI2A1
+     C                     MOVE SCOD1     SCO1A1
+     C                     MOVE SREG1     SRE1A1
+     C                     MOVE SROU1     SRO1A1
+     C                     MOVE SDEC1     SDE1A1
+     C                     MOVE SCOD2     SCO2A1
+     C                     MOVE SREG2     SRE2A1
+     C                     MOVE SROU2     SRO2A1
+     C                     MOVE SDEC2     SDE2A1
+     C                     MOVE SCOD3     SCO3A1
+     C                     MOVE SRER3     SRE3A1
+     C                     MOVE SROU3     SRO3A1
+     C                     MOVE SDEC3     SDE3A1
+     C                     MOVE WW11      SSA1
+     C                     MOVE WW12      PRDIA1
+     C                     MOVE WW13      PRGRA1
+     C                     MOVE WW14      PROUA1
+     C                     MOVE WW15      PEFFA1
+     C                     MOVE WW16      PDECA1
+     C                     MOVE RETP      RETPA1
+     C                     MOVE ROCA      ROCAA1
+     C                     MOVE SSR       SSA1R
+     C                     MOVE PRDIR     PRDA1R
+     C                     MOVE PRGRR     PRGA1R
+     C                     MOVE PROUR     PROA1R
+     C                     MOVE PEFFR     PEFA1R
+     C                     MOVE PDECR     PDEA1R
+     C                     MOVE RETPR     RETA1R
+     C                     MOVE ROCAR     ROCA1R
+     C                     MOVE SSGA      SSG1
+     C                     MOVE PRDIGA    PRDIG1
+     C                     MOVE PRGRGA    PRGRG1
+     C                     MOVE PROUGA    PROUG1
+     C                     MOVE PEFFGA    PEFFG1
+     C                     MOVE PDECGA    PDECG1
+     C                     MOVE RETPGA    RETPG1
+     C                     MOVE ROCAGA    ROCAG1
+     C                     MOVE SSGB      SSG2
+     C                     MOVE PRDIGB    PRDIG2
+     C                     MOVE PRGRGB    PRGRG2
+     C                     MOVE PROUGB    PROUG2
+     C                     MOVE PEFFGB    PEFFG2
+     C                     MOVE PDECGB    PDECG2
+     C                     MOVE RETPGB    RETPG2
+     C                     MOVE ROCAGB    ROCAG2
+     C                     Z-ADDLFPEAP    LPEAP1
+     C                     Z-ADDLFPEUT    LPEUT1
+     C                     MOVE INVPEL    INVPA1
+     C                     MOVE CODDOR    £CODDO
+     C                     MOVE DNATP1    £NATP1
+     C                     MOVE DDIFP1    £DIFP1
+     C                     MOVE DNATP2    £NATP2
+     C                     MOVE DDIFP2    £DIFP2
+     C                     MOVE DNATP3    £NATP3
+     C                     MOVE DDIFP3    £DIFP3
+     C                     MOVE DNATP4    £NATP4
+     C                     MOVE DDIFP4    £DIFP4
+     C                     MOVE DFPXF1    £FPXF1
+     C                     Z-ADDDSFF1     £SFF1
+     C                     MOVE DNPAF1    £NPAF1
+     C                     MOVE DFPXF2    £FPXF2
+     C                     Z-ADDDSFF2     £SFF2
+     C                     MOVE DNPAF2    £NPAF2
+     C                     MOVE DFPXF3    £FPXF3
+     C                     Z-ADDDSFF3     £SFF3
+     C                     MOVE DNPAF3    £NPAF3
+     C                     MOVE DFPXF4    £FPXF4
+     C                     Z-ADDDSFF4     £SFF4
+     C                     MOVE DNPAF4    £NPAF4
+     C                     MOVE DFPXF5    £FPXF5
+     C                     Z-ADDDSFF5     £SFF5
+     C                     MOVE DNPAF5    £NPAF5
+     C                     MOVE DFPXF6    £FPXF6
+     C                     Z-ADDDSFF6     £SFF6
+     C                     MOVE DNPAF6    £NPAF6
+     C                     MOVE DFPXF7    £FPXF7
+     C                     Z-ADDDSFF7     £SFF7
+     C                     MOVE DNPAF7    £NPAF7
+     C                     MOVE DFPXF8    £FPXF8
+     C                     Z-ADDDSFF8     £SFF8
+     C                     MOVE DNPAF8    £NPAF8
+     C                     MOVE DFPXF9    £FPXF9
+     C                     Z-ADDDSFF9     £SFF9
+     C                     MOVE DNPAF9    £NPAF9
+     C                     MOVE DFPXFA    £FPXFA
+     C                     Z-ADDDSFFA     £SFFA
+     C                     MOVE DNPAFA    £NPAFA
+     C                     MOVE DFPXFB    £FPXFB
+     C                     Z-ADDDSFFB     £SFFB
+     C                     MOVE DNPAFB    £NPAFB
+     C                     MOVE DFPXFC    £FPXFC
+     C                     Z-ADDDSFFC     £SFFC
+     C                     MOVE DNPAFC    £NPAFC
+     C                     MOVE WSD1      SSD1
+     C                     MOVE WRDID1    PRDID1
+     C                     MOVE WRGRD1    PRGRD1
+     C                     MOVE WROUD1    PROUD1
+     C                     MOVE WEFFD1    PEFFD1
+     C                     MOVE WDECD1    PDECD1
+     C                     MOVE WETPD1    RETPD1
+     C                     MOVE WOCAD1    ROCAD1
+     C                     MOVE WSD2      SSD2
+     C                     MOVE WRDID2    PRDID2
+     C                     MOVE WRGRD2    PRGRD2
+     C                     MOVE WROUD2    PROUD2
+     C                     MOVE WEFFD2    PEFFD2
+     C                     MOVE WDECD2    PDECD2
+     C                     MOVE WETPD2    RETPD2
+     C                     MOVE WOCAD2    ROCAD2
+     C                     MOVE WSDA      SSDA
+     C                     MOVE WRDIDA    PRDIDA
+     C                     MOVE WRGRDA    PRGRDA
+     C                     MOVE WROUDA    PROUDA
+     C                     MOVE WEFFDA    PEFFDA
+     C                     MOVE WDECDA    PDECDA
+     C                     MOVE WETPDA    RETPDA
+     C                     MOVE WOCADA    ROCADA
+     C                     MOVE WSDB      SSDB
+     C                     MOVE WRDIDB    PRDIDB
+     C                     MOVE WRGRDB    PRGRDB
+     C                     MOVE WROUDB    PROUDB
+     C                     MOVE WEFFDB    PEFFDB
+     C                     MOVE WDECDB    PDECDB
+     C                     MOVE WETPDB    RETPDB
+     C                     MOVE WOCADB    ROCADB
+     C                     Z-ADDGP1       GP1A1
+     C                     Z-ADDGP2       GP2A1
+     C                     Z-ADDGP3       GP3A1
+     C                     Z-ADDGP1R      GP1A1R
+     C                     Z-ADDGP2R      GP2A1R
+     * 3B
+     C                     Z-ADDATCOP     ATCOEP
+     C                     MOVE AMACP     AMACEP
+     * USINE DE LA MACHINE AFFICHE STOKÉE DANS MATA1M
+     C                     Z-ADDAUSIP     MATA1M
+     C                     Z-ADDAGEP1     AGEEP1
+     C                     Z-ADDAGEP2     AGEEP2
+     C                     Z-ADDAGEP3     AGEEP3
+     C                     MOVE ATE1P     ATE1EP
+     C                     MOVE ANE1P     ANE1EP
+     C                     Z-ADDAPE1P     APE1EP
+     C                     MOVE ATE2P     ATE2EP
+     C                     MOVE ANE2P     ANE2EP
+     C                     Z-ADDAPE2P     APE2EP
+     C                     MOVE ATOAP     ATOAEP
+     C                     Z-ADDAPOAP     APOAEP
+     C                     MOVE ATEFP     ATEFEP
+     C                     Z-ADDAPEFP     APEFEP
+     C                     Z-ADDAMESP     AMESEP
+     C                     MOVE ATEMP     ATEMEP
+     C                     Z-ADDAPEMP     APEMEP
+     C                     Z-ADDADPP      ADPEP
+     C                     MOVE ADF1P     ADF1EP
+     C                     MOVE ADF2P     ADF2EP
+     C                     MOVE ADF3P     ADF3EP
+     C                     Z-ADDADS1P     ADS1EP
+     C                     Z-ADDADS2P     ADS2EP
+     C                     Z-ADDADS3P     ADS3EP
+     C                     MOVE ATV1P     ATV1EP
+     C                     Z-ADDAPV1P     APV1EP
+     C                     Z-ADDAMV1P     AMV1EP
+     C                     MOVE AV1P1     AV1EP1
+     C                     MOVE AV1P2     AV1EP2
+     C                     MOVE AV1P3     AV1EP3
+     C                     MOVE ATV2P     ATV2EP
+     C                     Z-ADDAPV2P     APV2EP
+     C                     Z-ADDAMV2P     AMV2EP
+     C                     MOVE AV2P1     AV2EP1
+     C                     MOVE AV2P2     AV2EP2
+     C                     MOVE AV2P3     AV2EP3
+     C                     MOVE ATV3P     ATV3EP
+     C                     Z-ADDAPV3P     APV3EP
+     C                     Z-ADDAMV3P     AMV3EP
+     C                     MOVE AV3P1     AV3EP1
+     C                     MOVE AV3P2     AV3EP2
+     C                     MOVE AV3P3     AV3EP3
+     C                     MOVE ADPRP     ADPREP
+     C                     MOVE ATGP      ATGEP
+     C                     MOVE AGGP      AGGEP
+     C                     MOVE ADDP      ADDEP
+     C                     MOVE ADAP      ADAEP
+     C                     MOVE ATSSP     ATSSEP
+     C                     MOVE ATMP      ATMEP
+     C                     Z-ADDAGER1     AGEER1
+     C                     MOVE ATE1R     ATE1ER
+     C                     MOVE ANE1R     ANE1ER
+     C                     Z-ADDAPE1R     APE1ER
+     C                     Z-ADDAMESR     AMESER
+     C                     MOVE ATV1R     ATV1ER
+     C                     Z-ADDAPV1R     APV1ER
+     C                     Z-ADDAMV1R     AMV1ER
+F2  C                     END
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVELNOPROX    X1      10
+     C                     MOVE PAPA      PAPA2
+     C                     MOVE GRAA      GRAA2
+     C                     MOVE REFA      REFA2
+     C                     MOVE GRELA     GRELA2
+     C                     MOVE LA        LA2
+     C                     MOVE HA        HA2
+     C                     MOVE LAIA      LAIA2
+     C                     MOVE IMPA      IMPA2
+     C                     MOVE USA       USA2
+     C                     MOVE COUA      COUA2
+     C                     MOVE ENCA      ENCA2
+     C                     MOVE TSA       TSA2
+     C                     MOVE GRPA      GRPA2
+     C                     MOVE UVA       UVA2
+     C                     MOVE NATA      NATA2
+     C                     MOVE TVEA      TVEA2
+     C                     MOVE CVEA      CVEA2
+     C                     MOVE ORA       ORA2
+     C                     MOVE FLUA      FLUA2
+     C                     MOVE CFLA      CFLA2
+     C                     MOVE ESPA      ESPA2
+     C                     MOVE VSPA      VSPA2
+     C                     MOVE DDEA      DDEA2
+     C                     MOVE DAPA      DAPA2
+     C                     MOVE RIMA1     RIMA12
+     C                     MOVE COUAR     COUA2R
+     C                     MOVE ENCAR     ENCA2R
+     C                     MOVE TSAR      TSA2R
+     C                     MOVE GRPAR     GRPA2R
+     C                     MOVE UVAR      UVA2R
+     C                     MOVE NATAR     NATA2R
+     C                     MOVE TVEAR     TVEA2R
+     C                     MOVE CVEAR     CVEA2R
+     C                     MOVE ORAR      ORA2R
+     C                     MOVE FLUAR     FLUA2R
+     C                     MOVE CFLAR     CFLA2R
+     C                     MOVE ESPAR     ESPA2R
+     C                     MOVE VSPAR     VSPA2R
+     C                     MOVE DDEAR     DDEA2R
+     C                     MOVE DAPAR     DAPA2R
+     C                     MOVE CLIA      CLIA2
+     C                     MOVE CLIAR     CLIA2R
+     C                     MOVE GAUF1     GAUF12
+     C                     MOVE NOGF1     NOGF12
+     C                     MOVE GAUF2     GAUF22
+     C                     MOVE NOGF2     NOGF22
+     C                     MOVE MASSI     MASS12
+     C                     MOVE SSINT     SSINT2
+     C                     MOVE CXHAPI    CXHAI2
+     C                     MOVE USGF1     XSGF12  10
+     C                     MOVE USGF2     XSGF22  10
+     C                     MOVE USMAS     XSMAS2  10
+     C                     MOVE RASPA     RASA21
+     C                     MOVE PI1A      PI1A2
+     C                     MOVE PI2A      PI2A2
+     C                     MOVE SCOD1     SCO1A2
+     C                     MOVE SREG1     SRE1A2
+     C                     MOVE SROU1     SRO1A2
+     C                     MOVE SDEC1     SDE1A2
+     C                     MOVE SCOD2     SCO2A2
+     C                     MOVE SREG2     SRE2A2
+     C                     MOVE SROU2     SRO2A2
+     C                     MOVE SDEC2     SDE2A2
+     C                     MOVE SCOD3     SCO3A2
+     C                     MOVE SRER3     SRE3A2
+     C                     MOVE SROU3     SRO3A2
+     C                     MOVE SDEC3     SDE3A2
+     C                     MOVE WW11      SSA2
+     C                     MOVE WW12      PRDIA2
+     C                     MOVE WW13      PRGRA2
+     C                     MOVE WW14      PROUA2
+     C                     MOVE WW15      PEFFA2
+     C                     MOVE WW16      PDECA2
+     C                     MOVE RETP      RETPA2
+     C                     MOVE ROCA      ROCAA2
+     C                     MOVE SSR       SSA2R
+     C                     MOVE PRDIR     PRDA2R
+     C                     MOVE PRGRR     PRGA2R
+     C                     MOVE PROUR     PROA2R
+     C                     MOVE PEFFR     PEFA2R
+     C                     MOVE PDECR     PDEA2R
+     C                     MOVE RETPR     RETA2R
+     C                     MOVE ROCAR     ROCA2R
+     C                     MOVE SSGA      SSG3
+     C                     MOVE PRDIGA    PRDIG3
+     C                     MOVE PRGRGA    PRGRG3
+     C                     MOVE PROUGA    PROUG3
+     C                     MOVE PEFFGA    PEFFG3
+     C                     MOVE PDECGA    PDECG3
+     C                     MOVE RETPGA    RETPG3
+     C                     MOVE ROCAGA    ROCAG3
+     C                     MOVE SSGB      SSG4
+     C                     MOVE PRDIGB    PRDIG4
+     C                     MOVE PRGRGB    PRGRG4
+     C                     MOVE PROUGB    PROUG4
+     C                     MOVE PEFFGB    PEFFG4
+     C                     MOVE PDECGB    PDECG4
+     C                     MOVE RETPGB    RETPG4
+     C                     MOVE ROCAGB    ROCAG4
+     C                     Z-ADDLFPEAP    LPEAP2
+     C                     Z-ADDLFPEUT    LPEUT2
+     C                     MOVE INVPEL    INVPA2
+     C                     MOVE CODDOR    $CODDO
+     C                     MOVE DNATP1    $NATP1
+     C                     MOVE DDIFP1    $DIFP1
+     C                     MOVE DNATP2    $NATP2
+     C                     MOVE DDIFP2    $DIFP2
+     C                     MOVE DNATP3    $NATP3
+     C                     MOVE DDIFP3    $DIFP3
+     C                     MOVE DNATP4    $NATP4
+     C                     MOVE DDIFP4    $DIFP4
+     C                     MOVE DFPXF1    $FPXF1
+     C                     Z-ADDDSFF1     $SFF1
+     C                     MOVE DNPAF1    $NPAF1
+     C                     MOVE DFPXF2    $FPXF2
+     C                     Z-ADDDSFF2     $SFF2
+     C                     MOVE DNPAF2    $NPAF2
+     C                     MOVE DFPXF3    $FPXF3
+     C                     Z-ADDDSFF3     $SFF3
+     C                     MOVE DNPAF3    $NPAF3
+     C                     MOVE DFPXF4    $FPXF4
+     C                     Z-ADDDSFF4     $SFF4
+     C                     MOVE DNPAF4    $NPAF4
+     C                     MOVE DFPXF5    $FPXF5
+     C                     Z-ADDDSFF5     $SFF5
+     C                     MOVE DNPAF5    $NPAF5
+     C                     MOVE DFPXF6    $FPXF6
+     C                     Z-ADDDSFF6     $SFF6
+     C                     MOVE DNPAF6    $NPAF6
+     C                     MOVE DFPXF7    $FPXF7
+     C                     Z-ADDDSFF7     $SFF7
+     C                     MOVE DNPAF7    $NPAF7
+     C                     MOVE DFPXF8    $FPXF8
+     C                     Z-ADDDSFF8     $SFF8
+     C                     MOVE DNPAF8    $NPAF8
+     C                     MOVE DFPXF9    $FPXF9
+     C                     Z-ADDDSFF9     $SFF9
+     C                     MOVE DNPAF9    $NPAF9
+     C                     MOVE DFPXFA    $FPXFA
+     C                     Z-ADDDSFFA     $SFFA
+     C                     MOVE DNPAFA    $NPAFA
+     C                     MOVE DFPXFB    $FPXFB
+     C                     Z-ADDDSFFB     $SFFB
+     C                     MOVE DNPAFB    $NPAFB
+     C                     MOVE DFPXFC    $FPXFC
+     C                     Z-ADDDSFFC     $SFFC
+     C                     MOVE DNPAFC    $NPAFC
+     C                     MOVE WSD1      SSD3
+     C                     MOVE WRDID1    PRDID3
+     C                     MOVE WRGRD1    PRGRD3
+     C                     MOVE WROUD1    PROUD3
+     C                     MOVE WEFFD1    PEFFD3
+     C                     MOVE WDECD1    PDECD3
+     C                     MOVE WETPD1    RETPD3
+     C                     MOVE WOCAD1    ROCAD3
+     C                     MOVE WSD2      SSD4
+     C                     MOVE WRDID2    PRDID4
+     C                     MOVE WRGRD2    PRGRD4
+     C                     MOVE WROUD2    PROUD4
+     C                     MOVE WEFFD2    PEFFD4
+     C                     MOVE WDECD2    PDECD4
+     C                     MOVE WETPD2    RETPD4
+     C                     MOVE WOCAD2    ROCAD4
+     C                     MOVE WSDA      SSDC
+     C                     MOVE WRDIDA    PRDIDC
+     C                     MOVE WRGRDA    PRGRDC
+     C                     MOVE WROUDA    PROUDC
+     C                     MOVE WEFFDA    PEFFDC
+     C                     MOVE WDECDA    PDECDC
+     C                     MOVE WETPDA    RETPDC
+     C                     MOVE WOCADA    ROCADC
+     C                     MOVE WSDB      SSDD
+     C                     MOVE WRDIDB    PRDIDD
+     C                     MOVE WRGRDB    PRGRDD
+     C                     MOVE WROUDB    PROUDD
+     C                     MOVE WEFFDB    PEFFDD
+     C                     MOVE WDECDB    PDECDD
+     C                     MOVE WETPDB    RETPDD
+     C                     MOVE WOCADB    ROCADD
+     C                     Z-ADDGP1       GP1A2
+     C                     Z-ADDGP2       GP2A2
+     C                     Z-ADDGP3       GP3A2
+     C                     Z-ADDGP1R      GP1A2R
+     C                     Z-ADDGP2R      GP2A2R
+     * 3B
+     C                     Z-ADDATCOP     ATCOEP
+     C                     MOVE AMACP     AMACEP
+     * USINE DE LA MACHINE AFFICHE STOKÉE DANS MATA1M
+     C                     Z-ADDAUSIP     MATA1M
+     C                     Z-ADDAGEP1     AGEIP1
+     C                     Z-ADDAGEP2     AGEIP2
+     C                     Z-ADDAGEP3     AGEIP3
+     C                     MOVE ATE1P     ATE1IP
+     C                     MOVE ANE1P     ANE1IP
+     C                     Z-ADDAPE1P     APE1IP
+     C                     MOVE ATE2P     ATE2IP
+     C                     MOVE ANE2P     ANE2IP
+     C                     Z-ADDAPE2P     APE2IP
+     C                     MOVE ATOAP     ATOAIP
+     C                     Z-ADDAPOAP     APOAIP
+     C                     MOVE ATEFP     ATEFIP
+     C                     Z-ADDAPEFP     APEFIP
+     C                     Z-ADDAMESP     AMESIP
+     C                     MOVE ATEMP     ATEMIP
+     C                     Z-ADDAPEMP     APEMIP
+     C                     Z-ADDADPP      ADPIP
+     C                     MOVE ADF1P     ADF1IP
+     C                     MOVE ADF2P     ADF2IP
+     C                     MOVE ADF3P     ADF3IP
+     C                     Z-ADDADS1P     ADS1IP
+     C                     Z-ADDADS2P     ADS2IP
+     C                     Z-ADDADS3P     ADS3IP
+     C                     MOVE ATV1P     ATV1IP
+     C                     Z-ADDAPV1P     APV1IP
+     C                     Z-ADDAMV1P     AMV1IP
+     C                     MOVE AV1P1     AV1IP1
+     C                     MOVE AV1P2     AV1IP2
+     C                     MOVE AV1P3     AV1IP3
+     C                     MOVE ATV2P     ATV2IP
+     C                     Z-ADDAPV2P     APV2IP
+     C                     Z-ADDAMV2P     AMV2IP
+     C                     MOVE AV2P1     AV2IP1
+     C                     MOVE AV2P2     AV2IP2
+     C                     MOVE AV2P3     AV2IP3
+     C                     MOVE ATV3P     ATV3IP
+     C                     Z-ADDAPV3P     APV3IP
+     C                     Z-ADDAMV3P     AMV3IP
+     C                     MOVE AV3P1     AV3IP1
+     C                     MOVE AV3P2     AV3IP2
+     C                     MOVE AV3P3     AV3IP3
+     C                     MOVE ATGP      ATGIP
+     C                     MOVE AGGP      AGGIP
+     C                     MOVE ADDP      ADDIP
+     C                     MOVE ADAP      ADAIP
+     C                     MOVE ATSSP     ATSSIP
+     C                     MOVE ATMP      ATMIP
+     C                     Z-ADDAGER1     AGEIR1
+     C                     MOVE ATE1R     ATE1IR
+     C                     MOVE ANE1R     ANE1IR
+     C                     Z-ADDAPE1R     APE1IR
+     C                     Z-ADDAMESR     AMESIR
+     C                     MOVE ATV1R     ATV1IR
+     C                     Z-ADDAPV1R     APV1IR
+     C                     Z-ADDAMV1R     AMV1IR
+F2  C                     END
+     C           CLE2      READEPRODS3L1                 70
+F1  C                     END
+     *          ---------------
+D1  C           PAPA1     IFNE *BLANKS
+    C           PAPA2     ANDNE*BLANKS
+    C           X1        ANDEQ8
+     C                     MOVE '*'       VAVR
+F1  C                     END
+     C                     WRITEDEVIS2F1
+    C                     ENDSR
+     *--------------------------------------------------------*
+     *   SOUS PROGRAMME SI CODBAR                             *
+     *--------------------------------------------------------*
+    C           PROAML    BEGSR
+D1  C           *IN70     DOWEQ'0'
+     C                     MOVELREFCO     DESAML
+     C                     MOVE CLICO     DESAML
+     C                     Z-ADD0         SEQAML
+     C                     WRITEDEVAMLF
+     C           CLE10     READECODBARL2                 70
+F1  C                     END
+    C                     ENDSR
+     ODEVISF1 E                MAJDEV
+     O                         TAG1
+     O        E                MAJBID
+     ODEVSIM  E                MAJDES
+     O                         TAG1
+     O                         TAG2
+     O                         TYPDEV
+     O                         DIRPRF
+** OVR **
+DLTOVR *ALL                                                   1
+OVRDBF FILE(DEVISL1) MBR(DEVIS)    SHARE(*YES)                2
+OVRDBF FILE(DEVISL1) MBR(PANEL)                               3
+OVRDBF FILE(DEVISL1) MBR(SIMULBE)  SHARE(*YES)                4
+OVRDBF FILE(DEVISL1) MBR(SIMUL)    SHARE(*YES)                5
+OVRDBF FILE(DEVISL2) MBR(DEVIS)                               6
+OVRDBF FILE(DEVISL2) MBR(PANEL)                               7
+OVRDBF FILE(DEVISL2) MBR(SIMULBE)                             8
+OVRDBF FILE(DEVISL2) MBR(DEVIS)                               9
+DLTOVR FILE(DEVISL1)                                          10
+OVRDBF FILE(DEVISL1) MBR(ENQUETE)                             11
+OVRDBF FILE(DEVISL2) MBR(ENQUETE)                             12
+OVRDBF FILE(DEVISL1) MBR(PANSOF)                              13
+OVRDBF FILE(DEVISL2) MBR(PANSOF)                              14
+OVRDBF FILE(DEVISL1) MBR(PREIMP)                              15
+OVRDBF FILE(DEVISL2) MBR(PREIMP)                              16
+CLOF   OPNID(DEVISL1)                                         17
+OVRDBF FILE(DEVIS2) MBR(DEVIS)                                18
+OVRDBF FILE(DEVIS2) MBR(PANEL)                                19
+OVRDBF FILE(DEVIS2) MBR(SIMULBE)                              20
+OVRDBF FILE(DEVIS2) MBR(SIMUL)                                21
+OVRDBF FILE(DEVIS2) MBR(ENQUETE)                              22
+OVRDBF FILE(DEVIS2) MBR(PANSOF)                               23
+OVRDBF FILE(DEVIS2) MBR(PREIMP)                               24
+DLTOVR FILE(DEVIS2)                                           25
+OVRDBF FILE(DEVAMLL1) MBR(DEVIS)                              26
+OVRDBF FILE(DEVAMLL1) MBR(PANEL)                              27
+OVRDBF FILE(DEVAMLL1) MBR(SIMULBE)                            28
+OVRDBF FILE(DEVAMLL1) MBR(SIMUL)                              29
+OVRDBF FILE(DEVAMLL1) MBR(ENQUETE)                            30
+OVRDBF FILE(DEVAMLL1) MBR(PANSOF)                             31
+OVRDBF FILE(DEVAMLL1) MBR(PREIMP)                             32
+DLTOVR FILE(DEVAMLL1)                                         33
+OVRDBF FILE(DEVISL3) MBR(PREIMP)                              34
+** SB **
+SBMJOB JOB(XXXXXXXX) JOBD(QBATCH) OUTQ(*CURRENT) RQSDTA('CALL DEVCALL PARM(XX)')
+ CURLIB(*CURRENT) INLLIBL(*CURRENT)
+** SB1 **
+SBMJOB JOB(ENQUETES) JOBD(QBATCH) OUTQ(*CURRENT) RQSDTA('CALL ENQCALL PARM(''1''
+ ''1234'')') CURLIB(*CURRENT) INLLIBL(*CURRENT)
+** SC1
+OPNQRYF FILE((DEVISL1 DEVIS))   OPTION(*ALL) QRYSLT('DIRPRF = ''1234567890'' *AN
+D TAG2 *EQ '' '' *AND TYPDEV *NE 0') KEYFLD((ANDEV) (ETUDE) (SEQDE))
+** SC2
+OPNQRYF FILE((DEVISL1 SIMULBE)) OPTION(*ALL) QRYSLT('DIRPRF = ''1234567890'' *AN
+D TAG2 *EQ '' '' *AND TYPDEV *NE 0') KEYFLD((ANDEV) (ETUDE) (SEQDE))
+** SC3
+OPNQRYF FILE((DEVISL1 SIMUL))   OPTION(*ALL) QRYSLT('DIRPRF = ''1234567890'' *AN
+D TAG2 *EQ '' '' *AND TYPDEV *NE 0') KEYFLD((ANDEV) (ETUDE) (SEQDE))

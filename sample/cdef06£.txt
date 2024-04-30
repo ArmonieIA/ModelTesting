@@ -1,0 +1,3182 @@
+      *%CSTD===========================================================*
+      ** Application. : EMAGE      Logiciel métier DS Smith            *
+      ** Composant. . : CDEF06£                       Type: RPG        *
+      **===============================================================*
+      ** Sous-système :                                                *
+      ** Fonction . . :                                                *
+      ** Sous-fonction:                                                *
+      **%S=============================================================*
+      ** Description des fonctionnalités:                              *
+      **                                                               *
+      **                                                               *
+      **                                                               *
+      **%E=============================================================*
+      ** AUTEUR:                          00:00                        *
+      ** MODIFS: 05 NOUZIERES  24/03/2021 12:17  90.89.00 FM 21/   84  *
+      **           saisie tva due ou pas pour pays hors cee            *
+      **         04 NOUZIERES  24/03/2021 10:00  01.05.29 FM 21/   82  *
+      **           modif code TVA si HORS CEE                          *
+      **         03 NOUZIERES  27/01/2021 16:30  01.04.80 FM 21/   25  *
+      **           correction bug si reception non faite               *
+      **         02 TMALRE     17/11/2020 13:43  01.04.34 FM 21/   25  *
+      **         01 NOUZIERES  04/07/2019 16:20  01.01.48 FM 21/   25  *
+      *%ECSTD==========================================================*
+     *----------------------------------------------------------------
+     *
+     *                  ==============================
+     *                          P A P I E R S
+     *                  ==============================
+     *
+     *----------------------------------------------------------------
+     *          PROGRAMME DE SAISIE DES FACTURES DE PAPIERS
+     *----------------------------------------------------------------
+     *
+     * Créé le : 28/10/98  par François LEBRUN
+     * à partir de l'ancien réalisé par CORGNET le 4/09/85
+     * de façon à changer la cinématique et d'intégrer l'EURO
+     *
+     * Nom du programme : CDEF06£
+     *
+     *
+     * 03/2000: PRISE EN COMPTE CHABANAIS
+     *
+     *
+     *
+     * Modif : 30/04/2015  Par : Philippe Le Cardinal                *
+     * But   : Suppression du fichier "Siecle" & recherche du siècle *
+     *  via le fichier CALENAL0 (AA/MM/JJ)                           *
+     *---------------------------------------------------------------*
+     * Modif : xx/xx/xxxx  Par : Xxxxxxxxxxxxxxxxxxxxxxxxx           *
+     * But   : Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx *
+     *----------------------------------------------------------------
+     * Liste des Indicateurs :
+     *----------------------------------------------------------------
+     *
+     * 01 à 25 : Touches de fonctions et Options écrans
+     *
+     *----------------------------------------------------------------
+     * IN03 : F3
+     * IN12 : F12
+     *----------------------------------------------------------------
+     FCDEF06D CF  E                    WORKSTN
+     F                                        RECN5 KSFILE F5S
+     F                                        RECN6 KSFILE F6S
+     F                                        RECN6 KSFILE F9S
+     F                                        RECN12KSFILE F12S
+     F                                        RECN17KSFILE F17S
+     F                                        RECN21KSFILE MAWS21
+     F                                        RECN23KSFILE MAWS23
+     F                                        RECN24KSFILE MAWS24
+     F                                        RECN25KSFILE MAWS25
+     F                                        RECDN KSFILE WAS
+     F                                              KINFDS àINFDS
+     * Fichier des Fournisseurs
+     FFOURNIL1IF  E           K        DISK
+     FFOURNIL2IF  E           K        DISK
+     F            FOURNIF1                          KRENAMEFOURNIF2
+     FFOURNIL7IF  E           K        DISK
+     F            FOURNIF1                          KRENAMEFOURNIF7
+     * Fichier des Sociétés Fournies
+     FFOUSTEL1IF  E           K        DISK
+     * Fichier des Factures papiers enregistrées
+     FFCFOUTL3IF  E           K        DISK
+     F            FCFOUTF1                          KRENAMEFCFOUTF2
+     * Fichier des Livraisons de papiers, non Facturées
+     FLIVFOUL1IF  E           K        DISK         KINFDS RECNBR
+     * Fichier Physique des livraisons
+     FLIVFOU  IF  E                    DISK
+     F            LIVFOUF1                          KRENAMELIVFOUF2
+     * Fichier des Qualités Fournisseurs
+     FQUAFOUL2IF  E           K        DISK
+     * Fichier des Qualités par usines
+     FQUAUSI  IF  E           K        DISK
+     * Fichier de Travail de saisie des Factures
+    FFCFOUDW UF  E           K        DISK                      A
+     * Fichier de Travail de saisie des Factures
+    FFCFOUWL1UF  E           K        DISK
+     F            FCFOUDW1                          KRENAMEFCFOUDW2
+     * Fichier des commandes
+     FPAPCDLL1IF  E           K        DISK
+     * Fichier des Paramètres
+     FPARAME  IF  E           K        DISK
+     * Fichier ANAËL : Tables
+     FFAN100P1IF  E           K        DISK
+     * FICHIER CALENDRIER PAR JOURS
+     FCALENS  IF  E           K        DISK
+     * Fichier des ANNEES
+     *--- Début --- Philippe  --- 30/04/2015 --*
+     * - suppression du ficheir siécle pour récupérer le siécle car il existe
+     * dans le fichier CALENS; Utilisation de ce dernier pour le rechercher
+    F**SIECLE  IF  E           K        DISK
+     FCALENAL0IF  E           K        DISK
+     F            CALENDF1                          KRENAMECALENDF2
+     *--- Fin   --- Philippe  --- 30/04/2015 --*
+     * Fichier des Périodes COMPTABLES
+     FINFACHA IF  E           K        DISK
+     * Fichiers mis à jour en sortie :
+    FFCFOUD  O   E                    DISK                      A
+    FFCFOUT  O   E                    DISK                      A
+    FSAMI350 O   E                    DISK                      A
+     * Fichier ANAËL : Coefficient des monnaies
+     FNAN405L1IF  E           K        DISK
+     *
+     FDEVISEL1IF  E           K        DISK
+     *
+     FPAPCDEL8IF  E           K        DISK
+     * Fichiers papiers FSC
+    FMVTFSC  O   E                    DISK
+     *
+    FSOLFSCL1UF  E           K        DISK                      A
+     * Fichier fournisseurs plateforme PSP
+     FFOUPSPL2IF  E           K        DISK
+     *
+     *----------------------------------------------------------------
+     * Tableaux
+     *----------------------------------------------------------------
+     * Table des mois
+     *
+     E                    D       1  12  2 0
+     *
+     * Table des montants à convertir
+     *
+     E                    TZO        10 15 2
+     *
+     *----------------------------------------------------------------
+     * Zones renommées
+     *----------------------------------------------------------------
+     *
+     IFOURNIF1
+     I              SUIVI                           SUIVIX
+     *
+     IFOURNIF2
+     I              SUIVI                           SUIVIX
+     *
+     IFOURNIF7
+     I              NOFOU                           YNOFOU
+     I              NOMFOU                          YNOMFO
+     I              RAIFOU                          YRAIFO
+     I              RUEFOU                          YRUEFO
+     I              VILFOU                          YVILFO
+     I              DEPFOU                          YDEPFO
+     I              CPFOU                           YCPFOU
+     I              BDFOU                           YBDFOU
+     I              CPAYFO                          YCPAYF
+     I              PAYFOU                          YPAYFO
+     I              TELFOU                          YTELFO
+     I              TEXFOU                          YTEXFO
+     I              TELEFO                          YTELEF
+     I              PRCFO1                          YPRCF1
+     I              FONFO1                          YFONF1
+     I              PRCFO2                          YPRCF2
+     I              FONFO2                          YFONF2
+     I              PRCFO3                          YPRCF3
+     I              FONFO3                          YFONF3
+     I              PRCFO4                          YPRCF4
+     I              FONFO4                          YFONF4
+     I              ABRFOU                          YABRFO
+     I              ANCFOU                          YANCFO
+     I              FOUCLI                          YFOUCL
+     I              CORECH                          YCOREC
+     I              CORJOU                          YCORJO
+     I              FDM                             YFDM
+     I              COREGL                          YCOREG
+     I              ESCPT                           YESCPT
+     I              AGIOS                           YAGIOS
+     I              SUIVI                           YSUIVI
+     I              ANNUL                           YANNUL
+     I              ACRE                            YACRE
+     I              MCRE                            YMCRE
+     I              JCRE                            YJCRE
+     I              INICRE                          YINICR
+     I              AMAJ                            YAMAJ
+     I              MMAJ                            YMMAJ
+     I              JMAJ                            YJMAJ
+     I              INIMAJ                          YINIMA
+     I              SEQADR                          YSEQAD
+     I              TVAFOU                          YTVAFO
+     *
+     IPAPCDLF1
+     I              STE                             STE001
+     I              SCOM                            SCO001
+     I              ANCOM                           ANC001
+     I              NOCOM                           NOC001
+     I              TYPCOM                          TYP001
+     I              USCOM                           USC001
+     I              USFACT                          USF001
+     I              LIEULI                          LIE001
+     I              CONDAC                          CON001
+     I              NOFOU                           NOF001
+     I              SEQADR                          SEQA01
+     I              ABRFOU                          ABR001
+     I              SEQCOM                          SEQC01
+     I              STALIG                          STA001
+     I              REFUSC                          REFU01
+     I              REFACO                          REFA01
+     I              REFNUM                          REFN01
+     I              REFNLG                          REFL01
+     I              QUALQT                          QUA001
+     I              FAMIL                           FAM001
+     I              SFAMI                           SFA001
+     I              PAPI                            PAPI01
+     I              GRAMM                           GRA001
+     I              REFOUR                          REFO01
+     I              GRAREL                          GRA001
+     I              FOUB                            FOU001
+     I              LAIZE                           LAI001
+     I              FORL                            FOR001
+     I              FORH                            FOR001
+     I              DIAMAN                          DIA001
+     I              DIABOB                          DIA001
+     I              PUNIT                           PUN001
+     I              QTMARC                          QTM001
+     I              QTPERM                          QTP001
+     I              QTECOM                          QTE001
+     I              QTCLIV                          QTC001
+     I              FEUCOM                          FEU001
+     I              FECLIV                          FEC001
+     I              ANPREV                          ANP001
+     I              MPREV                           MPR001
+     I              JPREV                           JPR001
+     I              SPREV                           SPR001
+     I              CODEL                           CODE01
+     I              AADEL                           AAD001
+     I              MMDEL                           MMD001
+     I              JJDEL                           JJD001
+     I              SEDEL                           SED001
+     I              JSDEL                           JSD001
+     I              NOJOUR                          NOJ001
+     I              DACHEM                          DAC001
+     I              TOLMIN                          TOL001
+     I              TOLMAX                          TOL001
+     I              PUCOM                           PUC001
+     I              CODPRI                          CODP01
+     I              UFACTU                          UFA001
+     I              UVALOR                          UVA001
+     I              EQUIV                           EQU001
+     I              REMREL                          REMR01
+     I              REMABS                          REMA01
+     I              PAPFOU                          PAPF01
+     I              QTLIV                           QTL001
+     I              FEULIV                          FEU001
+     I              ARECEP                          ARE001
+     I              MRECEP                          MRE001
+     I              JRECEP                          JRE001
+     I              SOLDIS                          SOL001
+     I              SOLDIF                          SOL001
+     I              ARAPL                           ARA001
+     *
+     IFCFOUDW1
+     I              PAPI                            PAPIW
+     I              GRAMM                           GRAMMW
+     I              REFOUR                          REFOUW
+     I              GRAREL                          GRAREW
+     I              FOUB                            FOUBW
+     *
+     IDEVISEF1
+     I              NOMDEV                          LBDEV
+     I              CODMON                          RCDEV
+     *
+     IPAPCDEF1
+     I              STE                             STEYYY
+     I              NOCOM                           NOCOYY
+     I              TYPCOM                          TYPCYY
+     I              SCOM                            SCOMYY
+     I              ANCOM                           ANCOYY
+     I              MCOM                            MCOMYY
+     I              JCOM                            JCOMYY
+     I              USCOM                           USCOYY
+     I              USFACT                          USFAYY
+     I              LIEULI                          LIEUYY
+     I              PRFGES                          PRFGYY
+     I              CONDAC                          CONDYY
+     I              NOFOU                           NOFOYY
+     I              SEQADR                          SEQAYY
+     I              ABRFOU                          ABRFYY
+     I              STACDE                          STACYY
+     I              CDEDI                           CDEDYY
+     I              VISAR                           VISAYY
+     I              SCAR                            SCARYY
+     I              AAAR                            AAARYY
+     I              MMAR                            MMARYY
+     I              JJAR                            JJARYY
+     I              DERLIG                          DERLYY
+     I              ANEDIT                          ANEDYY
+     I              MMEDIT                          MMEDYY
+     I              JJEDIT                          JJEDYY
+     I              HHEDIT                          HHEDYY
+     I              MNEDIT                          MNEDYY
+     I              SSEDIT                          SSEDYY
+     I              AAMAJ                           AAMAYY
+     I              MMMAJ                           MMMAYY
+     I              JJMAJ                           JJMAYY
+     I              HHMAJ                           HHMAYY
+     I              MNMAJ                           MNMAYY
+     I              VERMAJ                          VERMYY
+     I              ARAPL                           ARAPYY
+     I              CONFCD                          CONFYY
+     *
+     IQUAFOUF1
+     I              IMPORT                          TYPFSC
+     *
+     *----------------------------------------------------------------
+     * Structures (DS)
+     *----------------------------------------------------------------
+     *
+     * DS Pour récupération des infos écran
+     *
+     IàINFDS      DS
+     I                                    B 370 3710£CURSO
+     *
+     * DS des paramètres du Programme
+     *
+     I£PARAM      DS                              1
+     I                                        1   10£USINE
+     *
+     * DS pour découpage de date JJ/MM/SSAA
+     *
+     IDS1         DS
+     I                                        1   80£DATN8
+     I                                        1   20£JJN
+     I                                        3   60£AMN
+     I                                        3   40£MMN
+     I                                        5   60£SSN
+     I                                        7   80£AAN
+     I                                        5   80£SAN
+     *
+     I            DS
+     I                                        1   40SAECHE
+     I                                        1   20SECHE
+     I                                        3   40AECHE
+     *
+     * DS pour découpage de date SSAA/MM/JJ
+     *
+     IDS2         DS
+     I                                        1   80£DATER
+     I                                        3   80£DATR6
+     I                                        1   40£SIR
+     I                                        1   20£SSR
+     I                                        3   60£AMR
+     I                                        3   40£AAR
+     I                                        5   60£MMR
+     I                                        7   80£JJR
+     *
+     * DS pour découpage de date JJ/MM/AA
+     *
+     I            DS
+     I                                        1   80WDATE
+     I                                        1   20WJJDT
+     I                                        3   40WMMDT
+     I                                        7   80WAADT
+     *
+     * DS Qualité
+     *
+     IDS3         DS
+     I                                        1  16 £QUAL
+     I                                        1   3 PAPI
+     I                                        4   60GRAMM
+     I                                        7  12 REFOUR
+     I                                       13  150GRAREL
+     I                                       16  16 FOUB
+     *
+     * DS Qualité de référence
+     *
+     IDS4         DS
+     I                                        1  16 £QUAL5
+     I                                        1   3 PAPI5
+     I                                        4   60GRAMM5
+     I                                        7  12 REFOU5
+     I                                       13  150GRARE5
+     I                                       16  16 FOUB5
+     IRECNBR      DS
+     I                                    B 397 4000£RECNB
+     *
+     * Appel du programme FOU010£
+     *
+     I£PAR10      DS
+     I                                        1   20STACH
+     I                                        3   6 NOFOU
+     I                                        7  21 ABRFOU
+     I                                       22  29 NOFACF
+     I                                       30  350DATFAC
+     I                                       36  380COPROV
+     I                                       39  472VALFA2
+     I                                       48  480USINE
+     I                                       49  560TPDFAC
+     I                                       57  580AIMPUT
+     I                                       59  600MIMPUT
+     I                                       61  61 LIE001
+     *
+     * PAPDTA : DTAARA des PAPIERS
+     * Récupération du n° de CHRONO
+     IPAPDTA     UDS                            256
+     I                                        1   60£CHRON
+     * Paramètres d'appel de l'europette
+     IDTPARM      DS                        164
+     I                                        1 150 TZO
+     I                                      151 153 DORIG
+     I                                      154 156 DDEST
+     I I            0                       157 1635CRS
+     I                                      164 164 COEFF
+     *
+     *----------------------------------------------------------------
+     * Description de variables
+     *----------------------------------------------------------------
+     *
+     C           *LIKE     DEFN PXARGU    WCLE
+     C           *LIKE     DEFN PXVALE    WNUM
+     C           *LIKE     DEFN QTEREC    WPDS
+     C           *LIKE     DEFN FEUREC    WFEU
+     C           *LIKE     DEFN PIMPUT    WPIMPU
+     C           *LIKE     DEFN MONIMP    WMONIM
+     C           *LIKE     DEFN VALFAC    FACDEV
+     C           *LIKE     DEFN VALHT     HTDEV
+     C           *LIKE     DEFN NETFAC    WNETFA
+     C           *LIKE     DEFN MONTAN    WONTAN
+     *
+     *----------------------------------------------------------------
+     * Description de clés
+     *----------------------------------------------------------------
+     *
+     C           KSTE1     KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           STEFOU
+     *
+     C           KPARAM    KLIST
+     C                     KFLD           WCLE
+     C                     KFLD           WNUM
+     *
+     C           KPAR      KLIST
+     C                     KFLD           WCLE
+     *
+     C           KFOUT     KLIST
+     C                     KFLD           £USINE
+     C                     KFLD           STACH
+     C                     KFLD           NOFOU
+     C                     KFLD           NOFACF
+     *
+     C           KCAL      KLIST
+     C                     KFLD           £SSN
+     C                     KFLD           £AAN
+     C                     KFLD           £MMN
+     C                     KFLD           £JJN
+     *
+     C           KFAN1     KLIST
+     C                     KFLD           RSTE
+     C                     KFLD           RCT
+     *
+     C           KFAN2     KLIST
+     C                     KFLD           RSTE
+     C                     KFLD           RCT
+     C                     KFLD           RARG
+     *
+     C           KLIV      KLIST
+     C                     KFLD           STACH
+     C                     KFLD           £USINE
+     C                     KFLD           NOFOU
+     *
+     C           KLIV2     KLIST
+     C                     KFLD           STACH
+     C                     KFLD           £USINE
+     C                     KFLD           NOFOU
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     *
+     C           KQUAFO    KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     *
+     C           KQUAF2    KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           PAPI5
+     C                     KFLD           GRAMM5
+     C                     KFLD           REFOU5
+     C                     KFLD           GRARE5
+     C                     KFLD           FOUB5
+     *
+     C           KFOUD     KLIST
+     C                     KFLD           £USINE
+     C                     KFLD           PAPI5
+     C                     KFLD           GRAMM5
+     C                     KFLD           REFOU5
+     C                     KFLD           GRARE5
+     C                     KFLD           FOUB5
+     *
+     C           KFOUD2    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           LAIZE
+     C                     KFLD           FORL
+     C                     KFLD           FORH
+     C                     KFLD           RELATI  60
+     *
+     C           KFOUD3    KLIST
+     C                     KFLD           £USINE
+     C                     KFLD           WCOMPT
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     *
+     C           KFOUD4    KLIST
+     C                     KFLD           £USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     *
+     C           KCDL      KLIST
+     C                     KFLD           USCOM
+     C                     KFLD           SS
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     C                     KFLD           SEQCOM
+     *
+     C           KACHAT    KLIST
+     C                     KFLD           CODAP
+     C                     KFLD           STACH
+     C                     KFLD           £USINE
+     C                     KFLD           SIMPUT
+     C                     KFLD           AIMPUT
+     C                     KFLD           MIMPUT
+     *
+     C           KPAPCD    KLIST
+     C                     KFLD           NOFOU
+    C***                  KFLD           SEQADR
+     C                     KFLD           USCOM
+     C                     KFLD           SCOMYY
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     *
+     *----------------------------------------------------------------
+     * Paramètres en Entrées/sorties
+     *----------------------------------------------------------------
+     *
+     C           *ENTRY    PLIST
+     C                     PARM           £PARAM
+     *
+     *----------------------------------------------------------------
+     * Moniteur (gestion du programme)
+     *----------------------------------------------------------------
+     *
+D1  C           ACTION    IFEQ *BLANKS
+     C                     MOVE 'INIPGM'  ACTION  6        Ini- 1ere actio
+F1  C                     END
+     *
+     * INIT FLAG FIN PROGRAMME :
+     *
+     C                     MOVE 'N'       FIN     1
+     *
+     * TANT QUE PAS FIN :
+     *
+D1  C           FIN       DOWNE'O'
+     *
+    C           ACTION    CASEQ'INIPGM'  INIPGM           Ini-Programme
+     *
+    C           ACTION    CASEQ'INIEC1'  INIEC1           Ini-1er Ecran
+    C           ACTION    CASEQ'AFFEC1'  AFFEC1           Affi-1er Ecran
+    C           ACTION    CASEQ'CTLEC1'  CTLEC1           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'AFFEC2'  AFFEC2           Affi-2em Ecran
+     *
+    C           ACTION    CASEQ'INIEC3'  INIEC3           Ini-3em Ecran
+    C           ACTION    CASEQ'AFFEC3'  AFFEC3           Affi-3em Ecran
+    C           ACTION    CASEQ'CTLEC3'  CTLEC3           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'INIEC4'  INIEC4           Ini-4em Ecran
+    C           ACTION    CASEQ'AFFEC4'  AFFEC4           Affi-4em Ecran
+    C           ACTION    CASEQ'CTLEC4'  CTLEC4           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'INISF5'  INISF5           Ini-5em Ecran
+    C           ACTION    CASEQ'CHGSF5'  CHGSF5           Chgt-5em Ecran
+    C           ACTION    CASEQ'AFFSF5'  AFFSF5           Affi-5em Ecran
+    C           ACTION    CASEQ'CTLSF5'  CTLSF5           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'INISF6'  INISF6           Ini-6em Ecran
+    C           ACTION    CASEQ'CHGSF6'  CHGSF6           Chgt-6em Ecran
+    C           ACTION    CASEQ'CHGSFM'  CHGSFM           Chgt-6em Ecran Modif
+    C           ACTION    CASEQ'AFFSF6'  AFFSF6           Affi-6em Ecran
+    C           ACTION    CASEQ'CTLSF6'  CTLSF6           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'INISF7'  INISF7           Ini-7em Ecran
+    C           ACTION    CASEQ'CHGSF7'  CHGSF7           Chgt-7em Ecran
+    C           ACTION    CASEQ'AFFSF7'  AFFSF7           Affi-7em Ecran
+    C           ACTION    CASEQ'CTLSF7'  CTLSF7           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'INIEC8'  INIEC8           Ini-8em Ecran
+    C           ACTION    CASEQ'AFFEC8'  AFFEC8           Affi-8em Ecran
+    C           ACTION    CASEQ'CTLEC8'  CTLEC8           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'INISF9'  INISF9           Ini-9em Ecran
+    C           ACTION    CASEQ'AFFSF9'  AFFSF9           Affi-9em Ecran
+    C           ACTION    CASEQ'CTLSF9'  CTLSF9           Contrôle Ecran
+     *
+    C           ACTION    CASEQ'FINPGM'  FINPGM           Fin-Programme
+     *
+    C                     CAS            ERRMON           Erreur Moniteur
+     *
+    C                     END
+F1  C                     END
+     *
+     C           FINLR     TAG
+     C                     SETON                     LR    Fin Programme
+     *
+     *----------------------------------------------------------------
+     * INIPGM : Initialisation des données Programme
+     *----------------------------------------------------------------
+     *
+    C           INIPGM    BEGSR
+     *
+     * LIBERATION DE LA DTAARA
+     C                     OUT  *NAMVAR
+     *
+D1  C           £USINE    IFEQ 7
+     C                     Z-ADD4         STACH   20
+X1  C                     ELSE
+     C                     Z-ADD1         STACH
+F1  C                     END
+     *  Recherche du libellé de l'usine
+     C                     MOVE *BLANKS   WCLE
+     C                     MOVE *BLANKS   WNUM
+     C                     MOVEL'USIN'    WCLE
+     C                     MOVE £USINE    WNUM
+     C           KPARAM    CHAINPARAME               55
+     C  N55                MOVELPXLIBE    LIBUSI
+     C   55                MOVE 'FINPGM'  ACTION
+     *
+     C                     MOVE *BLANKS   NOFOU
+     C                     Z-ADDSTACH     STEFOU
+     *
+     C  N55                MOVE 'INIEC1'  ACTION
+     *
+     C                     Z-ADD0         RECN5   30
+     C                     Z-ADD0         RECN6   30
+     C                     Z-ADD0         RECN12  30
+     C                     Z-ADD0         RECN17  30
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INIEC1 : Initialisation du premier écran
+     *----------------------------------------------------------------
+     *
+    C           INIEC1    BEGSR
+     *
+     * RAZ indicateur pour afficher le total FSC dans l'entête
+     C                     MOVE '0'       *IN01
+     C                     Z-ADD0         POIFSC
+     C                     Z-ADD0         PKGFSC
+     *
+     * RÀZ des zones de totalisation de la facture :
+     *
+     C                     Z-ADD0         BRUREM  82
+     C                     Z-ADD0         PDSTOT  80
+     C                     Z-ADD0         TOTMAT
+     *
+     * Initialisation du sous fichier récap de la facture
+     *
+     C                     MOVEA'100'     *IN,65
+     C                     WRITEF17C
+     *
+     C                     MOVEA'010'     *IN,65
+     C                     WRITEF17C
+     *
+     C                     MOVEA'00000'   *IN,65
+     C                     Z-ADD0         RECN17
+     C                     Z-ADD0         WREC17  30
+     C                     MOVE '1'       *IN67
+     C                     Z-ADD0         CLIT6
+     C                     Z-ADD0         TOTHT6
+     C                     Z-ADD0         ECART6
+     *
+     * RÀZ DU COMPTEUR DE QUALITÉS :
+     C                     Z-ADD0         WCPT    30
+     *
+     C                     MOVE 'AFFEC1'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFEC1 : Affichage du premier écran
+     *----------------------------------------------------------------
+     *
+    C           AFFEC1    BEGSR
+     *
+     C                     EXFMTF1
+     *
+     C                     MOVE '0'       *IN10
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVE 'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN04     IFEQ '1'
+     C                     EXSR FENETR
+     C                     MOVE 'AFFEC1'  ACTION
+X2  C                     ELSE
+     C                     MOVE 'CTLEC1'  ACTION
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLEC1 : Contrôle du premier écran
+     *----------------------------------------------------------------
+     *
+    C           CTLEC1    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     *
+     * Le Fournisseur doit exister et travailler pour la société de saisie
+     *
+     C           NOFOU     CHAINFOURNIL1             51
+     C   51                MOVE '1'       *IN30
+     C   51                MOVE '1'       *IN99
+    C   51                GOTO FCTEC1
+     *
+     C           KSTE1     SETLLFOUSTEL1                 51
+     C  N51                MOVE '1'       *IN31
+     C  N51                MOVE '1'       *IN99
+    C  N51                GOTO FCTEC1
+     *
+     * Le fournisseur doit avoir des livraisons en attente de Facturation
+     *
+     C           KLIV      SETLLLIVFOUL1                 51
+     C  N51                MOVE '1'       *IN32
+     C  N51                MOVE '1'       *IN99
+    C  N51                GOTO FCTEC1
+     *
+     *
+     * S'AGIT-IL D'UN FOURNISSEUR DE LA PLATEFORME PSP ?
+     C           NOFOU     SETLLFOUPSPL2                 57
+D1  C           *IN57     IFEQ '1'
+     C           '5004'    CHAINFOURNIL7             51
+F1  C                     ENDIF
+     *
+     C           FCTEC1    TAG
+D1  C           *IN99     IFEQ '1'
+     C                     MOVE 'AFFEC1'  ACTION
+X1  C                     ELSE
+     C                     MOVE 'AFFEC2'  ACTION
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFEC2 : Affichage du premier écran
+     *----------------------------------------------------------------
+     *
+    C           AFFEC2    BEGSR
+     *
+     C                     EXFMTF2
+     *
+     C   03                MOVEL'FINPGM'  ACTION
+     C   12                MOVEL'AFFEC1'  ACTION
+     C  N03N12             MOVEL'INIEC3'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INIEC3 : Initialisation du troisième écran
+     *----------------------------------------------------------------
+     *
+    C           INIEC3    BEGSR
+     *
+     C                     Z-ADD0         DAFOU1
+     C                     Z-ADD0         HDATFA
+     C                     MOVEL*BLANKS   NOFACF
+     C                     Z-ADD0         VALFAC
+     C                     Z-ADD0         VALTVA
+     C                     Z-ADD0         BASTA3
+     C                     Z-ADD0         ESCOMT
+D1  C  N57      ESCPT     IFNE 0
+     C                     MOVE '1'       *IN81
+X1  C                     ELSE
+     C                     MOVE '0'       *IN81
+F1  C                     END
+D1  C   57      YESCPT    IFNE 0
+     C                     MOVE '1'       *IN81
+X1  C                     ELSE
+     C                     MOVE '0'       *IN81
+F1  C                     END
+     * Pas encore eu de F12 sur l'écran 4 :
+     C                     MOVE '0'       £ECR4   1
+     *
+     C                     MOVEL'AFFEC3'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFEC3 : Initialisation du troisième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFEC3    BEGSR
+     *
+     C  N99                WRITEF3B
+     C                     EXFMTF3
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVEL'FINPGM'  ACTION
+X1  C                     ELSE
+     C                     MOVEL'CTLEC3'  ACTION
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLEC3 : Initialisation du troisième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLEC3    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     *
+     * Saisie de la date de facturation :
+     *
+     C                     Z-ADDDAFOU1    £DATN8
+     C                     EXSR CTLDAT
+D1  C           £ERR      IFEQ '1'
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * La date de la facture ne doit pas être supérieure à la date du jour :
+     *
+     C                     Z-ADDUDAY      £JJR
+     C                     Z-ADDUMONTH    £MMR
+     C                     Z-ADD*YEAR     £SIR
+     C                     Z-ADD£DATER    WDJOUR  80
+     C                     Z-ADD£JJN      £JJR
+     C                     Z-ADD£MMN      £MMR
+     C                     Z-ADD£AAN      £AAR
+     C                     Z-ADD£SSN      £SSR
+D1  C           £DATER    IFGT WDJOUR
+     C                     MOVE '1'       *IN31
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * L'année de la facture ne peut exéder un an :
+     *
+     C                     Z-ADD*YEAR     WANJOU  40
+     C           WANJOU    SUB  £SIR      WANJOU
+D1  C           WANJOU    IFGT 1
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * Renseignement de la date de facture :
+     *
+     C                     Z-ADD£JJN      JFAFOU
+     C                     Z-ADD£MMN      MFAFOU
+     C                     Z-ADD£AAN      AFAFOU
+     C                     Z-ADD£SSN      SFAFOU
+     *
+     * Saisie du numéro de facture :
+     *
+D1  C           NOFACF    IFEQ *BLANKS
+     C                     MOVE '1'       *IN32
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * Le n° de facture ne doit pas déjà exister
+     *
+     C           KFOUT     SETLLFCFOUTL3                 33
+D1  C           *IN33     IFEQ '1'
+D2  C           *IN44     IFEQ '1'
+     C                     MOVE '0'       *IN44
+     C                     MOVE '0'       *IN33
+X2  C                     ELSE
+     C                     MOVE '1'       *IN44
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F2  C                     END
+F1  C                     END
+     *
+     * Saisie du montant T.T.C :
+     *
+D1  C           VALFAC    IFEQ 0
+     C                     MOVE '1'       *IN34
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * Saisie de la base taxable :
+     *
+D1  C           BASTA3    IFEQ 0
+     C                     MOVE '1'       *IN35
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * Montant de T.V.A. non saisi : Message d'info.
+     *
+D1  C           VALTVA    IFEQ 0
+D2  C           *IN40     IFEQ '0'
+     C                     MOVE '1'       *IN40
+     C                     MOVE '1'       *IN37
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F2  C                     END
+D2  C           *IN41     IFEQ '0'
+D3  C           VALFAC    IFNE BASTA3
+     C                     MOVE '1'       *IN41
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     * T.V.A. Saisie : contrôle de la validité :
+     *
+D1  C           VALTVA    IFNE 0
+     C           VALFAC    SUB  BASTA3    WTVA    92
+D2  C           WTVA      IFNE VALTVA
+     C                     MOVE '1'       *IN38
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F2  C                     END
+F1  C                     END
+     * Précalcul de l'escompte si le fournisseur a un taux habituel
+     * Formule :
+     * ((Base Taxable * 100) / (100 - Taux escompte)) * (Taux Escompte/100)
+D1  C  N57      ESCPT     IFNE 0
+     C           BASTA3    MULT 100       WVAR1  110
+     C           100       SUB  ESCPT     WVAR2   52
+     C           WVAR1     DIV  WVAR2     WVAR3   92H
+     C           WVAR3     MULT ESCPT     WESCPT  92
+     C           WESCPT    DIV  100       WESCPT    H
+X1  C                     ELSE
+     C                     Z-ADD0         WESCPT
+F1  C                     END
+D1  C   57      YESCPT    IFNE 0
+     C           BASTA3    MULT 100       WVAR1
+     C           100       SUB  YESCPT    WVAR2
+     C           WVAR1     DIV  WVAR2     WVAR3     H
+     C           WVAR3     MULT YESCPT    WESCPT
+     C           WESCPT    DIV  100       WESCPT    H
+X1  C                     ELSE
+     C                     Z-ADD0         WESCPT
+F1  C                     END
+     *
+     * Saisie de l'escompte :
+     *
+     C           VALFAC    SUB  VALTVA    WHT     92
+D1  C           ESCOMT    IFGE VALFAC
+    C           ESCOMT    ORGE WHT
+     C                     MOVE '1'       *IN36
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * Si le fournisseur pratique l'escompte, alors contrôle qu'un
+     * montant d'escompte équivallent à celui calculé soit saisi.
+     * (Message d'information)
+     *
+D1  C           *IN82     IFEQ '0'
+    C           *IN81     ANDEQ'1'
+    C           WESCPT    ANDNEESCOMT
+     C                     MOVE '1'       *IN82
+     C                     MOVE '1'       *IN39
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR3
+F1  C                     END
+     *
+     * période de comptabilisation :
+     * Cette dernière est déterminée en fonction de la date de la pièce
+     * comptable, la facture en l'occurence.
+     * Si la période comptable d'imputation calculée est fermée, alors il faut
+     * rechercher la première période suivante ouverte
+     *
+     C                     Z-ADD1         CODAP
+     C                     Z-ADDMFAFOU    MIMPUT
+     C                     Z-ADDAFAFOU    AIMPUT
+     *--- Début --- Philippe  --- 30/04/2015 --*
+     * - Mise ne commentaire car utilisation de CALENAL0 pour recherche de
+     * valeur siècle
+    C**         AIMPUT    CHAINSIECLE               52
+    C**                   Z-ADDSS        SIMPUT
+     *
+     C           AIMPUT    CHAINCALENAL0             52
+     C  N52                Z-ADDCALSS     SIMPUT
+     C   52                Z-ADD20        SIMPUT
+D1  C   52      AIMPUT    IFGE 90
+     C                     Z-ADD19        SIMPUT
+F1  C                     ENDIF
+     *--- Fin   --- Philippe  --- 30/04/2015 --*
+     C           KACHAT    SETLLINFACHA                  51
+     * Si la période est non trouvée, alors elle est ouverte, il est possible
+     * d'imputer la facture sur le mois de la date de pièce,
+     * Par contre, si elle est trouvée, alors c'est qu'elle a été fermée
+     * par la COMPTA, donc il faut imputer sur la période suivant la dernière
+     * fermée
+D1  C           *IN51     DOWEQ'1'
+     C                     ADD  1         MIMPUT
+D2  C           MIMPUT    IFEQ 13
+     C                     Z-ADD1         MIMPUT
+     C                     ADD  1         AIMPUT
+     *--- Début --- Philippe  --- 30/04/2015 --*
+     * - Mise ne commentaire car utilisation de CALENAL0 pour recherche de
+     * valeur siècle
+    C**         AIMPUT    CHAINSIECLE               52
+    C**                   Z-ADDSS        SIMPUT
+     *
+     C           AIMPUT    CHAINCALENAL0             52
+     C  N52                Z-ADDCALSS     SIMPUT
+     C   52                Z-ADD20        SIMPUT
+D3  C   52      AIMPUT    IFGE 90
+     C                     Z-ADD19        SIMPUT
+F3  C                     ENDIF
+     *--- Fin   --- Philippe  --- 30/04/2015 --*
+F2  C                     END
+     C           KACHAT    SETLLINFACHA                  51
+F1  C                     END
+     *
+     C           ERR3      TAG
+D1  C           *IN99     IFEQ '1'
+     C                     MOVEL'AFFEC3'  ACTION
+X1  C                     ELSE
+     * Si la TVA est à zéro, il faudra réclamer le pays de provenance.
+D2  C           VALTVA    IFEQ 0
+     C                     MOVE '1'       *IN87
+X2  C                     ELSE
+     C                     MOVE '0'       *IN87
+F2  C                     END
+     C                     MOVEL'INIEC4'  ACTION
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INIEC4 : Initialisation du quatrième écran
+     *----------------------------------------------------------------
+     *
+    C           INIEC4    BEGSR
+     *
+     C                     Z-ADD0         HLIG
+     C                     Z-ADD0         HCOL
+     *
+     C                     Z-ADDVALFAC    VALHT
+     C                     SUB  VALTVA    VALHT
+     C                     ADD  ESCOMT    VALHT
+     *
+D1  C           £ECR4     IFEQ '0'
+     *
+     C                     MOVEL'EUR'     CODMON
+     C           CODMON    CHAINDEVISEL1             55
+     C                     MOVELLBDEV     LIBMO3
+     C                     MOVE *BLANKS   CODPA3
+     C                     MOVE *BLANKS   LIBPA3
+     C                     MOVE *BLANKS   HCEE
+     C                     MOVE *BLANKS   WCLE
+     C                     MOVE *BLANKS   WNUM
+     *
+     C                     MOVEL'MRGF'    WCLE
+     C  N57                MOVE COREGL    WNUM
+     C   57                MOVE YCOREG    WNUM
+     C           KPARAM    CHAINPARAME               55
+     C   55                MOVE *BLANKS   LIBRG4
+     C  N55                MOVELPXLIBE    LIBRG4
+     *
+F1  C                     END
+     *
+     *
+D1  C           HDATFA    IFNE DAFOU1
+     *
+     * Calcul de la date d'échéance :
+     *
+     C                     Z-ADDDAFOU1    £DATN8
+     *
+     C  N57      CORECH    DIV  30        JOUR    40
+     C   57      YCOREC    DIV  30        JOUR
+     C           £MMN      ADD  JOUR      MOIS    40
+D2  C           MOIS      IFGT 12
+     C           MOIS      SUB  12        MECHE   20
+     C           £SAN      ADD  1         SAECHE  40
+X2  C                     ELSE
+     C                     Z-ADDMOIS      MECHE
+     C                     Z-ADD£SAN      SAECHE
+F2  C                     END
+     C                     Z-ADD£JJN      JECHE   20
+     *
+D2  C  N57      CORJOU    IFNE *ZEROS
+     C                     MOVE CORJOU    JECHE
+F2  C                     END
+D2  C   57      YCORJO    IFNE *ZEROS
+     C                     MOVE YCORJO    JECHE
+F2  C                     END
+     *
+D2  C  N57      FDM       IFEQ *BLANKS
+    C           CORJOU    ANDNE0
+    C           £JJN      ANDGTCORJOU
+     C                     ADD  1         MECHE
+D3  C           MECHE     IFGT 12
+     C           MECHE     SUB  12        MECHE
+     C           £SAN      ADD  1         SAECHE
+F3  C                     END
+F2  C                     END
+D2  C   57      YFDM      IFEQ *BLANKS
+    C           YCORJO    ANDNE0
+    C           £JJN      ANDGTYCORJO
+     C                     ADD  1         MECHE
+D3  C           MECHE     IFGT 12
+     C           MECHE     SUB  12        MECHE
+     C           £SAN      ADD  1         SAECHE
+F3  C                     END
+F2  C                     END
+     *
+D2  C  N57      FDM       IFNE *BLANKS
+D3  C           CORJOU    IFNE *ZEROS
+     C                     ADD  1         MECHE
+D4  C           MECHE     IFGT 12
+     C                     SUB  12        MECHE
+     C                     ADD  1         SAECHE
+F4  C                     END
+F3  C                     END
+F2  C                     END
+D2  C   57      YFDM      IFNE *BLANKS
+D3  C           YCORJO    IFNE *ZEROS
+     C                     ADD  1         MECHE
+D4  C           MECHE     IFGT 12
+     C                     SUB  12        MECHE
+     C                     ADD  1         SAECHE
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     * (les BIDU & BIDUL ne sont pas de moi et je n'ai pas envie de
+     * les renommer...!)
+D2  C  N57      FDM       IFNE *BLANKS
+D3  C           CORJOU    IFEQ *ZEROS
+     C                     Z-ADDD,MECHE   JECHE
+D4  C           MECHE     IFEQ 2
+     C           AECHE     DIV  4         BIDUL   20
+     C                     MVR            BIDU    20
+D5  C           BIDU      IFEQ *ZEROS
+    C           AECHE     ANDNE0
+     C                     Z-ADD29        JECHE
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+D2  C   57      YFDM      IFNE *BLANKS
+D3  C           YCORJO    IFEQ *ZEROS
+     C                     Z-ADDD,MECHE   JECHE
+D4  C           MECHE     IFEQ 2
+     C           AECHE     DIV  4         BIDUL   20
+     C                     MVR            BIDU    20
+D5  C           BIDU      IFEQ *ZEROS
+    C           AECHE     ANDNE0
+     C                     Z-ADD29        JECHE
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+     C                     Z-ADDJECHE     £JJN
+     C                     Z-ADDMECHE     £MMN
+     C                     Z-ADDAECHE     £AAN
+     C                     Z-ADDSECHE     £SSN
+     C                     Z-ADD£DATN8    DATEC3
+     *
+     * sauvegarde de la date pour savoir si elle a été modifiée par
+     * l'utilisateur après son calcul :
+     C                     Z-ADDDAFOU1    HDATFA
+     *
+F1  C                     END
+     *
+     C                     MOVEL'AFFEC4'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFEC4 : Affichage du quatrième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFEC4    BEGSR
+     *
+     C  N99                WRITEF3
+     C                     EXFMTF4
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVEL'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN12     IFEQ '1'
+     C                     MOVE '1'       £ECR4
+     C                     Z-ADD0         HLIG
+     C                     Z-ADD0         HCOL
+     C                     MOVE 'AFFEC3'  ACTION
+X2  C                     ELSE
+D3  C           *IN04     IFEQ '1'
+     C                     EXSR FENETR
+     C                     MOVEL'AFFEC4'  ACTION
+X3  C                     ELSE
+     C                     MOVEL'CTLEC4'  ACTION
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLEC4 : Contrôle du quatrième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLEC4    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     *
+     * La date d'échéance doit être correcte :
+     *
+     C                     Z-ADDDATEC3    £DATN8
+     C                     EXSR CTLDAT
+D1  C           £ERR      IFEQ '1'
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR4
+F1  C                     END
+     *
+     * Le code Monnaie doit être correct :
+     *
+     C           CODMON    CHAINDEVISEL1             55
+     C  N55                MOVELLBDEV     LIBMO3
+     C   55                MOVE '1'       *IN31
+     C   55                MOVE '1'       *IN99
+    C   55                GOTO ERR4
+     *
+     * Avec de la tVA, la monnaie ne peut être que FRANCS ou EURO :
+     *
+D1  C           *IN87     IFEQ '0'
+D2  C           CODMON    IFNE 'EUR'
+     C                     MOVE '1'       *IN32
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR4
+F2  C                     END
+F1  C                     END
+     *
+     * Le code Pays doit être correct s'il y en a un à saisir
+     *
+D1  C           *IN87     IFEQ '1'
+     *
+     C                     MOVE *BLANKS   WCLE
+     C                     MOVE *BLANKS   WNUM
+     C                     MOVEL'TPAY'    WCLE
+     C                     MOVE CODPA3    WNUM
+     C           KPARAM    CHAINPARAME               55
+     C   55                MOVE '1'       *IN33
+     C   55                MOVE '1'       *IN99
+    C   55                GOTO ERR4
+     C                     MOVELPXMONT    PXMT   100
+D2  C           PXMT      IFEQ 99
+     C                     MOVEL'E'       HCEE
+X2  C                     ELSE
+     C                     MOVEL' '       HCEE
+F2  C                     END
+     C                     MOVELPXLIBE    LIBPA3
+D2  C           CODPA3    IFEQ '001'
+D3  C           CODMON    IFNE 'FRF'
+    C           CODMON    ANDNE'EUR'
+     C                     MOVE '1'       *IN35
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR4
+F3  C                     END
+F2  C                     END
+    C* DEMANDE SI TVA DUE PAR LE PRENEUR
+D2  C*          HCEE      IFEQ 'E'
+     C           CODPA3    IFNE '001'
+     C                     MOVE 'NON'     TVAPRE
+     C                     EXFMTF20W
+F2  C                     END
+F1  C                     END
+     *
+     C           ERR4      TAG
+     C   99                MOVEL'AFFEC4'  ACTION
+     C  N99                MOVEL'INISF5'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INISF5 : Initialisation du cinquième écran
+     *----------------------------------------------------------------
+     *
+    C           INISF5    BEGSR
+     *
+     C                     MOVEA'100'     *IN,70
+     C                     WRITEF5C
+     *
+     C                     MOVEA'010'     *IN,70
+     C                     WRITEF5C
+     *
+     C                     MOVEA'00000'   *IN,70
+     C                     Z-ADD0         RECN5
+     *
+     C                     Z-ADD0         HLIG
+     C                     Z-ADD0         HCOL
+     *
+     * Ràz de l'indicateur de modification de qualité déjà saisie :
+     C                     MOVE '0'       *IN86
+     * Ràz de l'indicateur de Bloquage du F12 sur les sous fichier suivant
+     C                     MOVE '0'       *IN88
+     *
+     C                     MOVE 'CHGSF5'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CHGSF5 : Chargement du cinquième écran
+     *----------------------------------------------------------------
+     *
+    C           CHGSF5    BEGSR
+     *
+     C                     MOVE '0'       *IN80
+     C                     MOVE *BLANKS   CHOIX
+     C                     Z-ADD0         PDSNF5
+     C                     Z-ADD0         FEUNF5
+     C           KLIV      CHAINLIVFOUL1             51
+     C  N51                MOVE '1'       *IN80
+     C  N51                MOVELPAPI      PAPI5
+     C  N51                Z-ADDGRAMM     GRAMM5
+     C  N51                MOVELREFOUR    REFOU5
+     C  N51                Z-ADDGRAREL    GRARE5
+     C  N51                MOVELFOUB      FOUB5
+     C  N51      KQUAFO    CHAINQUAFOUL2             52
+     C  N52N51             MOVELFOUART    FOUAR5
+     C   52N51             MOVEL*ALL'?? ' FOUAR5
+     C                     Z-ADD0         TXFSC
+D1  C           TYPFSC    IFNE *BLANK
+     C                     MOVEL'TFSC'    WCLE
+     C                     MOVE TYPFSC    WNUM      P
+     C           KPARAM    CHAINPARAME               55
+     C  N55                Z-ADDPXMONT    TXFSC
+F1  C                     END
+D1  C           *IN51     DOWEQ'0'
+D2  C           £QUAL     IFEQ £QUAL5
+     C           QTEREC    SUB  CUMQTF    WPDS
+     C           FEUREC    SUB  CUMFEF    WFEU
+     C                     ADD  WPDS      PDSNF5
+     C                     ADD  WFEU      FEUNF5
+X2  C                     ELSE
+     * Recherche de facturation en cours de saisie pour le défalquer
+     * du reste à facturer :
+     C           KFOUD     CHAINFCFOUDW              53
+D3  C           *IN53     DOWEQ'0'
+     C                     SUB  PDSFAC    PDSNF5
+     C                     SUB  FEFAC     FEUNF5
+     C           KFOUD     READEFCFOUDW                  53
+F3  C                     END
+D3  C           PDSNF5    IFGT 0
+    C           FEUNF5    ORGT 0
+     C                     ADD  1         RECN5
+     C                     WRITEF5S
+F3  C                     END
+     C                     MOVELPAPI      PAPI5
+     C                     Z-ADDGRAMM     GRAMM5
+     C                     MOVELREFOUR    REFOU5
+     C                     Z-ADDGRAREL    GRARE5
+     C                     MOVELFOUB      FOUB5
+     C           QTEREC    SUB  CUMQTF    WPDS
+     C           FEUREC    SUB  CUMFEF    WFEU
+     C                     Z-ADDWPDS      PDSNF5
+     C                     Z-ADDWFEU      FEUNF5
+     C           KQUAFO    CHAINQUAFOUL2             52
+     C  N52                MOVELFOUART    FOUAR5
+     C   52                MOVEL*ALL'?? ' FOUAR5
+     C                     Z-ADD0         TXFSC
+D3  C           TYPFSC    IFNE *BLANK
+     C                     MOVEL'TFSC'    WCLE
+     C                     MOVE TYPFSC    WNUM      P
+     C           KPARAM    CHAINPARAME               55
+     C  N55                Z-ADDPXMONT    TXFSC
+F3  C                     END
+F2  C                     END
+     C           KLIV      READELIVFOUL1                 51
+F1  C                     END
+     *
+     * écriture de la dernière qualité :
+     *
+D1  C           *IN80     IFEQ '1'
+     * Recherche de facturation en cours de saisie pour le défalquer
+     * du reste à facturer :
+     C           KFOUD     CHAINFCFOUDW              53
+D2  C           *IN53     DOWEQ'0'
+     C                     SUB  PDSFAC    PDSNF5
+     C                     SUB  FEFAC     FEUNF5
+     C           KFOUD     READEFCFOUDW                  53
+F2  C                     END
+D2  C           PDSNF5    IFGT 0
+    C           FEUNF5    ORGT 0
+     C                     ADD  1         RECN5
+     C                     WRITEF5S
+F2  C                     END
+F1  C                     END
+     *
+     * Fin de sous fichier :
+     *
+     C                     MOVE '1'       *IN72
+     *
+     * Sous fichier Vide :
+     *
+    C*          *IN80     IFEQ '0'
+D1  C           RECN5     IFEQ 0
+     C                     MOVE '1'       *IN73
+F1  C                     END
+     *
+     C                     MOVE 'AFFSF5'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFSF5 : Affichage du cinquième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFSF5    BEGSR
+     *
+     C                     WRITEF5
+     C                     EXFMTF5C
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVE 'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN12     IFEQ '1'
+D3  C           RECN17    IFEQ 0
+     C                     MOVE 'AFFEC4'  ACTION
+X3  C                     ELSE
+     C                     MOVE 'AFFSF9'  ACTION
+F3  C                     END
+X2  C                     ELSE
+     C                     MOVE 'CTLSF5'  ACTION
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLSF5 : Contrôle du cinquième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLSF5    BEGSR
+     *
+     C           LEC5S     TAG
+     C                     READCF5S                      51
+    C  N51      CHOIX     CABEQ*BLANKS   LEC5S
+     C  N51                MOVE 'INISF6'  ACTION
+     C  N51                MOVE *BLANKS   CHOIX
+     C  N51                UPDATF5S
+     C   51                MOVE 'AFFSF5'  ACTION
+     *
+     * Format ou bobine ?
+     *
+D1  C           FOUB5     IFEQ 'B'
+     C                     MOVE '0'       *IN83
+X1  C                     ELSE
+     C                     MOVE '1'       *IN83
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INISF6 : Initialisation sixième écran
+     *----------------------------------------------------------------
+     *
+    C           INISF6    BEGSR
+     *
+     C                     MOVE '0'       *IN40
+     *
+     C                     MOVEA'100'     *IN,70
+     C   83                WRITEF6C
+     C  N83                WRITEF9C
+     *
+     C                     MOVEA'010'     *IN,70
+     C   83                WRITEF6C
+     C  N83                WRITEF9C
+     *
+     C                     MOVEA'00000'   *IN,70
+     C                     Z-ADD0         RECN6
+     *
+     C                     Z-ADD0         HLIG
+     C                     Z-ADD0         HCOL
+     *
+     C           KQUAF2    CHAINQUAFOUL2             52
+     C           KFOUD     CHAINQUAUSI               52
+     *
+     C  N86                MOVE 'CHGSF6'  ACTION
+     C   86                MOVE 'CHGSFM'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CHGSF6 : Chargement du sixième écran
+     *----------------------------------------------------------------
+     *
+    C           CHGSF6    BEGSR
+     *
+     C                     Z-ADD0         FFACTU
+     C                     Z-ADD0         PFACTU
+     C                     MOVE *BLANKS   CHOIX
+     C                     MOVE '0'       *IN79
+     C           KLIV2     CHAINLIVFOUL1             51
+D1  C           *IN51     DOWEQ'0'
+     C           QTEREC    SUB  CUMQTF    PAFACT
+     C   83      FEUREC    SUB  CUMFEF    FAFACT
+     C                     Z-ADD£RECNB    RELATI
+     C           KFOUD2    CHAINFCFOUDW              52
+     C  N52                SUB  PDSFAC    PAFACT
+     C  N52 83             SUB  FEFAC     FAFACT
+     *
+D2  C           PAFACT    IFNE 0
+     * Recherche si commande FSC ?
+     *--- Début --- Philippe  --- 30/04/2015 --*
+     * - Mise ne commentaire car utilisation de CALENAL0 pour recherche de
+     * valeur siècle
+    C**         ACOM      CHAINSIECLE               50
+    C**                   Z-ADDSS        SCOMYY
+     *
+     C           ACOM      CHAINCALENAL0             50
+     C  N50                Z-ADDCALSS     SCOMYY
+     C   50                Z-ADD20        SCOMYY
+D3  C   50      ACOM      IFGE 90
+     C                     Z-ADD19        SCOMYY
+F3  C                     ENDIF
+     *--- Fin   --- Philippe  --- 30/04/2015 --*
+     C           KPAPCD    CHAINPAPCDEL8             50
+D3  C           *IN50     IFEQ '0'
+    C           ARTEMP    ANDEQ'F'
+     C                     MOVE 'F'       CDEFSC
+     C                     MOVE TYPFSC    LTYFSC
+     C                     Z-ADDTXFSC     LTXFSC
+X3  C                     ELSE
+     C                     MOVE ' '       CDEFSC
+     C                     MOVE *BLANK    LTYFSC
+     C                     Z-ADD0         LTXFSC
+F3  C                     ENDIF
+     *
+     C                     ADD  1         RECN6
+     C   83                WRITEF6S
+     C  N83                WRITEF9S
+F2  C                     END
+     *
+     C           KLIV2     READELIVFOUL1                 51
+F1  C                     END
+     *
+     * Fin de sous fichier :
+     *
+     C                     MOVE '1'       *IN72
+     *
+     * Sous fichier Vide :
+     *
+D1  C           *IN80     IFEQ '0'
+     C                     MOVE '1'       *IN73
+F1  C                     END
+     *
+     C                     MOVE 'AFFSF6'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CHGSFM : Chargement du sixième écran EN MODIFICATION de qualité
+     *----------------------------------------------------------------
+     *
+    C           CHGSFM    BEGSR
+     *
+     C           KFOUD3    CHAINFCFOUWL1             51
+D1  C           *IN51     DOWEQ'0'
+     C           RELATI    CHAINLIVFOU               52
+     C           QTEREC    SUB  CUMQTF    PAFACT
+     C   83      FEUREC    SUB  CUMFEF    FAFACT
+     C                     Z-ADDPDSFAC    PFACTU
+     C      83             Z-ADDFEFAC     FFACTU
+     C                     MOVE '1'       *IN79
+     C                     MOVE '1'       CHOIX
+     *
+     * Recherche si commande FSC ?
+     C                     Z-ADD0         POIFSC
+     *--- Début --- Philippe  --- 30/04/2015 --*
+     * - Mise ne commentaire car utilisation de CALENAL0 pour recherche de
+     * valeur siècle
+    C**         ACOM      CHAINSIECLE               50
+    C**                   Z-ADDSS        SCOMYY
+     *
+     C           ACOM      CHAINCALENAL0             50
+     C  N50                Z-ADDCALSS     SCOMYY
+     C   50                Z-ADD20        SCOMYY
+D2  C   50      ACOM      IFGE 90
+     C                     Z-ADD19        SCOMYY
+F2  C                     ENDIF
+     *--- Fin   --- Philippe  --- 30/04/2015 --*
+     C           KPAPCD    CHAINPAPCDEL8             50
+D2  C           *IN50     IFEQ '0'
+    C           ARTEMP    ANDEQ'F'
+     C                     MOVE 'F'       CDEFSC
+X2  C                     ELSE
+     C                     MOVE ' '       CDEFSC
+F2  C                     ENDIF
+     *
+     C                     ADD  1         RECN6
+     C   83                WRITEF6S
+     C  N83                WRITEF9S
+     *
+     C           KFOUD3    READEFCFOUWL1                 51
+F1  C                     END
+     *
+     * Fin de sous fichier :
+     *
+     C                     MOVE '1'       *IN72
+     *
+     * Sous fichier Vide :
+     *
+D1  C           *IN80     IFEQ '0'
+     C                     MOVE '1'       *IN73
+F1  C                     END
+     *
+     C                     MOVE 'AFFSF6'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFSF6 : Affichage du sixième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFSF6    BEGSR
+     *
+     C  N99                WRITEF6
+     C   83                EXFMTF6C
+     C  N83                EXFMTF9C
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVE 'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN12     IFEQ '1'
+     C  N86                MOVE 'AFFSF5'  ACTION
+     C   86                MOVE 'AFFSF9'  ACTION
+X2  C                     ELSE
+     C                     MOVE 'CTLSF6'  ACTION
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLSF6 : Contrôle du sixième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLSF6    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     C                     MOVE '0'       *IN98
+     C                     MOVE '0'       *IN02
+     *
+     * Contrôle des lignes :
+     *
+     C   83                READCF6S                      51
+     C  N83                READCF9S                      51
+     *
+D1  C           *IN51     DOWEQ'0'
+     C                     MOVE '0'       *IN30
+D2  C           CHOIX     IFNE *BLANKS
+     * Au moins une ligne sélectionnée
+     C                     MOVE '1'       *IN98
+     C                     MOVE '1'       *IN79
+     * Au moins une commande FSC ?
+D3  C           CDEFSC    IFEQ 'F'
+     C                     MOVE '1'       *IN01
+     C                     MOVE '1'       *IN02
+F3  C                     ENDIF
+     *
+D3  C           PFACTU    IFEQ 0
+     C                     Z-ADDPAFACT    PFACTU
+F3  C                     END
+D3  C           PFACTU    IFGT PAFACT
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+F3  C                     END
+X2  C                     ELSE
+     C                     MOVE '0'       *IN79
+F2  C                     END
+     C   83                UPDATF6S
+     C  N83                UPDATF9S
+     C   83                READCF6S                      51
+     C  N83                READCF9S                      51
+F1  C                     END
+     *
+     C   99                MOVE '1'       *IN40
+D1  C           *IN99     IFEQ '1'
+    C           *IN98     OREQ '0'
+     C                     MOVE 'AFFSF6'  ACTION
+X1  C                     ELSE
+     *
+     * Affichage fenêtre confirmation si commande FSC
+D2  C           *IN02     IFEQ '1'
+    C           *IN86     ANDEQ'0'
+     C                     EXSR FENFSC
+D3  C           *IN12     IFEQ '1'
+     C                     MOVE 'AFFSF6'  ACTION
+X3  C                     ELSE
+     C  N99 98             MOVE 'INISF7'  ACTION
+F3  C                     END
+X2  C                     ELSE
+     C  N99 98             MOVE 'INISF7'  ACTION
+F2  C                     END
+F1  C                     ENDIF
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INISF7 : Initialisation du septième écran
+     *----------------------------------------------------------------
+     *
+    C           INISF7    BEGSR
+     *
+     * Nous sommes en Modification d'une qualité :
+     * Alors on ne peut plus faire marche arrière (F12)
+     * et suppression des enregistrements
+     *
+D1  C           *IN86     IFEQ '1'
+     *
+     C                     SUB  FACTTC    TOTHT6
+     C           VALHT     SUB  TOTHT6    ECART6
+     C                     SUB  PUMEC6    TOTMAT
+     *
+     C           KFOUD3    CHAINFCFOUWL1             51
+D2  C           *IN51     DOWEQ'0'
+     C                     DELETFCFOUDW2
+     C           KFOUD3    READEFCFOUWL1                 51
+F2  C                     END
+     C                     MOVE '1'       *IN88
+F1  C                     END
+     *
+     C                     MOVEA'100'     *IN,75
+     C                     WRITEF12C
+     *
+     C                     MOVEA'010'     *IN,75
+     C                     WRITEF12C
+     *
+     C                     MOVEA'00000'   *IN,75
+     C                     Z-ADD0         RECN12
+     *
+     C                     Z-ADD0         HLIG
+     C                     Z-ADD0         HCOL
+     *
+     C                     Z-ADD0         MONIMP  92
+     C                     Z-ADD0         PIMPUT  70
+     C                     Z-ADD0         FIMPUT  70
+     C                     Z-ADD0         WONIMP
+     C                     Z-ADD0         WIMPUP
+     C                     Z-ADD0         WIMPUF
+     C                     MOVELCODMON    CODMO1
+     *
+     C                     Z-ADD0         MTFACT
+     C                     Z-ADD0         UNIFAC
+     C                     Z-ADD0         REMGEN
+     C                     Z-ADD0         REMUNI
+     C                     Z-ADD0         REMPOU
+     *
+     C                     MOVE 'CHGSF7'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CHGSF7 : Chargement du septième écran
+     *----------------------------------------------------------------
+     *
+    C           CHGSF7    BEGSR
+     *
+     C   83                READCF6S                      51
+     C  N83                READCF9S                      51
+D1  C           *IN51     DOWEQ'0'
+     * Calcul du poids  valoriser
+D2  C           *IN83     IFEQ '1'
+D3  C           UFACTU    IFNE 'KG'
+     C           FORL      DIV  1000      WW1     43
+     C           FORH      DIV  1000      WW2     43
+     C           WW1       MULT WW2       WSURFA  86
+     C           WSURFA    MULT FFACTU    WPOIDS 155
+     C           WPOIDS    DIV  UVALOR    WVALO  155
+X3  C                     ELSE
+     C           PFACTU    DIV  UVALOR    WVALO
+F3  C                     END
+X2  C                     ELSE
+D3  C           UFACTU    IFNE 'KG'
+     C           GRAMOY    DIV  1000      WW3    155
+     C           PFACTU    DIV  WW3       WW4    155
+D4  C           UFACTU    IFEQ 'ML'
+     C           LAIZE     DIV  100       WW5    155
+     C           WW4       DIV  WW5       WW4
+F4  C                     END
+     C           WW4       DIV  UVALOR    WVALO
+X3  C                     ELSE
+     C           PFACTU    DIV  UVALOR    WVALO
+F3  C                     END
+F2  C                     END
+     * Cumul des totaux FSC
+     C           KPAPCD    CHAINPAPCDEL8             50
+D2  C           *IN50     IFEQ '0'
+    C           ARTEMP    ANDEQ'F'
+     C           WVALO     MULT PUCOM     WONTAN
+     C                     ADD  WONTAN    WONIMP
+     C                     ADD  PFACTU    WIMPUP
+     C   83                ADD  FFACTU    WIMPUF
+F2  C                     ENDIF
+     C           WVALO     MULT PUCOM     MONTAN
+     C                     ADD  MONTAN    MONIMP
+     C                     ADD  PFACTU    PIMPUT
+     C   83                ADD  FFACTU    FIMPUT
+D2  C           REMABS    IFNE 0
+     C                     Z-ADDREMABS    REMORS
+F2  C                     END
+D2  C           REMREL    IFNE 0
+     C                     Z-ADDREMREL    REMPOU
+F2  C                     END
+     C                     ADD  1         RECN12
+     C                     WRITEF12S
+     C                     MOVE '1'       *IN79
+     C   83                UPDATF6S
+     C  N83                UPDATF9S
+     C   83                READCF6S                      51
+     C  N83                READCF9S                      51
+F1  C                     END
+     *
+     * Fin du sous fichier
+     C                     MOVE '1'       *IN77
+     *
+     C                     MOVE 'AFFSF7'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFSF7 : Affichage du septième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFSF7    BEGSR
+     *
+     C                     WRITEF12C
+     C                     EXFMTF14
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVE 'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN12     IFEQ '1'
+     C                     Z-ADD0         POIFSC
+     C                     MOVE 'AFFSF6'  ACTION
+X2  C                     ELSE
+     C                     MOVE 'CTLSF7'  ACTION
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLSF7 : Contrôle du septième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLSF7    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     *
+D1  C           MTFACT    IFEQ 0
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR7
+F1  C                     END
+     *
+D1  C           UNIFAC    IFEQ 0
+     C                     MOVE '1'       *IN31
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR7
+F1  C                     END
+     *
+     * Sauvegarde du poids imputé initial et du montant
+     C                     Z-ADDPIMPUT    WPIMPU
+     C                     Z-ADDMONIMP    WMONIM
+     *
+     C           ERR7      TAG
+     C   99                MOVE 'AFFSF7'  ACTION
+     C  N99                MOVE 'INIEC8'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INIEC8 : Initialisation du huitième écran
+     *----------------------------------------------------------------
+     *
+    C           INIEC8    BEGSR
+     *
+     C                     Z-ADD0         REMORS
+     C                     Z-ADD0         RMPOUR
+     C                     Z-ADD0         VAVA
+     C                     MOVE *BLANKS   FAFA
+     C                     Z-ADD0         PORTDU
+     *
+     C                     MOVELCODMON    CODMO2
+     *
+     * Init de la monnaie de la commande (en francs pour l'instant)
+     *
+     C                     MOVEL'EUR'     CDEMON
+     *
+     C                     Z-ADD0         PUMECR
+     C                     Z-ADDPUCOM     PUIMPU
+     * Calcul Montant facturé
+     C           MTFACT    DIV  UVALOR    WVALO     H
+     C           WVALO     MULT UNIFAC    MTBFAC
+     C                     Z-ADDMTBFAC    NETFAC
+     * Calcul Montant remises
+     C                     Z-ADD0         TTREMS
+     * Unitaire
+D1  C           REMUNI    IFNE 0
+     C           PIMPUT    MULT REMUNI    WVALO
+     C           WVALO     DIV  UVALOR    WVALO
+     C                     SUB  WVALO     NETFAC
+     C                     ADD  WVALO     TTREMS
+F1  C                     END
+     * Pourcentage
+D1  C           REMPOU    IFNE 0
+     C           REMPOU    DIV  100       WVALO
+     C           NETFAC    MULT WVALO     WVALO
+     C                     SUB  WVALO     NETFAC
+     C                     ADD  WVALO     TTREMS
+F1  C                     END
+     * Remise générale
+D1  C           REMGEN    IFNE 0
+     C                     SUB  REMGEN    NETFAC
+     C                     ADD  REMGEN    TTREMS
+F1  C                     END
+     * Calcul Grammages
+     C           PIMPUT    DIV  MTFACT    NGRAMY
+     C           NGRAMY    MULT 1000      NGRMOY
+     *
+     * Calcul de l'estimation Commande dans l'unité de facturation
+     *
+D1  C           UFACTU    IFNE 'KG'
+     C           PIMPUT    DIV  NGRAMY    PIMPUT
+D2  C           UFACTU    IFEQ 'ML'
+     C           PIMPUT    DIV  LAIZE     WW6    157H
+     C           WW6       MULT 100       PIMPUT
+F2  C                     END
+F1  C                     END
+     C                     ADD  TTREMS    BRUREM
+     C                     Z-ADD0         MONIMP
+     C                     Z-ADD0         PDSTOT
+     * Recalcul à partir du sous fichier
+     C                     Z-ADD1         RECN12
+     C           RECN12    CHAINF12S                 51
+D1  C           *IN51     DOWEQ'0'
+D2  C           UFACTU    IFNE 'KG'
+     C           PFACTU    DIV  NGRAMY    WW4       H
+D3  C           UFACTU    IFEQ 'ML'
+     C           WW4       DIV  LAIZE     WW6    157H
+     C           WW6       MULT 100       PIMPUT
+F3  C                     END
+X2  C                     ELSE
+     C                     Z-ADDPFACTU    WW4
+F2  C                     END
+     C           WW4       MULT PUCOM     WVALO
+     C           WVALO     DIV  UVALOR    WVALO
+     C                     ADD  WVALO     MONIMP
+     C                     ADD  PFACTU    PDSTOT
+     *
+     C                     ADD  1         RECN12
+     C           RECN12    CHAINF12S                 51
+F1  C                     END
+     C                     Z-ADD1         RECN12
+     *
+     C           MONIMP    DIV  PIMPUT    WVALO     H
+     C           WVALO     MULT UVALOR    PUIMPU
+     * Calcul de l'écart : si la monnaie de facturation n'est pas EUR,
+     * Alors conversion du montant facturé en EUR
+     * ATTENTION !! Cette procédure est à revoir dés lors qu'il y aura une
+     * monnaie au niveau de la commande !
+     C                     Z-ADDNETFAC    WNETFA
+D1  C           CODMON    IFNE 'EUR'
+     C                     Z-ADD*ZEROS    TZO
+     C                     Z-ADDWNETFA    TZO,1
+     C                     MOVE CODMON    DORIG
+     C                     MOVE 'EUR'     DDEST
+     C                     CALL 'EUROCON£'
+     C                     PARM           DTPARM
+     C                     Z-ADDTZO,1     WNETFA
+F1  C                     END
+     C           MONIMP    SUB  WNETFA    ECART
+     * Recherche du PUMATI de la commande
+     *--- Début --- Philippe  --- 30/04/2015 --*
+     * - Mise ne commentaire car utilisation de CALENAL0 pour recherche de
+     * valeur siècle
+    C**         ANCOM     CHAINSIECLE               51
+     *
+     C           ANCOM     CHAINCALENAL0             51
+     C  N51                Z-ADDCALSS     SS      20
+     C   51                Z-ADD20        SS
+D1  C   51      ANCOM     IFGE 90
+     C                     Z-ADD19        SS
+F1  C                     ENDIF
+     *--- Fin   --- Philippe  --- 30/04/2015 --*
+     C           KCDL      CHAINPAPCDLL1             51
+     C   51                Z-ADD0         PUMATI
+D1  C           PAPF01    IFEQ 'O'
+     C                     MOVE '1'       *IN84
+X1  C                     ELSE
+     C                     MOVE '0'       *IN84
+F1  C                     END
+     *
+     C                     MOVEL'AFFEC8'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFEC8 : Initialisation du huitième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFEC8    BEGSR
+     *
+     C                     EXFMTF15
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVE 'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN12     IFEQ '1'
+     C                     Z-ADDWPIMPU    PIMPUT
+     C                     Z-ADDWMONIM    MONIMP
+     C                     MOVE 'AFFSF7'  ACTION
+X2  C                     ELSE
+     C                     MOVE 'CTLEC8'  ACTION
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLEC8 : Contrôle du huitième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLEC8    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     *
+     *  si une remise à l'unité de facturation est saisie, alors
+     *  l'unité de facturation doit être saisie
+     *
+D1  C           REMORS    IFNE 0
+D2  C           VAVA      IFEQ 0
+    C           FAFA      OREQ *BLANKS
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR8
+F2  C                     END
+F1  C                     END
+     * Sauvegarde du PUMATI de l'écran F15 (PUMECR)
+    C* MF                 Z-ADDPUMATI    PUMREF  72
+     C           PUMECR    DIV  100       PUMREF  72
+     *
+     * Cumul du PUMATI pour total final :
+     *
+     C                     ADD  PUMECR    TOTMAT
+     *
+     * Calcul de la remise hors facture dans l'unité de facturation
+     *
+D1  C           REMORS    IFNE 0
+D2  C           UFACTU    IFEQ FAFA
+     C           REMORS    MULT PIMPUT    WW3
+X2  C                     ELSE
+     C           REMORS    MULT WPIMPU    WW3
+F2  C                     END
+     C           WW3       DIV  VAVA      WW3
+     C           WW3       MULT UVALOR    WW3
+     C           WW3       DIV  PIMPUT    REMORS    H
+F1  C                     END
+     *
+     * Incrémentation du compteur de la qualité :
+     *
+     C  N86                ADD  1         WCPT
+     C  N86                Z-ADDWCPT      WCOMPT
+     *
+     * Pas d'erreur : création d'un enregistrement récap qualité :
+     *
+     * Si mise à jour de ligne, alors chainage :
+     C   86      RECN17    CHAINF17S                 51
+     C                     Z-ADDPUMECR    PUMEC6
+     C                     Z-ADDMONIMP    VACOMM
+     C                     Z-ADDMTBFAC    VAFACT
+     C                     Z-ADDTTREMS    REMIFA
+     C                     Z-ADDNETFAC    FACTTC
+     C                     Z-ADDECART     ECA
+     C                     ADD  NETFAC    TOTHT6
+     C           VALHT     SUB  TOTHT6    ECART6
+     C                     MOVEL*BLANKS   CHOIX
+     *
+     C  N86                ADD  1         WREC17
+     C  N86                Z-ADDWREC17    RECN17
+     C                     MOVE '0'       *IN85
+     C  N86                WRITEF17S
+     C   86                UPDATF17S
+     *
+     * Création du détail article dans le fichier de travail FCFOUDW
+     *
+     C                     MOVELPAPI      PAPIW
+     C                     Z-ADDGRAMM     GRAMMW
+     C                     MOVELREFOUR    REFOUW
+     C                     Z-ADDGRAREL    GRAREW
+     C                     MOVELFOUB      FOUBW
+     *
+     C                     Z-ADD1         RECN12
+     C           RECN12    CHAINF12S                 51
+D1  C           *IN51     DOWEQ'0'
+     C                     Z-ADDPFACTU    PDSFAC
+     C                     Z-ADDFFACTU    FEFAC
+     * Transpo de la quantité facturée dans l'unité
+D2  C           UFACTU    IFNE 'KG'
+     C           PFACTU    DIV  NGRAMY    QTEFAF    H
+D3  C           UFACTU    IFEQ 'ML'
+     C           LAIZE     DIV  100       WW5
+     C           QTEFAF    DIV  WW5       QTEFAF    H
+F3  C                     END
+X2  C                     ELSE
+     C                     Z-ADDPFACTU    QTEFAF
+F2  C                     END
+     * Valo de la quantité facturée
+     C           NETFAC    DIV  PIMPUT    WW5       H
+     C           WW5       MULT QTEFAF    MTFAC
+     *
+     C                     Z-ADDREMORS    REMABS
+     C                     Z-ADDRMPOUR    REMVAL
+     C                     Z-ADDUDAY      JCONTR
+     C                     Z-ADDUMONTH    MCONTR
+     C                     Z-ADDUYEAR     ACONTR
+     C                     MOVEL*YEAR     SCONTR
+     * Affectation PUMATI par article
+D2  C           PUMREF    IFNE 0
+     C           PDSFAC    DIV  PDSTOT    WMOYEN  87
+     C           WMOYEN    MULT PUMREF    PUMATI    H
+F2  C                     END
+     * Création de l'enregistrement :
+     C                     WRITEFCFOUDW1
+     *
+     C                     ADD  1         RECN12
+     C           RECN12    CHAINF12S                 51
+F1  C                     END
+     *
+     C           ERR8      TAG
+     C   99                MOVE 'AFFEC8'  ACTION
+     C  N99                MOVE 'INISF9'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * INISF9 : Initialisation du neuvième écran
+     *----------------------------------------------------------------
+     *
+    C           INISF9    BEGSR
+     *
+     * Calcul de la zone BRUCOM et ESTPOR
+     *
+     C                     Z-ADD0         ESTPOR
+     C                     Z-ADD0         VALCOM  92
+     C           *LOVAL    SETLLFCFOUDW
+     C                     READ FCFOUDW                  51
+D1  C           *IN51     DOWEQ'0'
+     *
+     C           KFOUD4    CHAINQUAUSI               52
+     C           KQUAFO    CHAINQUAFOUL2             52
+D2  C           UFACTU    IFNE 'KG'
+     C                     Z-ADDNGRAMY    Z78    159
+D3  C           UFACTU    IFEQ 'ML'
+     C           LAIZE     DIV  100       Z22    157
+     C           Z78       DIV  Z22       Z78
+F3  C                     END
+     C           PDSFAC    DIV  Z78       Z23    157H
+X2  C                     ELSE
+     C                     Z-ADDPDSFAC    Z23
+F2  C                     END
+     C           Z23       MULT PUCOM     ZZ     155
+     C           ZZ        DIV  UVALOR    ZZ
+     C                     ADD  ZZ        VALCOM
+     C           PDSFAC    DIV  1000      PDFAC  155H
+     C           PDFAC     MULT PORTDU    ESPOR   70
+     C                     ADD  ESPOR     ESTPOR
+     *
+     C                     READ FCFOUDW                  51
+F1  C                     END
+     *
+     * Cumul du poids total FSC de la facture
+     C                     ADD  POIFSC    PKGFSC
+     *
+     C                     MOVE 'AFFSF9'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * AFFSF9 : Affichage du neuvième écran
+     *----------------------------------------------------------------
+     *
+    C           AFFSF9    BEGSR
+     *
+     C  N99                WRITEF19
+     C                     EXFMTF17C
+     *
+D1  C           *IN03     IFEQ '1'
+     C                     MOVE 'FINPGM'  ACTION
+X1  C                     ELSE
+D2  C           *IN04     IFEQ '1'
+     C                     EXSR FENETR
+     C                     MOVE 'AFFSF9'  ACTION
+X2  C                     ELSE
+D3  C           *IN06     IFEQ '1'
+     C                     Z-ADD0         POIFSC
+     C                     MOVE 'INISF5'  ACTION
+X3  C                     ELSE
+     C                     MOVE 'CTLSF9'  ACTION
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLSF9 : Contrôle du neuvième écran
+     *----------------------------------------------------------------
+     *
+    C           CTLSF9    BEGSR
+     *
+     C                     MOVE '0'       *IN99
+     C                     MOVE '0'       *IN88
+     *
+     * La date d'échéance doit être correcte
+     *
+     C                     Z-ADDDATEC3    £DATN8
+     C                     EXSR CTLDAT
+D1  C           £ERR      IFEQ '1'
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR9
+F1  C                     END
+     *
+     * Le Code Litige doit être correct :
+     *
+D1  C           CLIT6     IFNE 0
+     C                     Z-ADD92        RSTE
+     C                     MOVEL'LT'      RCT
+     C                     MOVE *BLANKS   RARG
+     C                     MOVELCLIT6     RARG
+     C           KFAN2     CHAINFAN100P1             55
+D2  C           *IN55     IFEQ '1'
+    C           CLIT6     ORLT 20
+    C           CLIT6     ORGT 28
+     C                     MOVE '1'       *IN31
+     C                     MOVE '1'       *IN99
+    C                     GOTO ERR9
+F2  C                     END
+F1  C                     END
+     C                     MOVE '0'       *IN99
+     *
+     *
+     C                     MOVE '0'       *IN86
+     *
+     * Demande de modification ou de suppression ?
+     *
+     C                     READCF17S                     55
+     * On ne traite que le premier trouvé
+     C                     Z-ADD0         WRECN   30
+     *
+D1  C           *IN55     DOWEQ'0'
+     *
+D2  C           CHOIX     IFEQ 'M'
+    C           WRECN     ANDEQ0
+    C           CHOIX     OREQ 'S'
+    C           WRECN     ANDEQ0
+     C                     Z-ADDRECN17    WRECN   30
+X2  C                     ELSE
+     C                     MOVE *BLANKS   CHOIX
+     C                     MOVE '0'       *IN85
+     C                     UPDATF17S
+F2  C                     END
+     C                     READCF17S                     55
+     *
+F1  C                     END
+     *
+     * Traitement de l'enregistrement sélectionné :
+     *
+     * PAS DE SELECTION
+D1  C           WRECN     IFEQ 0
+     *
+     * Si validation de la Facture, l'écart ne doit pas être supérieur
+     * à + ou - 1
+     *
+D2  C           *IN10     IFEQ '1'
+     * CALL 31210 (S.VINCENT) 02/04/2012
+D3  C           NOFOU     IFEQ '5004'
+     C           VALHT     DIV  100       PECPSP  94
+     C           PECPSP    MULT -1        NECPSP  94
+D4  C           ECART6    IFGT PECPSP
+    C           ECART6    ORLT NECPSP
+     C                     MOVE '1'       *IN32
+     C                     MOVE '1'       *IN99
+F4  C                     END
+X3  C                     ELSE
+D4  C           ECART6    IFGT 1
+    C           ECART6    ORLT -1
+     C                     MOVE '1'       *IN32
+     C                     MOVE '1'       *IN99
+F4  C                     END
+F3  C                     END
+F2  C                     END
+    C                     GOTO ERR9
+     *
+F1  C                     END
+     *
+     C                     MOVE '0'       *IN10
+     *
+     C           WRECN     CHAINF17S                 55
+D1  C           CHOIX     IFEQ 'M'
+     C                     MOVE *BLANKS   CHOIX
+     C                     UPDATF17S
+     C                     MOVE '1'       *IN86
+     C                     MOVELPAPI      PAPI5
+     C                     Z-ADDGRAMM     GRAMM5
+     C                     MOVELREFOUR    REFOU5
+     C                     Z-ADDGRAREL    GRARE5
+     C                     MOVELFOUB      FOUB5
+F1  C                     END
+D1  C           CHOIX     IFEQ 'S'
+     C                     EXSR SUPPR
+F1  C                     END
+     *
+     C           ERR9      TAG
+     *
+     C   86                MOVEL'INISF6'  ACTION
+     C   99N86             MOVEL'AFFSF9'  ACTION
+     C  N99N10N86          MOVEL'AFFSF9'  ACTION
+     C  N99 10N86          EXSR MAJGLO
+     C  N99 10N86          EXSR HISFSC
+     C  N99 10N86          MOVEL'INIEC1'  ACTION
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * SUPPR : Suppression d'une qualité de la facture
+     *----------------------------------------------------------------
+     *
+    C           SUPPR     BEGSR
+     *
+     C                     SUB  FACTTC    TOTHT6
+     C           VALHT     SUB  TOTHT6    ECART6
+     *
+     C                     MOVE *BLANKS   CHOIX
+     C                     MOVE '1'       *IN85
+     C                     UPDATF17S
+     *
+     C           KFOUD3    CHAINFCFOUWL1             51
+D1  C           *IN51     DOWEQ'0'
+     C                     DELETFCFOUDW2
+     C           KFOUD3    READEFCFOUWL1                 51
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * MAJGLO : Mise à jour globale des fichiers
+     *----------------------------------------------------------------
+     *
+    C           MAJGLO    BEGSR
+     *
+     * Mise à jour des fichiers de Facturation :
+     *
+     C                     Z-ADD0         TPDFAC
+     C           *LOVAL    SETLLFCFOUDW
+     C                     READ FCFOUDW                  51
+D1  C           *IN51     DOWEQ'0'
+     C                     MOVELPAPIW     PAPI
+     C                     Z-ADDGRAMMW    GRAMM
+     C                     MOVELREFOUW    REFOUR
+     C                     Z-ADDGRAREW    GRAREL
+     C                     MOVELFOUBW     FOUB
+     * Conversion des devises saisies en Francs :
+D2  C           CODMON    IFNE 'EUR'
+     C                     Z-ADD*ZEROS    TZO
+     C                     Z-ADDMTFAC     TZO,1
+     C                     Z-ADDREMABS    TZO,2
+     C                     MOVE CODMON    DORIG
+     C                     MOVE 'EUR'     DDEST
+     C                     CALL 'EUROCON£'
+     C                     PARM           DTPARM
+     C                     Z-ADDTZO,1     MTFAC
+     C                     Z-ADDTZO,2     REMABS
+F2  C                     END
+     C                     WRITEFCFOUDF1
+     C                     UPDATFCFOUDW1
+     C                     ADD  PDSFAC    TPDFAC
+     C                     READ FCFOUDW                  51
+F1  C                     END
+     *
+D1  C           CLIT6     IFEQ 0
+     C                     MOVE *BLANKS   BAP
+X1  C                     ELSE
+     C                     MOVELCLIT6     BAP
+F1  C                     END
+     *
+     * Conversion des montants totaux de la facture :
+     *
+     C                     Z-ADDVALFAC    FACDEV
+     C                     Z-ADDVALHT     HTDEV
+D1  C           CODMON    IFNE 'EUR'
+     C                     Z-ADD*ZEROS    TZO
+     C                     Z-ADDVALFAC    TZO,1
+     C                     Z-ADDVALHT     TZO,2
+     C                     Z-ADDVALCOM    TZO,3
+     C                     MOVE CODMON    DORIG
+     C                     MOVE 'EUR'     DDEST
+     C                     CALL 'EUROCON£'
+     C                     PARM           DTPARM
+     C                     Z-ADDTZO,1     VALFAC
+     C                     Z-ADDTZO,2     VALHT
+     C                     Z-ADDTZO,3     VALCOM
+F1  C                     END
+     C                     WRITEFCFOUTF1
+     *
+     * Mise à jour des lignes de livraison :
+     *
+     C                     CALL 'CDEF07£'
+     *
+     * Mise à jour des fichiers Comptables :
+     *
+     C                     EXSR MAJANA
+     *
+     * Si le pays saisi est membre de la C.E.E, alors saisie de la CEE
+     * Avec le montant Facturé en Francs
+     *
+     C                     Z-ADDJFAFOU    £JJR
+     C                     Z-ADDMFAFOU    £MMR
+     C                     Z-ADDAFAFOU    £AAR
+     C                     Z-ADD£DATR6    DATFAC
+     C                     Z-ADDVALFAC    VALFA2
+     C                     MOVE CODPA3    COPROV
+D1  C           HCEE      IFEQ 'E'
+    C           TVAPRE    ANDEQ'NON'
+     C                     CALL 'FOU010£'
+     C                     PARM           £PAR10
+F1  C                     END
+     *
+     * Remise à blanc du fichier de travail
+     *
+     C           *LOVAL    SETLLFCFOUWL1
+     C                     READ FCFOUWL1                 51
+D1  C           *IN51     DOWEQ'0'
+     C                     DELETFCFOUDW2
+     C                     READ FCFOUWL1                 51
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * MAJANA : Mise à jour des Fichiers ANAËL
+     *----------------------------------------------------------------
+     *
+    C           MAJANA    BEGSR
+     *
+     *
+     ** RECUP DU CHRONO DANS LA DTAARA
+     *********************************
+     C           *NAMVAR   DEFN           PAPDTA
+     C           *LOCK     IN   *NAMVAR                55
+D1  C           *IN55     DOWEQ'1'
+     C           *LOCK     IN   *NAMVAR                55
+F1  C                     END
+     C                     ADD  1         £CHRON
+D1  C           £CHRON    IFEQ 0
+     C                     Z-ADD100000    £CHRON
+F1  C                     END
+     C                     OUT  *NAMVAR
+     *
+     * Définition du coefficient de la devise à partir de NAN405L1
+     *
+     C           CODMON    CHAINNAN405L1             55
+     C   55                Z-ADD2         DVDEC
+D1  C           DVDEC     IFEQ 0
+     C                     Z-ADD1         WCOEF   43
+X1  C                     ELSE
+D2  C           DVDEC     IFEQ 1
+     C                     Z-ADD0,1       WCOEF
+X2  C                     ELSE
+D3  C           DVDEC     IFEQ 2
+     C                     Z-ADD0,01      WCOEF
+X3  C                     ELSE
+     C                     Z-ADD0,001     WCOEF
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     C                     MOVELCODMON    DCDEV
+     *
+     C                     MOVEL'C'       RTYPE
+D1  C           STACH     IFNE 1
+     C                     Z-ADDSTACH     RSTE
+X1  C                     ELSE
+     C                     Z-ADD2         RSTE
+F1  C                     END
+D1  C           AIMPUT    IFLT 97
+     C           2000      ADD  AIMPUT    RANP
+X1  C                     ELSE
+     C           1900      ADD  AIMPUT    RANP
+F1  C                     END
+     C                     Z-ADDMIMPUT    RMOISP
+     *
+D1  C           MIMPUT    IFEQ UMONTH
+     C                     Z-ADDUDAY      RJOURP
+X1  C                     ELSE
+     C                     Z-ADDD,MIMPUT  RJOURP
+F1  C                     END
+     *
+     C                     MOVEL'6'       RCE
+D1  C           AFAFOU    IFLT 97
+     C           2000      ADD  AFAFOU    DDATOA
+X1  C                     ELSE
+     C           1900      ADD  AFAFOU    DDATOA
+F1  C                     END
+     C                     Z-ADDMFAFOU    DDATOM
+     C                     Z-ADDJFAFOU    DDATOJ
+     C                     MOVEL'ACP'     DJAL
+     C                     MOVEL'ACH'     DFOLIO
+     C                     Z-ADD£CHRON    DINT
+     C                     MOVEL'ORD'     DIDENT
+     C                     MOVELABRFOU    DLIB
+     * Code Litige
+D1  C           CLIT6     IFEQ 0
+     C                     MOVEL*BLANKS   DLIT
+X1  C                     ELSE
+     C                     MOVELCLIT6     DLIT
+F1  C                     END
+     C                     MOVELNOFACF    DPIECE
+     *
+     * Ligne total fournisseur à payer :
+     *       -------------------------
+     * Etablissement
+     C                     MOVE *BLANKS   RETAB
+D1  C           £USINE    IFNE 7
+     C                     MOVEL'NY'      RETAB
+F1  C                     END
+     C                     Z-ADD401000    RGEN
+     C  N57                MOVE NOFOU     RAUX
+     C   57                MOVE YNOFOU    RAUX
+     C           FACDEV    DIV  WCOEF     DMDEV
+     C                     Z-SUBWCOEF     DCODEV
+     C                     Z-ADDJECHE     DECHJ
+     C                     Z-ADDMECHE     DECHM
+     C                     Z-ADDSAECHE    DECHA
+     C                     Z-ADD1         DNOLIG
+     C                     Z-ADD0         DCONTR
+     C  N57                MOVELCOREGL    DREGLT
+     C   57                MOVELYCOREG    DREGLT
+     C                     MOVEL*BLANKS   RSECT
+     C                     MOVEL*BLANKS   RCHAP
+     C                     Z-ADD0         RNAT
+     C                     MOVEL*BLANKS   DTVA
+     *
+     C                     WRITEFAN350F1
+     *
+     *  Traitement Achat
+     *
+     * Affectation du code TVA en fonction du pays de la marchandise
+D1  C           VALTVA    IFNE 0
+     C                     MOVEL'0'       DTVA
+X1  C                     ELSE
+     * Pas de TVA mais pays FRANCE :
+D2  C           CODPA3    IFEQ '001'
+     C                     MOVEL'S'       DTVA
+X2  C                     ELSE
+     * Pays de la C.E.E :
+D3  C           HCEE      IFEQ 'E'
+D4  C           TVAPRE    IFEQ 'NON'
+     C                     MOVEL'1'       DTVA
+X4  C                     ELSE
+     C                     MOVEL'O'       DTVA
+F4  C                     END
+X3  C                     ELSE
+D4  C           TVAPRE    IFEQ 'NON'
+     C                     MOVEL'5'       DTVA
+X4  C                     ELSE
+     C                     MOVEL'O'       DTVA
+F4  C                     END
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     C                     Z-ADD0         DECHJ
+     C                     Z-ADD0         DECHM
+     C                     Z-ADD0         DECHA
+     C                     MOVEL*BLANKS   DLIT
+     *
+     * Etablissement
+     C                     MOVE *BLANKS   RETAB
+D1  C           £USINE    IFNE 7
+D2  C           £USINE    IFNE 4
+     C                     MOVE 'USDE'    WCLE
+     C                     MOVE *BLANKS   WNUM
+     C                     MOVE £USINE    WNUM
+     C           KPARAM    CHAINPARAME               73
+     C                     MOVELPXABRG    RETAB
+X2  C                     ELSE
+     C                     MOVE 'NB'      RETAB
+F2  C                     ENDIF
+F1  C                     ENDIF
+     *
+     C                     Z-ADD601100    RGEN
+     C                     MOVE *BLANKS   RAUX
+     C           HTDEV     DIV  WCOEF     DMDEV
+     C                     Z-ADDWCOEF     DCODEV
+     C                     Z-ADD2         DNOLIG
+     C                     Z-ADD0         DCONTR
+     C                     MOVEL£USINE    RSECT     P
+     C                     MOVEL*BLANKS   RCHAP
+     C                     Z-ADD0         RNAT
+     C                     WRITEFAN350F1
+     *
+     * Ligne T.V.A
+     *       -----
+     * Etablissement
+     C                     MOVE *BLANKS   RETAB
+D1  C           £USINE    IFNE 7
+     C                     MOVEL'NY'      RETAB
+F1  C                     END
+     *
+D1  C           VALTVA    IFNE 0
+     C                     MOVE *BLANKS   RGEN
+     C                     MOVEL'445660'  RGEN
+     C           VALTVA    DIV  WCOEF     DMDEV
+     C                     Z-ADDWCOEF     DCODEV
+     C                     Z-ADD3         DNOLIG
+     C                     Z-ADD0         DCONTR
+     C                     MOVEL*BLANKS   RSECT
+     C                     MOVEL*BLANKS   RCHAP
+     C                     Z-ADD0         RNAT
+     C                     WRITEFAN350F1
+F1  C                     END
+     *
+     * Ligne Escompte
+     *       --------
+D1  C           ESCOMT    IFNE 0
+     C                     MOVE *BLANKS   RGEN
+     C                     MOVEL'765000'  RGEN
+     C           ESCOMT    DIV  WCOEF     DMDEV
+     C                     Z-SUBWCOEF     DCODEV
+     C                     Z-ADD4         DNOLIG
+     C                     Z-ADD0         DCONTR
+     C                     MOVEL'1     '  RSECT
+     C                     MOVEL'90'      RCHAP
+     C                     Z-ADD9008      RNAT
+     C                     WRITEFAN350F1
+F1  C                     END
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FINPGM : Fin du programme : Mise à 'O' du Flag FIN
+     *----------------------------------------------------------------
+     *
+    C           FINPGM    BEGSR
+     *
+     C                     MOVE 'O'       FIN
+     *
+    C                     ENDSR
+     *
+     *-----------------------------------------------------------------
+     * ERRMON : Fin anormale due à une option inexistante dans moniteur
+     *-----------------------------------------------------------------
+     *
+    C           ERRMON    BEGSR
+     *
+     C                     MOVE 'O'       FIN
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FENETR : Gestionnaire des fenêtres
+     *----------------------------------------------------------------
+     *
+    C           FENETR    BEGSR
+     * Sauvegarde de la position du curseur pour éviter qu'il ne se
+     * ballade dans l'écran (très désagréable...)
+     C           £CURSO    DIV  256       HLIG
+     C                     MVR            HCOL
+     *
+    C           HZONE     CASEQ'NOFOU'   FENFOU
+    C           HZONE     CASEQ'CODMON'  FENMON
+    C           HZONE     CASEQ'CODPA3'  FENPAY
+    C           HZONE     CASEQ'CLIT6'   FENLIT
+    C                     CAS            ERRHLP
+    C                     END
+     *
+    C                     ENDSR
+     *----------------------------------------------------------------
+     * ERRHLP : ERREUR ZONE SANS AIDE
+     *----------------------------------------------------------------
+     *
+    C           ERRHLP    BEGSR
+     C                     EXFMTAIDERR
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FENFOU : Affichage fenêtre des fournisseurs
+     *----------------------------------------------------------------
+     *
+    C           FENFOU    BEGSR
+     *
+     C                     MOVEL*BLANKS   WARGU5
+     C                     MOVEL*BLANKS   WHARGU
+     *
+     C           POS5      TAG
+     *
+     C                     Z-ADD0         WLIGNE  20
+     C                     MOVEA'100'     *IN,60
+     C                     WRITEMAWC23
+     *
+     C                     MOVEA'010'     *IN,60
+     C                     WRITEMAWC23
+     *
+     C                     MOVEA'00000'   *IN,60
+     C                     Z-ADD0         RECN23
+     C           WARGU5    SETLLFOURNIL2
+     C                     READ FOURNIL2                 55
+     C           CHGT5     TAG
+D1  C           *IN55     DOWEQ'0'
+    C           WLIGNE    ANDLT10
+D2  C           SEQADR    IFEQ 1
+     C           KSTE1     SETLLFOUSTEL1                 54
+     C           KLIV      SETLLLIVFOUL1                 53
+D3  C           *IN54     IFEQ '1'
+    C           *IN53     ANDEQ'1'
+     C                     MOVELNOFOU     WNOFO5
+     C                     MOVELABRFOU    WABRF5
+     C                     MOVELVILFOU    WVILF5
+     C                     Z-ADDDEPFOU    WDEPF5
+     C                     Z-ADDCPFOU     WCDPF5
+     C                     MOVELRUEFOU    WRUEF5
+     C                     MOVELPAYFOU    WPAYF5
+     C                     MOVELNOMFOU    WNOMF5
+     C                     MOVE *BLANKS   WSELE5
+     C                     ADD  1         RECN23
+     C                     ADD  1         WLIGNE
+     C                     WRITEMAWS23
+F3  C                     END
+F2  C                     END
+     C                     READ FOURNIL2                 55
+F1  C                     END
+     *
+D1  C           *IN55     IFEQ '1'
+     C                     MOVE '1'       *IN62
+F1  C                     END
+D1  C           RECN23    IFEQ 0
+     C                     MOVE '1'       *IN63
+F1  C                     END
+     *
+     C           AFFI5     TAG
+     C                     EXFMTMAWC23
+D1  C           *IN12     IFEQ '1'
+     C                     MOVEL*BLANKS   NOFOU
+     C                     MOVEL*BLANKS   ABRFOU
+     C                     MOVEL*BLANKS   NOMFOU
+    C                     GOTO FINW5
+X1  C                     ELSE
+D2  C           *IN25     IFEQ '1'
+D3  C           *IN62     IFEQ '0'
+     C                     Z-ADD0         WLIGNE
+     C                     MOVE '0'       *IN25
+    C                     GOTO CHGT5
+X3  C                     ELSE
+    C                     GOTO AFFI5
+F3  C                     END
+X2  C                     ELSE
+D3  C           WARGU5    IFNE WHARGU
+     C                     MOVELWARGU5    WHARGU
+    C                     GOTO POS5
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     * SELECTION ?
+     *
+     C                     MOVEL*BLANKS   WNOFO5
+     C                     READCMAWS23                   54
+D1  C           WSELE5    DOWEQ*BLANKS
+    C           *IN54     ANDEQ'0'
+     C                     READCMAWS23                   54
+F1  C                     END
+D1  C           WSELE5    IFNE *BLANKS
+     C                     MOVELWNOFO5    NOFOU
+     C                     MOVELWABRF5    ABRFOU
+     C                     MOVELWNOMF5    NOMFOU
+X1  C                     ELSE
+     C                     MOVEL*BLANKS   NOFOU
+     C                     MOVEL*BLANKS   ABRFOU
+     C                     MOVEL*BLANKS   NOMFOU
+F1  C                     END
+     *
+     C           FINW5     TAG
+     C                     MOVE '0'       *IN03
+     C                     MOVE '0'       *IN12
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FENMON : Module de recherche de CODES monnaies
+     *----------------------------------------------------------------
+     *
+    C           FENMON    BEGSR
+     *
+     C                     MOVEA'100'     *IN,60
+     C                     WRITEMAWC21
+     *
+     C                     MOVEA'010'     *IN,60
+     C                     WRITEMAWC21
+     *
+     C                     MOVEA'00000'   *IN,60
+     C                     Z-ADD0         RECN21
+     *
+     C                     MOVEL'DV'      RCT
+     C                     Z-ADD92        RSTE
+     *
+     C           *LOVAL    SETLLDEVISEL1
+     C                     READ DEVISEL1                 55
+D1  C           *IN55     DOWEQ'0'
+D2  C           RCDEV     IFNE XCODMO
+     C                     MOVE *BLANKS   XSELEC
+     C                     MOVELRCDEV     XCODMO
+     C                     ADD  1         RECN21
+     C                     WRITEMAWS21
+F2  C                     END
+     C                     READ DEVISEL1                 55
+F1  C                     END
+     C                     MOVE '1'       *IN62
+D1  C           RECN21    IFEQ 0
+     C                     MOVE '1'       *IN63
+F1  C                     END
+     *
+     C                     Z-ADD1         RECN21
+     *
+     C           AFFI3     TAG
+     C                     EXFMTMAWC21
+D1  C           *IN03     IFEQ '1'
+    C                     GOTO FINW3
+F1  C                     END
+     *
+     * SELECTION ?
+     *
+     C                     READCMAWS21                   54
+D1  C           XSELEC    DOWEQ*BLANKS
+    C           *IN54     ANDEQ'0'
+     C                     READCMAWS21                   54
+F1  C                     END
+D1  C           XSELEC    IFEQ *BLANKS
+    C                     GOTO AFFI3
+X1  C                     ELSE
+     C                     MOVELXCODMO    CODMON
+     C                     MOVELLBDEV     LIBMO3
+F1  C                     END
+     *
+     C           FINW3     TAG
+     C                     MOVE '0'       *IN03
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FENPAY : Module de recherche de PAYS
+     *----------------------------------------------------------------
+     *
+    C           FENPAY    BEGSR
+     *
+     C                     Z-ADD0         WLIGNE  20
+     *
+     C                     MOVEA'100'     *IN,60
+     C                     WRITEMAWC24
+     *
+     C                     MOVEA'010'     *IN,60
+     C                     WRITEMAWC24
+     *
+     C                     MOVEA'00000'   *IN,60
+     C                     Z-ADD0         RECN24
+     *
+     C                     MOVE *BLANKS   WCLE
+     C                     MOVE *BLANKS   WNUM
+     C                     MOVEL'TPAY'    WCLE
+     *
+     C           KPAR      SETLLPARAME
+     C           KPAR      READEPARAME                   55
+     *
+D1  C           *IN55     DOWEQ'0'
+     C                     MOVELPXMONT    PXMT   100
+D2  C           PXMT      IFEQ 99
+     C                     MOVEL'E'       XHCEE
+X2  C                     ELSE
+     C                     MOVEL' '       XHCEE
+F2  C                     END
+     C                     MOVE PXVALE    XCPAY
+     C                     MOVELPXLIBE    XLIBPA
+     C                     MOVE *BLANKS   XSELEC
+     C                     ADD  1         RECN24
+     C                     ADD  1         WLIGNE
+     C                     WRITEMAWS24
+     C           KPAR      READEPARAME                   55
+F1  C                     END
+D1  C           *IN55     IFEQ '1'
+     C                     MOVE '1'       *IN62
+F1  C                     END
+D1  C           RECN24    IFEQ 0
+     C                     MOVE '1'       *IN63
+F1  C                     END
+     *
+     C                     Z-ADD1         RECN24
+     *
+     C           AFFI6     TAG
+     C                     EXFMTMAWC24
+    C   12                GOTO FINW6
+     *
+     * SELECTION ?
+     *
+     C                     READCMAWS24                   54
+D1  C           XSELEC    DOWEQ*BLANKS
+    C           *IN54     ANDEQ'0'
+     C                     READCMAWS24                   54
+F1  C                     END
+D1  C           XSELEC    IFEQ *BLANKS
+     C                     MOVE '1'       *IN30
+    C                     GOTO AFFI6
+F1  C                     END
+     *
+     C                     MOVELXCPAY     CODPA3
+     C                     MOVELXLIBPA    LIBPA3
+     C                     MOVELXHCEE     HCEE
+     *
+     C           FINW6     TAG
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FENLIT : Module de recherche des Codes Litiges
+     *----------------------------------------------------------------
+     *
+    C           FENLIT    BEGSR
+     *
+     C                     Z-ADD0         WLIGNE  20
+     *
+     C                     MOVEA'100'     *IN,60
+     C                     WRITEMAWC25
+     *
+     C                     MOVEA'010'     *IN,60
+     C                     WRITEMAWC25
+     *
+     C                     MOVEA'00000'   *IN,60
+     C                     Z-ADD0         RECN25
+     *
+     C                     MOVEL'LT'      RCT
+     C                     Z-ADD92        RSTE
+     *
+     C           KFAN1     SETLLFAN100P1
+     C           KFAN1     READEFAN100P1                 55
+     *
+D1  C           *IN55     DOWEQ'0'
+     C                     MOVELRARG      XCLIT
+D2  C           XCLIT     IFLE '28'
+    C           XCLIT     ANDGE'20'
+     C                     MOVELTLIB1     XLIBLI
+     C                     MOVE *BLANKS   XSELEC
+     C                     ADD  1         RECN25
+     C                     WRITEMAWS25
+F2  C                     END
+     C           KFAN1     READEFAN100P1                 55
+F1  C                     END
+D1  C           *IN55     IFEQ '1'
+     C                     MOVE '1'       *IN62
+F1  C                     END
+D1  C           RECN25    IFEQ 0
+     C                     MOVE '1'       *IN63
+F1  C                     END
+     *
+     C                     Z-ADD1         RECN25
+     *
+     C           AFFI7     TAG
+     C                     EXFMTMAWC25
+    C   12                GOTO FINW7
+     *
+     * SELECTION ?
+     *
+     C                     READCMAWS25                   54
+D1  C           XSELEC    DOWEQ*BLANKS
+    C           *IN54     ANDEQ'0'
+     C                     READCMAWS25                   54
+F1  C                     END
+D1  C           XSELEC    IFEQ *BLANKS
+     C                     MOVE '1'       *IN30
+    C                     GOTO AFFI7
+F1  C                     END
+     *
+     C                     MOVELXCLIT     CLIT6
+     *
+     C           FINW7     TAG
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * FENFSC : Affichage fenêtre spécial FSC
+     *----------------------------------------------------------------
+     *
+    C           FENFSC    BEGSR
+     *
+     C           AFF2      TAG
+     C                     MOVE '1'       *IN33
+     C                     Z-ADD0         RECDN   40
+     C                     MOVELNOFOU     WNOFOU
+     C                     MOVELABRFOU    WLBFOU
+     C                     MOVELPAPI      WPAPI
+     C                     Z-ADDGRAMM     WGRAMM
+     C                     MOVELREFOUR    WREFOU
+     C                     Z-ADDGRAREL    WGRARE
+     C                     MOVE FOUB      WFOUB
+     C                     MOVELFOUART    WFOUAR
+     C                     MOVELNOFACF    WNOFAC
+     C                     Z-ADDDAFOU1    WDAFOU
+     C                     WRITEWAC
+     C                     MOVEA'00'      *IN,33
+     C                     Z-ADD0         POIFSC
+     *
+     C   83                READCF6S                      39
+     C  N83                READCF9S                      39
+     C                     MOVE '1'       *IN79
+D1  C           *IN39     DOWEQ'0'
+     * S'agit-il d'une commande FSC ?
+D2  C           CDEFSC    IFEQ 'F'
+     C           TXFSC     DIV  100       COEFSC  32
+D3  C           PFACTU    IFNE 0
+     C                     Z-ADDPFACTU    WPOIIM
+X3  C                     ELSE
+     C                     Z-ADDQTEREC    WPOIIM
+F3  C                     ENDIF
+     C                     Z-ADDWPOIIM    WPDFSC
+     C                     MULT COEFSC    WPDFSC
+     C                     Z-ADDWPDFSC    HPDFSC
+     C                     ADD  WPDFSC    POIFSC
+     C                     MOVE USCOM     WUSCOM
+     C                     MOVE ANCOM     WANCOM
+     C                     MOVE NOCOM     WNOCOM
+     C                     MOVE SEQCOM    WSEQCO
+     C                     ADD  1         RECDN
+     C                     MOVE '1'       *IN34
+     C                     WRITEWAS
+F2  C                     ENDIF
+     *
+     C   83                UPDATF6S
+     C  N83                UPDATF9S
+     C   83                READCF6S                      39
+     C  N83                READCF9S                      39
+F1  C                     ENDDO
+     *
+     C           SELWA     TAG
+     C                     WRITEWB
+     C                     EXFMTWAC
+     C                     MOVE '0'       *IN90
+     *
+    C           *IN12     CABEQ'1'       FFENFS
+     *
+     C                     READCWAS                      35
+D1  C           *IN35     DOWEQ'0'
+     C                     MOVE '0'       *IN30
+     C                     MOVE '1'       *IN89
+D2  C           WPDFSC    IFGT HPDFSC
+     C                     MOVE '1'       *IN30
+     C                     MOVE '1'       *IN90
+X2  C                     ELSE
+D3  C           WPDFSC    IFNE HPDFSC
+     C                     ADD  WPDFSC    POIFSC
+     C                     SUB  HPDFSC    POIFSC
+     C                     Z-ADDWPDFSC    HPDFSC
+F3  C                     ENDIF
+F2  C                     ENDIF
+     C                     UPDATWAS
+     C                     READCWAS                      35
+F1  C                     ENDDO
+     *
+D1  C           *IN90     IFEQ '1'
+     C                     MOVE '1'       *IN31
+    C                     GOTO SELWA
+F1  C                     ENDIF
+     *
+     * Confirmation imputation poids FSC à la facture
+    C           *IN23     CABEQ'0'       SELWA
+     *
+    C           FFENFS    ENDSR
+     *
+     *----------------------------------------------------------------
+     * CTLDAT : Module de contrôle de Date
+     *----------------------------------------------------------------
+     *
+    C           CTLDAT    BEGSR
+     *
+     C                     MOVE '0'       £ERR    1
+     *
+     C           KCAL      CHAINCALENS               55
+     C   55                MOVE '1'       £ERR
+     *
+    C                     ENDSR
+     *
+     *----------------------------------------------------------------
+     * HISFSC : Historisation poids FSC
+     *----------------------------------------------------------------
+     *
+    C           HISFSC    BEGSR
+     *
+D1  C           PKGFSC    IFNE 0
+     *
+     C                     Z-ADD£USINE    USINE
+     C                     Z-ADD0         NOCLI
+     C                     MOVE 'C'       SENS
+     C                     MOVE 'FACTF'   TYPIEC
+     C                     MOVE NOFACF    NOPIEC
+     C                     Z-ADDDAFOU1    WDATE
+     C                     Z-ADDWJJDT     DTJPIE
+     C                     Z-ADDWMMDT     DTMPIE
+     C                     Z-ADDWAADT     DTAPIE
+     C                     Z-ADDPKGFSC    NBPOIN
+     *
+     C                     WRITEMVTFSCF1
+     *
+     C           £USINE    CHAINSOLFSCF1             50
+D2  C           *IN50     IFEQ '0'
+     C                     ADD  PKGFSC    SLPOIN
+     C                     MOVE 'FACTF'   TYPIEC
+     C                     MOVE NOFACF    NOPIEC
+     C                     Z-ADDUDAY      JJMAJ
+     C                     Z-ADDUMONTH    MMMAJ
+     C                     Z-ADDUYEAR     ANMAJ
+     C                     TIME           HMSMAJ
+     C                     UPDATSOLFSCF1
+X2  C                     ELSE
+     C                     Z-ADDPKGFSC    SLPOIN
+     C                     Z-ADDUDAY      JJMAJ
+     C                     Z-ADDUMONTH    MMMAJ
+     C                     Z-ADDUYEAR     ANMAJ
+     C                     TIME           HMSMAJ
+     C                     WRITESOLFSCF1
+F2  C                     ENDIF
+     *
+F1  C                     ENDIF
+     *
+    C                     ENDSR
+** TABLE DES MOIS
+31
+28
+31
+30
+31
+30
+31
+31
+30
+31
+30
+31

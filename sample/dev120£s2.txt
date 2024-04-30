@@ -1,0 +1,3097 @@
+     **********************************************************
+     *                                                        *
+     *    ECRAN OFFSET      -  NOUVELLE VERSION               *
+     *    -----------------------------------------           *
+     *    + DORURE A FROID                                    *
+     *    POUR DEVIS OFFRE PRDODUIT                           *
+     **********************************************************
+     *    INDICATEURS:                                        *
+     *    ------------                                        *
+     *     01 A 24 --> TOUCHES DE FONCTION                    *
+     * *   30 --> IMPRESSION EXTERIEUR                        *
+     * *   31 --> IMPRESSION INTERIEUR                        *
+     * *   32 --> COMPACT RECTO VERSO                         *
+     * *   33 --> VISUALISATION UNIQUEMENT                    *
+     * *   34 --> DORURE EXTERIEUR                            *
+     * *  N34 --> DORURE INTERIEUR                            *
+     * *   35 --> AIDE                                        *
+     * *   41 --> CONFIG 6 + 1                                *
+     * *   42 --> CONFIG 6 + 2                                *
+     *     50 A 98 --> ERREURS                                *
+     **********************************************************
+     * TMAFBU 25/09/2017 : AJOUT ENCRE TRADI 'T'              *
+     **********************************************************
+     H             /J
+     FDEV120D CF  E                    WORKSTN
+     F                                              KINFDS àINFDS
+     *
+     FXTBASE01IF  E           K        DISK
+     FPARAME  IF  E           K        DISK
+     *
+     E                    ERD     1   7 40
+     E                    LIBMSG  1   1 15
+     *
+     * DS Pour récupération des infos écran
+     I/COPY QRPGSRC,XVERDS
+     I/COPY QRPGSRC,XTRADS
+     I/COPY QRPGSRC,XENCDS
+     I/COPY QRPGSRC,XORCDS
+     I/COPY QRPGSRC,XFLUDS
+     I/COPY QRPGSRC,XCOLDS
+     I/COPY QRPGSRC,XDECDS
+     I/COPY QRPGSRC,XTIMDS
+     I/COPY QRPGSRC,XPTEDS
+     *
+     IàINFDS      DS
+     I                                    B 370 3710£CURSO
+     IDSPARM      DS
+     I                                      001 025 LIBTRA
+     I                                      026 035 LIBDEV
+     I                                      036 065 NOMCL
+     I                                      066 0670ANDEV
+     I                                      068 0710ETUDE
+     I                                      072 0750SEQDE
+     I                                      076 115 BLOC1
+     I                                      116 116 MAJVIS
+    I*****************  EXTPRI
+     I                                      117 1170USEXT
+     I                                      118 120 PAPIE
+     I                                      121 1230GRAME
+     I                                      124 129 REFOUE
+     I                                      130 1320GRAREE
+     I                                      133 1340COUEX
+     I                                      135 136 OCOMRV
+     I                                      137 1370OTCOEP
+     I                                      138 139 OMACEP
+     I                                      140 1410OGEEP1
+     I                                      142 1430OGEEP2
+     I                                      144 1450OGEEP3
+     I                                      146 146 OTE1EP
+     I                                      147 147 ONE1EP
+     I                                      148 1491OPE1EP
+     I                                      150 150 OTE2EP
+     I                                      151 151 ONE2EP
+     I                                      152 1531OPE2EP
+     I                                      154 155 OTOAEP
+     I                                      156 1571OPOAEP
+     I                                      158 158 OTEFEP
+     I                                      159 1601OPEFEP
+     I                                      161 1621OMESEP
+     I                                      163 163 OTEMEP
+     I                                      164 1651OPEMEP
+     I                                      166 1660ODPEP
+     I                                      167 168 ODF1EP
+     I                                      169 170 ODF2EP
+     I                                      171 172 ODF3EP
+     I                                      173 1770ODS1EP
+     I                                      178 1820ODS2EP
+     I                                      183 1870ODS3EP
+     I                                      188 188 OTV1EP
+     I                                      189 1901OPV1EP
+     I                                      191 1921OMV1EP
+     I                                      193 193 OV1EP1
+     I                                      194 194 OV1EP2
+     I                                      195 195 OV1EP3
+     I                                      196 196 OTV2EP
+     I                                      197 1981OPV2EP
+     I                                      199 2001OMV2EP
+     I                                      201 201 OV2EP1
+     I                                      202 202 OV2EP2
+     I                                      203 203 OV2EP3
+     I                                      204 204 OTV3EP
+     I                                      205 2061OPV3EP
+     I                                      207 2081OMV3EP
+     I                                      209 209 OV3EP1
+     I                                      210 210 OV3EP2
+     I                                      211 211 OV3EP3
+     I                                      212 212 ODPREP
+     I                                      213 213 OTGEP
+     I                                      214 214 OGGEP
+     I                                      215 215 ODDEP
+     I                                      216 216 ODAEP
+     I                                      217 217 OTSSEP
+     I                                      218 218 OTMEP
+    I*****************  EXTREP
+     I                                      219 2200OGEER1
+     I                                      221 2220OGEER2
+     I                                      223 2240OGEER3
+     I                                      225 225 OTE1ER
+     I                                      226 226 ONE1ER
+     I                                      227 2281OPE1ER
+     I                                      229 229 OTE2ER
+     I                                      230 230 ONE2ER
+     I                                      231 2321OPE2ER
+     I                                      233 234 OTOAER
+     I                                      235 2361OPOAER
+     I                                      237 237 OTEFER
+     I                                      238 2391OPEFER
+     I                                      240 2411OMESER
+     I                                      242 242 OTEMER
+     I                                      243 2441OPEMER
+     I                                      245 2450ODPER
+     I                                      246 247 ODF1ER
+     I                                      248 249 ODF2ER
+     I                                      250 251 ODF3ER
+     I                                      252 2560ODS1ER
+     I                                      257 2610ODS2ER
+     I                                      262 2660ODS3ER
+     I                                      267 267 OTV1ER
+     I                                      268 2691OPV1ER
+     I                                      270 2711OMV1ER
+     I                                      272 272 OV1ER1
+     I                                      273 273 OV1ER2
+     I                                      274 274 OV1ER3
+     I                                      275 275 OTV2ER
+     I                                      276 2771OPV2ER
+     I                                      278 2791OMV2ER
+     I                                      280 280 OV2ER1
+     I                                      281 281 OV2ER2
+     I                                      282 282 OV2ER3
+     I                                      283 283 OTV3ER
+     I                                      284 2851OPV3ER
+     I                                      286 2871OMV3ER
+     I                                      288 288 OV3ER1
+     I                                      289 289 OV3ER2
+     I                                      290 290 OV3ER3
+     I                                      291 291 ODPRER
+     I                                      292 292 OTGER
+     I                                      293 293 OGGER
+     I                                      294 294 ODDER
+     I                                      295 295 ODAER
+     I                                      296 296 OTSSER
+     I                                      297 297 OTMER
+    I*****************  INTPRI
+     I                                      298 2980USINT
+     I                                      299 301 PAPII
+     I                                      302 3040GRAMI
+     I                                      305 310 REFOUI
+     I                                      311 3130GRAREI
+     I                                      314 3150COUIN
+     I                                      316 3170OGEIP1
+     I                                      318 3190OGEIP2
+     I                                      320 3210OGEIP3
+     I                                      322 322 OTE1IP
+     I                                      323 323 ONE1IP
+     I                                      324 3251OPE1IP
+     I                                      326 326 OTE2IP
+     I                                      327 327 ONE2IP
+     I                                      328 3291OPE2IP
+     I                                      330 331 OTOAIP
+     I                                      332 3331OPOAIP
+     I                                      334 334 OTEFIP
+     I                                      335 3361OPEFIP
+     I                                      337 3381OMESIP
+     I                                      339 339 OTEMIP
+     I                                      340 3411OPEMIP
+     I                                      342 3420ODPIP
+     I                                      343 344 ODF1IP
+     I                                      345 346 ODF2IP
+     I                                      347 348 ODF3IP
+     I                                      349 3530ODS1IP
+     I                                      354 3580ODS2IP
+     I                                      359 3630ODS3IP
+     I                                      364 364 OTV1IP
+     I                                      365 3661OPV1IP
+     I                                      367 3681OMV1IP
+     I                                      369 369 OV1IP1
+     I                                      370 370 OV1IP2
+     I                                      371 371 OV1IP3
+     I                                      372 372 OTV2IP
+     I                                      373 3741OPV2IP
+     I                                      375 3761OMV2IP
+     I                                      377 377 OV2IP1
+     I                                      378 378 OV2IP2
+     I                                      379 379 OV2IP3
+     I                                      380 380 OTV3IP
+     I                                      381 3821OPV3IP
+     I                                      383 3841OMV3IP
+     I                                      385 385 OV3IP1
+     I                                      386 386 OV3IP2
+     I                                      387 387 OV3IP3
+     I                                      388 388 OTGIP
+     I                                      389 389 OGGIP
+     I                                      390 390 ODDIP
+     I                                      391 391 ODAIP
+     I                                      392 392 OTSSIP
+     I                                      393 393 OTMIP
+    I*****************  INTREP
+     I                                      394 3950OGEIR1
+     I                                      396 396 OTE1IR
+     I                                      397 397 ONE1IR
+     I                                      398 3991OPE1IR
+     I                                      400 4011OMESIR
+     I                                      402 402 OTV1IR
+     I                                      403 4041OPV1IR
+     I                                      405 4061OMV1IR
+    I*****************  DIVERS
+     I                                      407 4100FORL
+     I                                      411 4140FORH
+     I                                      415 4150TIMPEX
+     I                                      416 4160TIMPIN
+     I                                      417 4170COUEXR
+     I                                      418 418 CODDOR
+     I                                      419 420 CODRET
+     I                                      421 421 DEAFPR
+     I                                      422 4220USIMAC
+     I                                      423 423 UV1
+    I*****************  DORURE A FROID PRODUITS
+     I                                      424 427 ODT1EP
+     I                                      428 4300ODL1EP
+     I                                      431 434 ODT2EP
+     I                                      435 4370ODL2EP
+     I                                      438 441 ODT3EP
+     I                                      442 4440ODL3EP
+     I                                      445 448 ODT1IP
+     I                                      449 4510ODL1IP
+     I                                      452 455 ODT2IP
+     I                                      456 4580ODL2IP
+     I                                      459 462 ODT3IP
+     I                                      463 4650ODL3IP
+     I                                      466 469 ODT1ER
+     I                                      470 4720ODL1ER
+     I                                      473 476 ODT2ER
+     I                                      477 4790ODL2ER
+     I                                      480 483 ODT3ER
+     I                                      484 4860ODL3ER
+    I*****************  REFERENCE CLICHÉ SPECIFIQUE AFFICHE PRODUIT
+     I                                      487 492 CLICEP
+     I                                      493 493 INDPEP
+     I                                      494 499 CLICIP
+     I                                      500 500 INDPIP
+     *
+     IDSPAR2      DS
+     I                                        1   8 TBLNOM
+     I                                        9  18 TBVAR
+     I                                       19  200LG
+     I                                       21  30 CODE
+     I                                       31  80 LIBEL
+     I                                       81  81 FICH
+     *
+     IDSPAR3      DS
+     I                                        1   2 BLANK
+     I                                        3   3 STE
+     I                                        4   7 NOCLI
+     I                                        8  11 NOPRO
+     *
+     I            DS
+     I                                        1   3 OUMEP
+     I                                        1   10OUCOEP
+     I                                        2   3 OUMAEP
+     *
+     I            DS
+     I                                        1  20 LIBMAC
+     I                                        1   10LUSIMA
+     I I            ' '                       2   2 FIL001
+     I                                        3   40LMACMA
+     I I            ' '                       5   5 FIL002
+     I                                        6  20 LLIBMA
+     * CLE D'ACCES PARAME
+     C           KPARAM    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+     *  CLE D'ACCES FICHIER XTBASE01
+     C           KTBA01    KLIST
+     C                     KFLD           TBLNOM
+     C                     KFLD           TBVARG
+     C                     KFLD           TBNSEG
+     *
+     C           *ENTRY    PLIST
+     C                     PARM           DSPARM
+     * INIT DES ZONES SPECIFIQUES PRODUITS
+D1  C           DEAFPR    IFNE 'P'                        PRODUIT
+    C           DEAFPR    ANDNE'F'                        AFFICHE/PRODUIT
+     C                     Z-ADD*ZEROS    ODL1EP
+     C                     Z-ADD*ZEROS    ODL2EP
+     C                     Z-ADD*ZEROS    ODL3EP
+     C                     Z-ADD*ZEROS    ODL1IP
+     C                     Z-ADD*ZEROS    ODL2IP
+     C                     Z-ADD*ZEROS    ODL3IP
+     C                     Z-ADD*ZEROS    ODL1ER
+     C                     Z-ADD*ZEROS    ODL2ER
+     C                     Z-ADD*ZEROS    ODL3ER
+F1  C                     END
+D1  C           DEAFPR    IFNE 'F'                        AFFICHE/PRODUIT
+     C                     Z-ADD*ZEROS    ZLICEP
+     C                     MOVE *BLANK    ZNDPEP
+     C                     Z-ADD*ZEROS    ZLICIP
+     C                     MOVE *BLANK    ZNDPIP
+     C                     MOVE '0'       *IN69
+X1  C                     ELSE
+     C                     MOVE '1'       *IN69
+F1  C                     END
+     *GESTION DES AFFICHAGES
+D1  C           MAJVIS    IFEQ 'V'
+     C                     MOVE '1'       *IN33            PROTEGÉ
+F1  C                     END
+D1  C           OCOMRV    IFEQ 'EI'
+    C           OCOMRV    OREQ 'I '
+     C                     MOVE TIMPEX    TIMPIN
+     C                     MOVE USEXT     USINT
+     C                     MOVE PAPIE     PAPII
+     C                     MOVE GRAME     GRAMI
+     C                     MOVE REFOUE    REFOUI
+     C                     MOVE GRAREE    GRAREI
+D2  C           OCOMRV    IFEQ 'EI'
+     C                     MOVE '1'       *IN32            COMPACT:REC/VERSO
+F2  C                     END
+D2  C           OCOMRV    IFEQ 'I '
+     C                     MOVE 0         TIMPEX
+     C                     MOVE *BLANK    PAPIE
+     C                     MOVE *BLANK    GRAME
+     C                     MOVE *BLANK    REFOUE
+     C                     MOVE *ZEROS    GRAREE
+F2  C                     END
+F1  C                     END
+D1  C           TIMPEX    IFEQ 4
+     C                     MOVE '1'       *IN30            EXTERIEUR
+F1  C                     END
+D1  C           TIMPIN    IFEQ 4
+     C                     MOVE '1'       *IN31            INTERIEUR
+F1  C                     END
+    C           OTCOEP    CABEQ1                        41   *** 6+1
+    C  N41      OTCOEP    CABEQ2                        42   *** KBA 6+2
+    C  N41N42N33OTCOEP    CABEQ3                    3333     *** 3B
+     *
+     * INIT DES PASSAGE E/I SI CONFIG 2
+D1  C           *IN42     IFEQ '1'
+     C                     MOVE *BLANK    UV1
+     C                     MOVE *BLANK    ODPREP
+     C                     MOVE *BLANK    ODPRER
+     C                     MOVE *BLANK    OGEEP2
+     C                     MOVE *BLANK    OGEEP3
+     C                     MOVE *BLANK    OGEER2
+     C                     MOVE *BLANK    OGEER3
+     C                     MOVE *BLANK    OGEIP2
+     C                     MOVE *BLANK    OGEIP3
+    C*                    MOVE *BLANK    ODPEP
+    C*                    MOVE *BLANK    ODPER
+    C*                    MOVE *BLANK    ODPIP
+     C                     MOVE *BLANK    OV1EP2
+     C                     MOVE *BLANK    OV1EP3
+     C                     MOVE *BLANK    OV1ER2
+     C                     MOVE *BLANK    OV1ER3
+     C                     MOVE *BLANK    OV1IP2
+     C                     MOVE *BLANK    OV1IP3
+     C                     MOVE *BLANK    OV2EP2
+     C                     MOVE *BLANK    OV2EP3
+     C                     MOVE *BLANK    OV2ER2
+     C                     MOVE *BLANK    OV2ER3
+     C                     MOVE *BLANK    OV2IP2
+     C                     MOVE *BLANK    OV2IP3
+     C                     MOVE *BLANK    OV3EP2
+     C                     MOVE *BLANK    OV3EP3
+     C                     MOVE *BLANK    OV3ER2
+     C                     MOVE *BLANK    OV3ER3
+     C                     MOVE *BLANK    OV3IP2
+     C                     MOVE *BLANK    OV3IP3
+F1  C                     END
+     *USINE
+D1  C           USEXT     IFNE 0
+     C                     MOVEL'USDE'    PXARGU
+     C                     MOVE USEXT     PXVALE    P
+     C                     Z-ADDUSEXT     USINE
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVELPXABRG    LIBUSI
+X1  C                     ELSE
+D2  C           USINT     IFNE 0
+     C                     MOVE USINT     PXVALE    P
+     C                     Z-ADDUSINT     USINE
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVELPXABRG    LIBUSI
+F2  C                     END
+F1  C                     END
+     *
+     * AFFICHAGE DES DONNÉES REÇUES
+     *
+     *  EXTERIEUR PRICIPALE STANDARD OU COMPACT RECTO OU COMPACT RECTO VERSO
+     *  ISSUE DES DONNÉES EXTERIEURES  PRINCIPALES
+D1  C           TIMPEX    IFEQ 4
+     C                     MOVEL'OFMA'    PXARGU
+     C                     Z-ADDUSIMAC    OUCOEP
+     C                     MOVE OMACEP    OUMAEP
+     C                     MOVE OUMEP     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVELPXLIBE    LLIBMA
+     C  N50                MOVELOMACEP    LMACMA
+     C  N50                MOVELOUCOEP    LUSIMA
+     C   50                MOVE *BLANK    LIBMAC
+     *
+D2  C           OCOMRV    IFEQ '  '
+    C           OCOMRV    OREQ 'E '
+    C           OCOMRV    OREQ 'EI'
+     C                     Z-ADDOGEEP1    ZGEEP1
+     C                     Z-ADDOGEEP2    ZGEEP2
+     C                     Z-ADDOGEEP3    ZGEEP3
+     C                     MOVE OTE1EP    ZTE1EP
+     C                     MOVE ONE1EP    ZNE1EP
+     C                     Z-ADDOPE1EP    ZPE1EP
+     C                     MOVE OTE2EP    ZTE2EP
+     C                     MOVE ONE2EP    ZNE2EP
+     C                     Z-ADDOPE2EP    ZPE2EP
+     C                     MOVELOTOAEP    ZTOAEP
+     C                     Z-ADDOPOAEP    ZPOAEP
+     C                     MOVE OTEFEP    ZTEFEP
+     C                     Z-ADDOPEFEP    ZPEFEP
+     C                     Z-ADDOMESEP    ZMESEP
+     C                     MOVE OTEMEP    ZTEMEP
+     C                     Z-ADDOPEMEP    ZPEMEP
+D3  C           ODPEP     IFEQ 1
+     C                     MOVE 'X'       ZDEP1P
+     C                     MOVE ' '       ZDEP2P
+     C                     MOVE ' '       ZDEP3P
+X3  C                     ELSE
+D4  C           ODPEP     IFEQ 2
+     C                     MOVE ' '       ZDEP1P
+     C                     MOVE 'X'       ZDEP2P
+     C                     MOVE ' '       ZDEP3P
+X4  C                     ELSE
+D5  C           ODPEP     IFEQ 3
+     C                     MOVE ' '       ZDEP1P
+     C                     MOVE ' '       ZDEP2P
+     C                     MOVE 'X'       ZDEP3P
+F5  C                     END
+F4  C                     END
+F3  C                     END
+     C                     MOVE ODPEP     HDPEP
+     C                     MOVE ODF1EP    HDF1EP
+     C                     MOVE ODF2EP    HDF2EP
+     C                     MOVE ODF3EP    HDF3EP
+     C                     MOVE ODS1EP    HDS1EP
+     C                     MOVE ODS2EP    HDS2EP
+     C                     MOVE ODS3EP    HDS3EP
+     C                     MOVE ODT1EP    HDT1EP
+     C                     MOVE ODL1EP    HDL1EP
+     C                     MOVE ODT2EP    HDT2EP
+     C                     MOVE ODL2EP    HDL2EP
+     C                     MOVE ODT3EP    HDT3EP
+     C                     MOVE ODL3EP    HDL3EP
+     C                     MOVE OTV1EP    ZTV1EP
+     C                     MOVE OPV1EP    ZPV1EP
+     C                     MOVE OMV1EP    ZMV1EP
+     C                     MOVE OV1EP1    ZV1EP1
+     C                     MOVE OV1EP2    ZV1EP2
+     C                     MOVE OV1EP3    ZV1EP3
+     C                     MOVE OTV2EP    ZTV2EP
+     C                     Z-ADDOPV2EP    ZPV2EP
+     C                     Z-ADDOMV2EP    ZMV2EP
+     C                     MOVE OV2EP1    ZV2EP1
+     C                     MOVE OV2EP2    ZV2EP2
+     C                     MOVE OV2EP3    ZV2EP3
+     C                     MOVE OTV3EP    ZTV3EP
+     C                     Z-ADDOPV3EP    ZPV3EP
+     C                     Z-ADDOMV3EP    ZMV3EP
+     C                     MOVE OV3EP1    ZV3EP1
+     C                     MOVE OV3EP2    ZV3EP2
+     C                     MOVE OV3EP3    ZV3EP3
+     C                     MOVE ODPREP    ZDPREP
+     C                     MOVE OTGEP     ZTGEP
+     C                     MOVE OGGEP     ZGGEP
+     C                     MOVE ODDEP     ZDDEP
+     C                     MOVE ODAEP     ZDAEP
+     C                     MOVE OTSSEP    ZTSSEP
+     C                     MOVE OTMEP     ZTMEP
+D3  C           DEAFPR    IFEQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE CLICEP    ZLICEP
+     C                     MOVE INDPEP    ZNDPEP
+F3  C                     END
+     *  EXTERIEUR REPIQUAGE STANDARD OU COMPACT RECTO
+     *  ISSUE DES DONNÉES EXTERIEURES
+D3  C           OCOMRV    IFEQ '  '
+    C           OCOMRV    OREQ 'E '
+     C                     Z-ADDOGEER1    ZGEER1
+     C                     MOVE OTE1ER    ZTE1ER
+     C                     MOVE ONE1ER    ZNE1ER
+     C                     Z-ADDOPE1ER    ZPE1ER
+     C                     Z-ADDOMESER    ZMESER
+     C                     MOVE OTV1ER    ZTV1ER
+     C                     Z-ADDOPV1ER    ZPV1ER
+     C                     Z-ADDOMV1ER    ZMV1ER
+X3  C                     ELSE
+     *  PAS DE REPIQUAGE SI COMPACT R/V MAIS ZONE DERNIER PASSAGE= REPIQUAGE
+     C                     MOVE ODPREP    ZDPREP
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     *  INTERIEUR PRICIPALE STANDARD  ISSUE DES DONNÉES INTERIEURES
+D1  C           TIMPIN    IFEQ 4
+     C                     MOVEL'OFMA'    PXARGU
+     C                     Z-ADDUSIMAC    OUCOEP
+     C                     MOVE OMACEP    OUMAEP
+     C                     MOVE OUMEP     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVELPXLIBE    LLIBMA
+     C  N50                MOVELOMACEP    LMACMA
+     C  N50                MOVELOUCOEP    LUSIMA
+     C   50                MOVE *BLANK    LIBMAC
+D2  C           OCOMRV    IFEQ '  '
+     C                     Z-ADDOGEIP1    ZGEIP1
+     C                     Z-ADDOGEIP2    ZGEIP2
+     C                     Z-ADDOGEIP3    ZGEIP3
+     C                     MOVE OTE1IP    ZTE1IP
+     C                     MOVE ONE1IP    ZNE1IP
+     C                     Z-ADDOPE1IP    ZPE1IP
+     C                     MOVE OTE2IP    ZTE2IP
+     C                     MOVE ONE2IP    ZNE2IP
+     C                     Z-ADDOPE2IP    ZPE2IP
+     C                     MOVE OTOAIP    ZTOAIP
+     C                     Z-ADDOPOAIP    ZPOAIP
+     C                     MOVE OTEFIP    ZTEFIP
+     C                     Z-ADDOPEFIP    ZPEFIP
+     C                     Z-ADDOMESIP    ZMESIP
+     C                     MOVE OTEMIP    ZTEMIP
+     C                     Z-ADDOPEMIP    ZPEMIP
+D3  C           ODPIP     IFEQ 1
+     C                     MOVE 'X'       ZDIP1P
+     C                     MOVE ' '       ZDIP2P
+     C                     MOVE ' '       ZDIP3P
+X3  C                     ELSE
+D4  C           ODPIP     IFEQ 2
+     C                     MOVE ' '       ZDIP1P
+     C                     MOVE 'X'       ZDIP2P
+     C                     MOVE ' '       ZDIP3P
+X4  C                     ELSE
+D5  C           ODPIP     IFEQ 3
+     C                     MOVE ' '       ZDIP1P
+     C                     MOVE ' '       ZDIP2P
+     C                     MOVE 'X'       ZDIP3P
+F5  C                     END
+F4  C                     END
+F3  C                     END
+     C                     MOVE ODPIP     HDPIP
+     C                     MOVE ODF1IP    HDF1IP
+     C                     MOVE ODF2IP    HDF2IP
+     C                     MOVE ODF3IP    HDF3IP
+     C                     MOVE ODS1IP    HDS1IP
+     C                     MOVE ODS2IP    HDS2IP
+     C                     MOVE ODS3IP    HDS3IP
+     C                     MOVE ODT1IP    HDT1IP
+     C                     MOVE ODL1IP    HDL1IP
+     C                     MOVE ODT2IP    HDT2IP
+     C                     MOVE ODL2IP    HDL2IP
+     C                     MOVE ODT3IP    HDT3IP
+     C                     MOVE ODL3IP    HDL3IP
+     C                     MOVE OTV1IP    ZTV1IP
+     C                     Z-ADDOPV1IP    ZPV1IP
+     C                     Z-ADDOMV1IP    ZMV1IP
+     C                     MOVE OV1IP1    ZV1IP1
+     C                     MOVE OV1IP2    ZV1IP2
+     C                     MOVE OV1IP3    ZV1IP3
+     C                     MOVE OTV2IP    ZTV2IP
+     C                     Z-ADDOPV2IP    ZPV2IP
+     C                     Z-ADDOMV2IP    ZMV2IP
+     C                     MOVE OV2IP1    ZV2IP1
+     C                     MOVE OV2IP2    ZV2IP2
+     C                     MOVE OV2IP3    ZV2IP3
+     C                     MOVE OTV3IP    ZTV3IP
+     C                     Z-ADDOPV3IP    ZPV3IP
+     C                     Z-ADDOMV3IP    ZMV3IP
+     C                     MOVE OV3IP1    ZV3IP1
+     C                     MOVE OV3IP2    ZV3IP2
+     C                     MOVE OV3IP3    ZV3IP3
+     C                     MOVE OTGIP     ZTGIP
+     C                     MOVE OGGIP     ZGGIP
+     C                     MOVE ODDIP     ZDDIP
+     C                     MOVE ODAIP     ZDAIP
+     C                     MOVE OTSSIP    ZTSSIP
+     C                     MOVE OTMIP     ZTMIP
+D3  C           DEAFPR    IFEQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE CLICIP    ZLICIP
+     C                     MOVE INDPIP    ZNDPIP
+F3  C                     END
+     *  INTERIEUR REPIQUAGE STANDARD  ISSUE DES DONNÉES INTERIEURES
+     C                     Z-ADDOGEIR1    ZGEIR1
+     C                     MOVE OTE1IR    ZTE1IR
+     C                     MOVE ONE1IR    ZNE1IR
+     C                     Z-ADDOPE1IR    ZPE1IR
+     C                     Z-ADDOMESIR    ZMESIR
+     C                     MOVE OTV1IR    ZTV1IR
+     C                     Z-ADDOPV1IR    ZPV1IR
+     C                     Z-ADDOMV1IR    ZMV1IR
+F2  C                     END
+F1  C                     END
+     *
+     *  INTERIEUR PRICIPALE COMPACT VERSO ISSUE DES DONNÉES EXTERIEUR
+D1  C           TIMPIN    IFEQ 4
+    C           OCOMRV    ANDEQ'I '
+     C                     Z-ADDCOUEX     COUIN
+     C                     Z-ADDOGEEP1    ZGEIP1
+     C                     Z-ADDOGEEP2    ZGEIP2
+     C                     Z-ADDOGEEP3    ZGEIP3
+     C                     MOVE OTE1EP    ZTE1IP
+     C                     MOVE ONE1EP    ZNE1IP
+     C                     Z-ADDOPE1EP    ZPE1IP
+     C                     MOVE OTE2EP    ZTE2IP
+     C                     MOVE ONE2EP    ZNE2IP
+     C                     Z-ADDOPE2EP    ZPE2IP
+     C                     MOVELOTOAEP    ZTOAIP
+     C                     Z-ADDOPOAEP    ZPOAIP
+     C                     MOVE OTEFEP    ZTEFIP
+     C                     Z-ADDOPEFEP    ZPEFIP
+     C                     Z-ADDOMESEP    ZMESIP
+     C                     MOVE OTEMEP    ZTEMIP
+     C                     Z-ADDOPEMEP    ZPEMIP
+D2  C           ODPEP     IFEQ 1
+     C                     MOVE 'X'       ZDIP1P
+     C                     MOVE ' '       ZDIP2P
+     C                     MOVE ' '       ZDIP3P
+X2  C                     ELSE
+D3  C           ODPEP     IFEQ 2
+     C                     MOVE ' '       ZDIP1P
+     C                     MOVE 'X'       ZDIP2P
+     C                     MOVE ' '       ZDIP3P
+X3  C                     ELSE
+D4  C           ODPEP     IFEQ 3
+     C                     MOVE ' '       ZDIP1P
+     C                     MOVE ' '       ZDIP2P
+     C                     MOVE 'X'       ZDIP3P
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     C                     MOVE ODPEP     HDPIP
+     C                     MOVE ODF1EP    HDF1IP
+     C                     MOVE ODF2EP    HDF2IP
+     C                     MOVE ODF3EP    HDF3IP
+     C                     MOVE ODS1EP    HDS1IP
+     C                     MOVE ODS2EP    HDS2IP
+     C                     MOVE ODS3EP    HDS3IP
+     C                     MOVE ODT1EP    HDT1IP
+     C                     MOVE ODL1EP    HDL1IP
+     C                     MOVE ODT2EP    HDT2IP
+     C                     MOVE ODL2EP    HDL2IP
+     C                     MOVE ODT3EP    HDT3IP
+     C                     MOVE ODL3EP    HDL3IP
+     C                     MOVE OTV1EP    ZTV1IP
+     C                     Z-ADDOPV1EP    ZPV1IP
+     C                     Z-ADDOMV1EP    ZMV1IP
+     C                     MOVE OV1EP1    ZV1IP1
+     C                     MOVE OV1EP2    ZV1IP2
+     C                     MOVE OV1EP3    ZV1IP3
+     C                     MOVE OTV2EP    ZTV2IP
+     C                     Z-ADDOPV2EP    ZPV2IP
+     C                     Z-ADDOMV2EP    ZMV2IP
+     C                     MOVE OV2EP1    ZV2IP1
+     C                     MOVE OV2EP2    ZV2IP2
+     C                     MOVE OV2EP3    ZV2IP3
+     C                     MOVE OTV3EP    ZTV3IP
+     C                     Z-ADDOPV3EP    ZPV3IP
+     C                     Z-ADDOMV3EP    ZMV3IP
+     C                     MOVE OV3EP1    ZV3IP1
+     C                     MOVE OV3EP2    ZV3IP2
+     C                     MOVE OV3EP3    ZV3IP3
+     C                     MOVE OTGEP     ZTGIP
+     C                     MOVE OGGEP     ZGGIP
+     C                     MOVE ODDEP     ZDDIP
+     C                     MOVE ODAEP     ZDAIP
+     C                     MOVE OTSSEP    ZTSSIP
+     C                     MOVE OTMEP     ZTMIP
+D2  C           DEAFPR    IFEQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE CLICEP    ZLICIP
+     C                     MOVE INDPEP    ZNDPIP
+F2  C                     END
+     *  INTERIEUR REPIQUAGE COMPACT VERSO ISSUE DES DONNÉES EXTERIEUR REPIQUAGE
+     C                     Z-ADDOGEER1    ZGEIR1
+     C                     MOVE OTE1ER    ZTE1IR
+     C                     MOVE ONE1ER    ZNE1IR
+     C                     Z-ADDOPE1ER    ZPE1IR
+     C                     Z-ADDOMESER    ZMESIR
+     C                     MOVE OTV1ER    ZTV1IR
+     C                     Z-ADDOPV1ER    ZPV1IR
+     C                     Z-ADDOMV1ER    ZMV1IR
+F1  C                     END
+     *
+     *  INTERIEUR PRICIPALE COMPACT R/V ISSUE DES DONNÉES EXTERIEUR REPIQUAGE
+D1  C           TIMPIN    IFEQ 4
+    C           OCOMRV    ANDEQ'EI'
+     C                     Z-ADDCOUEXR    COUIN
+     C                     Z-ADDOGEER1    ZGEIP1
+     C                     Z-ADDOGEER2    ZGEIP2
+     C                     Z-ADDOGEER3    ZGEIP3
+     C                     MOVE OTE1ER    ZTE1IP
+     C                     MOVE ONE1ER    ZNE1IP
+     C                     Z-ADDOPE1ER    ZPE1IP
+     C                     MOVE OTE2ER    ZTE2IP
+     C                     MOVE ONE2ER    ZNE2IP
+     C                     Z-ADDOPE2ER    ZPE2IP
+     C                     MOVELOTOAER    ZTOAIP
+     C                     Z-ADDOPOAER    ZPOAIP
+     C                     MOVE OTEFER    ZTEFIP
+     C                     Z-ADDOPEFER    ZPEFIP
+     C                     Z-ADDOMESER    ZMESIP
+     C                     MOVE OTEMER    ZTEMIP
+     C                     Z-ADDOPEMER    ZPEMIP
+D2  C           ODPER     IFEQ 1
+     C                     MOVE 'X'       ZDIP1P
+     C                     MOVE ' '       ZDIP2P
+     C                     MOVE ' '       ZDIP3P
+X2  C                     ELSE
+D3  C           ODPER     IFEQ 2
+     C                     MOVE ' '       ZDIP1P
+     C                     MOVE 'X'       ZDIP2P
+     C                     MOVE ' '       ZDIP3P
+X3  C                     ELSE
+D4  C           ODPER     IFEQ 3
+     C                     MOVE ' '       ZDIP1P
+     C                     MOVE ' '       ZDIP2P
+     C                     MOVE 'X'       ZDIP3P
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     C                     MOVE ODPER     HDPIP
+     C                     MOVE ODF1ER    HDF1IP
+     C                     MOVE ODF2ER    HDF2IP
+     C                     MOVE ODF3ER    HDF3IP
+     C                     MOVE ODS1ER    HDS1IP
+     C                     MOVE ODS2ER    HDS2IP
+     C                     MOVE ODS3ER    HDS3IP
+     C                     MOVE ODT1ER    HDT1IP
+     C                     MOVE ODL1ER    HDL1IP
+     C                     MOVE ODT2ER    HDT2IP
+     C                     MOVE ODL2ER    HDL2IP
+     C                     MOVE ODT3ER    HDT3IP
+     C                     MOVE ODL3ER    HDL3IP
+     C                     MOVE OTV1EP    ZTV1IP
+     C                     MOVE OTV1ER    ZTV1IP
+     C                     Z-ADDOPV1ER    ZPV1IP
+     C                     Z-ADDOMV1ER    ZMV1IP
+     C                     MOVE OV1ER1    ZV1IP1
+     C                     MOVE OV1ER2    ZV1IP2
+     C                     MOVE OV1ER3    ZV1IP3
+     C                     MOVE OTV2ER    ZTV2IP
+     C                     Z-ADDOPV2ER    ZPV2IP
+     C                     Z-ADDOMV2ER    ZMV2IP
+     C                     MOVE OV2ER1    ZV2IP1
+     C                     MOVE OV2ER2    ZV2IP2
+     C                     MOVE OV2ER3    ZV2IP3
+     C                     MOVE OTV3ER    ZTV3IP
+     C                     Z-ADDOPV3ER    ZPV3IP
+     C                     Z-ADDOMV3ER    ZMV3IP
+     C                     MOVE OV3ER1    ZV3IP1
+     C                     MOVE OV3ER2    ZV3IP2
+     C                     MOVE OV3ER3    ZV3IP3
+     C                     MOVE OTGER     ZTGIP
+     C                     MOVE OGGER     ZGGIP
+     C                     MOVE ODDER     ZDDIP
+     C                     MOVE ODAER     ZDAIP
+     C                     MOVE OTSSER    ZTSSIP
+     C                     MOVE OTMER     ZTMIP
+     *  PAS DE REPIQUAGE SI COMPACT R/V MAIS ZONE DERNIER PASSAGE= REPIQUAGE
+     C                     MOVE ODPRER    ZDPRER
+F1  C                     END
+D1  C           DEAFPR    IFEQ 'P'                        PRODUIT
+    C           DEAFPR    OREQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE *BLANK    LIBMAC
+     C                     MOVE '1'       *IN38            F7=FICHE TECHNIQUE
+X1  C                     ELSE
+     C                     MOVE '0'       *IN38             PAS F7
+F1  C                     END
+     *
+     C                     MOVE 'KO'      CODRET
+     ********************************
+D1  C           DEAFPR    IFEQ 'D'                        DEVIS
+    C           DEAFPR    OREQ 'P'                        PRODUIT
+     C                     WRITEFMT1
+X1  C                     ELSE
+     C                     WRITEFMT1B
+F1  C                     END
+     C                     Z-ADD*ZEROS    HLIG
+     C                     Z-ADD*ZEROS    HCOL
+     C           AFFICH    TAG
+D1  C           DEAFPR    IFEQ 'D'                        DEVIS
+    C           DEAFPR    OREQ 'P'                        PRODUIT
+     C                     EXFMTFMT2
+X1  C                     ELSE
+     C                     EXFMTFMT2B
+F1  C                     END
+    C           *IN03     CABEQ'1'       FINFIN
+    C           *IN12     CABEQ'1'       FINFIN
+    C           *IN04     CASEQ'1'       TRTAID         35
+    C           *IN07     CASEQ'1'       TRTFTO
+    C                     END
+    C   35                GOTO AFFICH
+     C  N33      USINE     COMP 0                        92
+    C   92N33             GOTO AFFICH
+     *--------------------------------------------------------*
+     *   IMPRESSION EXTERIEUR                                 *
+     *--------------------------------------------------------*
+D1  C           TIMPEX    IFEQ 4
+    C           *IN33     ANDNE'1'
+    C* CONTROLES COMMUN A TOUTES LES CONFIGURATIONS
+    C* COULEUR ET GROUPES ENCREURS
+    C*-------------------------------------
+D2  C           COUEX     IFEQ *ZEROS
+D3  C           ZGEEP1    IFNE *ZEROS
+    C           ZGEEP2    ORNE *ZEROS
+    C           ZGEEP3    ORNE *ZEROS
+     C                     SETON                     50    MESSAGE 217
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           COUEX     IFNE *ZEROS
+D3  C           ZGEEP1    IFEQ *ZEROS
+    C           ZGEEP2    ANDEQ*ZEROS
+    C           ZGEEP3    ANDEQ*ZEROS
+     C                     SETON                     50    MESSAGE 217
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           COUEX     IFNE *ZEROS
+    C           ZTE1EP    ANDEQ*BLANK
+     C                     SETON                     51    MESSAGE 231
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           COUEX     IFEQ *ZEROS
+D3  C           ZTE1EP    IFNE *BLANK
+    C           ZNE1EP    ORNE *BLANK
+     C                     SETON                     51    MESSAGE 231
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE1EP    IFEQ *BLANK
+    C           ZPE1EP    ANDNE*ZEROS
+     C                     SETON                     51    MESSAGE 231
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTE2EP    IFEQ *BLANK
+    C           ZPE2EP    ANDNE*ZEROS
+     C                     SETON                     67    MESSAGE 232
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           COUEX     IFEQ *ZEROS
+D3  C           ZTE2EP    IFNE *BLANK
+    C           ZNE2EP    ORNE *BLANK
+     C                     SETON                     51    MESSAGE 231
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE2EP    IFNE *BLANK
+    C           ZNE2EP    ORNE *BLANK
+D3  C           ZTE1EP    IFEQ *BLANK
+     C                     SETON                     67    MESSAGE 232
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     C/SPACE 2
+    C* ENCRE OU VERNIS
+    C*--------------------------------------
+D2  C           COUEX     IFEQ *ZEROS
+    C           ZTV1EP    ANDEQ*BLANKS
+     C                     SETON                     52    MESSAGE 149
+    C                     GOTO AFFICH
+F2  C                     END
+    C* VERNIS  1, 2, 3 ET PASSAGES
+    C*--------------------------------------
+D2  C           ZTV1EP    IFEQ *BLANKS
+    C           ZTV2EP    ANDNE*BLANKS
+    C           ZTV1EP    OREQ *BLANKS
+    C           ZTV3EP    ANDNE*BLANKS
+     C                     SETON                     53    MESSAGE 218
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTV2EP    IFEQ *BLANKS
+    C           ZTV3EP    ANDNE*BLANKS
+     C                     SETON                     54    MESSAGE 219
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTV1EP    IFNE *BLANKS
+D3  C           ZV1EP1    IFEQ *BLANKS
+    C           ZV1EP2    ANDEQ*BLANKS
+    C           ZV1EP3    ANDEQ*BLANKS
+     C                     SETON                     53    MESSAGE 218
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV2EP    IFNE *BLANKS
+D3  C           ZV2EP1    IFEQ *BLANKS
+    C           ZV2EP2    ANDEQ*BLANKS
+    C           ZV2EP3    ANDEQ*BLANKS
+     C                     SETON                     54    MESSAGE 219
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV3EP    IFNE *BLANKS
+D3  C           ZV3EP1    IFEQ *BLANKS
+    C           ZV3EP2    ANDEQ*BLANKS
+    C           ZV3EP3    ANDEQ*BLANKS
+     C                     SETON                     55    MESSAGE 220
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV1EP    IFEQ *BLANKS
+D3  C           ZPV1EP    IFNE *ZEROS
+    C           ZMV1EP    ORNE *ZEROS
+    C           ZV3EP1    ORNE *BLANKS
+    C           ZV3EP2    ORNE *BLANKS
+    C           ZV3EP3    ORNE *BLANKS
+     C                     SETON                     53    MESSAGE 218
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV2EP    IFEQ *BLANKS
+D3  C           ZPV2EP    IFNE *ZEROS
+    C           ZMV2EP    ORNE *ZEROS
+    C           ZV2EP1    ORNE *BLANKS
+    C           ZV2EP2    ORNE *BLANKS
+    C           ZV2EP3    ORNE *BLANKS
+     C                     SETON                     54    MESSAGE 219
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV3EP    IFEQ *BLANKS
+D3  C           ZPV3EP    IFNE *ZEROS
+    C           ZMV3EP    ORNE *ZEROS
+    C           ZV3EP1    ORNE *BLANKS
+    C           ZV3EP2    ORNE *BLANKS
+    C           ZV3EP3    ORNE *BLANKS
+     C                     SETON                     55    MESSAGE 220
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     * EN 6+1: PAS 3 VERNIS SUR LE MEME PASSAGE    SEUL V+E PAR PASSAGE
+D2  C           *IN41     IFEQ '1'
+D3  C           ZV1EP1    IFNE *BLANKS
+    C           ZV2EP1    ANDNE*BLANKS
+    C           ZV3EP1    ANDNE*BLANKS
+    C           ZV1EP2    ORNE *BLANKS
+    C           ZV2EP2    ANDNE*BLANKS
+    C           ZV3EP2    ANDNE*BLANKS
+    C           ZV1EP3    ORNE *BLANKS
+    C           ZV2EP3    ANDNE*BLANKS
+    C           ZV3EP3    ANDNE*BLANKS
+     C                     SETON                     90    MESSAGE 238
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZV1IP1    IFNE *BLANKS
+    C           ZV2IP1    ANDNE*BLANKS
+    C           ZV3IP1    ANDNE*BLANKS
+    C           ZV1IP2    ORNE *BLANKS
+    C           ZV2IP2    ANDNE*BLANKS
+    C           ZV3IP2    ANDNE*BLANKS
+    C           ZV1IP3    ORNE *BLANKS
+    C           ZV2IP3    ANDNE*BLANKS
+    C           ZV3IP3    ANDNE*BLANKS
+     C                     SETON                     91    MESSAGE 237
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+    C* OR CU ALU
+    C*--------------------------------------
+D2  C           ZTOAEP    IFEQ *BLANKS
+    C           ZPOAEP    ANDNE*ZEROS
+     C                     SETON                     56    MESSAGE 080
+    C                     GOTO AFFICH
+F2  C                     END
+    C* ENCRE FLUO
+    C*--------------------------------------
+D2  C           ZTEFEP    IFEQ *BLANKS
+    C           ZPEFEP    ANDNE*ZEROS
+     C                     SETON                     57    MESSAGE 082
+    C                     GOTO AFFICH
+F2  C                     END
+    C* DORURE A FROID
+    C*--------------------------------------
+D2  C           ZTEMEP    IFEQ *BLANKS
+    C           ZPEMEP    ANDNE*ZEROS
+     C                     SETON                     58    MESSAGE 221
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTEMEP    IFNE *BLANKS
+    C           ZDEP1P    ANDEQ*BLANKS
+    C           ZDEP2P    ANDEQ*BLANKS
+    C           ZDEP3P    ANDEQ*BLANKS
+     C                     SETON                     58    MESSAGE 221
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZDEP1P    IFNE *BLANKS
+    C           ZDEP2P    ANDNE*BLANKS
+    C           ZDEP1P    ORNE *BLANKS
+    C           ZDEP3P    ANDNE*BLANKS
+    C           ZDEP2P    ORNE *BLANKS
+    C           ZDEP3P    ANDNE*BLANKS
+     C                     SETON                     58    MESSAGE 221
+    C                     GOTO AFFICH
+F2  C                     END
+     * DORURE A FROIDS SUR UN PASSAGE ENCREUR
+D2  C           ZDEP1P    IFNE *BLANKS
+    C           ZGEEP1    ANDEQ*ZEROS
+    C           ZDEP2P    ORNE *BLANKS
+    C           ZGEEP2    ANDEQ*ZEROS
+    C           ZDEP3P    ORNE *BLANKS
+    C           ZGEEP3    ANDEQ*ZEROS
+     C                     SETON                     58    MESSAGE 221
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTEMEP    IFNE *BLANKS
+     C                     MOVE ZTEMEP    ZWTEM
+     C                     Z-ADDZPEMEP    ZWPEM
+D3  C           ZDEP1P    IFNE *BLANKS
+     C                     Z-ADD1         ZWPAS
+X3  C                     ELSE
+D4  C           ZDEP2P    IFNE *BLANKS
+     C                     Z-ADD2         ZWPAS
+X4  C                     ELSE
+     C                     Z-ADD3         ZWPAS
+F4  C                     END
+F3  C                     END
+     C                     MOVE ZWPAS     HDPEP
+F2  C                     END
+     *
+D2  C           ZTEMEP    IFNE *BLANKS
+     C                     MOVEL'ENMO'    PXARGU
+     C                     MOVE ZTEMEP    PXVALE    P
+     C           KPARAM    CHAINPARAME               58    MESSAGE 221
+    C           *IN58     CABEQ'1'       AFFICH
+F2  C                     END
+    C* GRAINAGE
+    C*--------------------------------------
+D2  C           ZTGEP     IFEQ 'S'
+    C           ZGGEP     ANDEQ*BLANK
+    C           ZTGEP     OREQ *BLANK
+    C           ZGGEP     ANDNE*BLANK
+     C                     SETON                     59    MESSAGE 222
+    C                     GOTO AFFICH
+F2  C                     END
+    C* REPIQUAGE STANDARD
+    C*--------------------------------------
+D2  C           ZTV1ER    IFEQ *BLANKS
+D3  C           ZPV1ER    IFNE *ZEROS
+    C           ZMV1ER    ORNE *ZEROS
+     C                     SETON                     60    MESSAGE 096
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE1ER    IFEQ *BLANK
+D3  C           ZPE1ER    IFNE *ZEROS
+    C           ZMESER    ORNE *ZEROS
+    C           ZGEER1    ORNE *ZEROS
+     C                     SETON                     61    MESSAGE 095
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE1ER    IFNE *BLANK
+D3  C           ZGEER1    IFEQ *ZEROS
+     C                     SETON                     61    MESSAGE 095
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+    C*
+    C* TYPE ET NATURE ENCRE 1
+    C*-------------------------
+D2  C           ZTE1EP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XENCA1
+     C                     MOVE ZTE1EP    XENCA2
+     C                     MOVELXENCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XENCRESS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             51    MESSAGE 231
+    C           *IN51     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZNE1EP    IFNE *BLANKS
+     C                     MOVEL'ENCR'    PXARGU
+     C                     MOVE ZNE1EP    PXVALE    P
+     C           KPARAM    CHAINPARAME               51    MESSAGE 231
+    C           *IN51     CABEQ'1'       AFFICH
+F2  C                     END
+    C* TYPE ET NATURE ENCRE 2
+    C*-------------------------
+D2  C           ZTE2EP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XENCA1
+     C                     MOVE ZTE2EP    XENCA2
+     C                     MOVELXENCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XENCRESS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             67    MESSAGE 232
+    C           *IN67     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZNE2EP    IFNE *BLANKS
+     C                     MOVEL'ENCR'    PXARGU
+     C                     MOVE ZNE2EP    PXVALE    P
+     C           KPARAM    CHAINPARAME               67    MESSAGE 232
+    C           *IN67     CABEQ'1'       AFFICH
+F2  C                     END
+     *
+    C* OR CUIVRE ALU
+    C*-------------------------
+D2  C           ZTOAEP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XORCA1
+     C                     MOVE ZTOAEP    XORCA2
+     C                     MOVELXORCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XORCUALU'TBLNOM
+     C           KTBA01    CHAINXTBASE01             56    MESSAGE 80
+    C           *IN56     CABEQ'1'       AFFICH
+F2  C                     END
+    C* FLUO
+    C*-------------------------
+D2  C           ZTEFEP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XFLUA1
+     C                     MOVE ZTEFEP    XFLUA2
+     C                     MOVELXFLUKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XFLUOSSS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             57    MESSAGE 82
+    C           *IN57     CABEQ'1'       AFFICH
+F2  C                     END
+    C*
+    C* ENCRE MORDANTE POUR DORURE A FROID  ???????????????????????????????????
+    C* BEN NON TESTÉ DANS ENMO
+    C*---------------------------------------
+    C*          ZTEMEP    IFNE *BLANKS
+    C*                    Z-ADD1         TBNSEG
+    C*                    MOVE 4         XENCA1
+    C*                    MOVE ZTEMEP    XENCA2
+    C*                    MOVELXENCKE    TBVARG
+    C*                    MOVE *BLANKS   TBVRES
+    C*                    MOVEL'XENCRESS'TBLNOM
+    C*          KTBA01    CHAINXTBASE01             58    MESSAGE 221
+    C*          *IN58     CABEQ'1'       AFFICH
+    C*                    END
+    C*
+    C* TYPE VERNIS
+    C*-------------------------
+D2  C           ZTV1EP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV1EP    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             53    MESSAGE 218
+    C           *IN53     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZTV2EP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV2EP    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             54    MESSAGE 219
+    C           *IN54     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZTV3EP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV3EP    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             55    MESSAGE 220
+    C           *IN55     CABEQ'1'       AFFICH
+F2  C                     END
+    C*
+    C* DIFFICULTE DECOR
+    C*-------------------------
+D2  C           ZDDEP     IFNE *BLANKS
+     C                     MOVEL'DDEC'    PXARGU
+     C                     MOVE ZDDEP     PXVALE    P
+     C           KPARAM    CHAINPARAME               62
+    C   62                GOTO AFFICH                     MESSAGE 84
+F2  C                     END
+    C*
+    C* DIFFICULTE APLAT
+    C*-------------------------
+D2  C           ZDAEP     IFNE *BLANKS
+     C                     MOVEL'APLA'    PXARGU
+     C                     MOVE ZDAEP     PXVALE    P
+     C           KPARAM    CHAINPARAME               63
+    C   63                GOTO AFFICH                     MESSAGE 86
+F2  C                     END
+     *
+    C* TRAIT OU SELECTION EXT
+    C*-------------------------
+D2  C           ZTSSEP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XTRAA1
+     C                     MOVE ZTSSEP    XTRAA2
+     C                     MOVELXTRAKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XTRAISEL'TBLNOM
+     C           KTBA01    CHAINXTBASE01             64    MESSAGE 74
+    C           *IN64     CABEQ'1'       AFFICH
+F2  C                     END
+     *
+    C* TYPE MATERIEL
+    C*-------------------------
+D2  C           ZTMEP     IFNE *BLANKS
+     C                     MOVEL'CMAT'    PXARGU
+     C                     MOVE ZTMEP     PXVALE    P
+     C           KPARAM    CHAINPARAME               65
+    C   65                GOTO AFFICH                     MESSAGE 88
+     C                     MOVELPXLIBE    LIBME
+X2  C                     ELSE
+     C                     MOVE *BLANK    LIBME
+F2  C                     END
+     *
+    C* TYPE VERNIS  REPIQUAGE
+    C*-------------------------
+D2  C           ZTV1ER    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV1ER    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             60    MESSAGE 096
+    C           *IN60     CABEQ'1'       AFFICH
+F2  C                     END
+    C* TYPE ET NATURE ENCRE REPIQUAGE
+    C*-------------------------
+D2  C           ZTE1ER    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XENCA1
+     C                     MOVE ZTE1ER    XENCA2
+     C                     MOVELXENCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XENCRESS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             61    MESSAGE 95
+    C           *IN61     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZNE1ER    IFNE *BLANKS
+     C                     MOVEL'ENCR'    PXARGU
+     C                     MOVE ZNE1ER    PXVALE    P
+     C           KPARAM    CHAINPARAME               61    MESSAGE 95
+    C           *IN61     CABEQ'1'       AFFICH
+F2  C                     END
+     *
+    C* CONTROLES SPECIFIQUES PAR CONFIGURATION
+    C*----------------------------------------------
+D2  C           OTCOEP    IFEQ 1                          ** 6+1
+D3  C           COUEX     IFGT 6
+    C           ZGEEP2    ANDEQ0
+    C           COUEX     ORGT 12
+    C           ZGEEP3    ANDEQ0
+    C           COUEX     ORGT 18
+     C                     SETON                     66    MESSAGE 223
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZGEEP1    IFGT 6
+    C           ZGEEP2    ORGT 6
+    C           ZGEEP3    ORGT 6
+     C                     SETON                     50    MESSAGE 217
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     *
+D2  C           OTCOEP    IFEQ 2                          ** KBA 6+2
+D3  C           COUEX     IFGT 6
+     C                     SETON                     66    MESSAGE 223
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZGEEP1    IFGT 6
+    C           ZGEEP2    ORGT 6
+    C           ZGEEP3    ORGT 6
+     C                     SETON                     50    MESSAGE 217
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     *
+D2  C           OTCOEP    IFEQ 3                          ** 3B
+D3  C           COUEX     IFGT 27
+     C                     SETON                     66    MESSAGE 223
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZGEEP1    IFGT 9
+    C           ZGEEP2    ORGT 9
+    C           ZGEEP3    ORGT 9
+     C                     SETON                     50    MESSAGE 217
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     * SI KBA: SI 2 TYPES ENCRE: TRADI OU UV MAIS PAS DE MÉLANGE
+D2  C           OMACEP    IFEQ '06'
+D3  C           ZTE1EP    IFNE *BLANKS                    2 ENCRES
+    C           ZTE2EP    ANDNE*BLANKS
+D4  C           ZTE1EP    IFEQ ' '                        1ERE TRADI
+    C           ZTE1EP    OREQ 'N'
+    C           ZTE1EP    OREQ 'T'
+D5  C           ZTE2EP    IFEQ 'O'                        2EME UV
+    C           ZTE2EP    OREQ 'P'
+    C           ZTE2EP    OREQ 'U'
+     C                     SETON                     67    MESSAGE  232
+    C                     GOTO AFFICH
+F5  C                     END
+X4  C                     ELSE                            1ERE UV
+D5  C           ZTE2EP    IFEQ ' '                        2EME TRADI
+    C           ZTE2EP    OREQ 'N'
+    C           ZTE2EP    OREQ 'T'
+     C                     SETON                     67    MESSAGE  232
+    C                     GOTO AFFICH
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+     **** FENETRE DE DORURE A FROID *****
+     *
+D2  C           ZTEMEP    IFNE *BLANKS
+     C           WDAF      TAG
+     C                     MOVE HDF1EP    ZWDF1
+     C                     MOVE 'DOFF'    PXARGU
+     C                     MOVE ZWDF1     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    LTFF1
+     C   50                MOVE *BLANK    LTFF1
+     *
+     C                     MOVE HDF2EP    ZWDF2
+     C                     MOVE 'DOFF'    PXARGU
+     C                     MOVE ZWDF2     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    LTFF2
+     C   50                MOVE *BLANK    LTFF2
+     *
+     C                     MOVE HDF3EP    ZWDF3
+     C                     MOVE 'DOFF'    PXARGU
+     C                     MOVE ZWDF3     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    LTFF3
+     C   50                MOVE *BLANK    LTFF3
+     *
+     C                     MOVE HDS1EP    ZWDS1
+     C                     MOVE HDS2EP    ZWDS2
+     C                     MOVE HDS3EP    ZWDS3
+D3  C           DEAFPR    IFEQ 'P'
+    C           DEAFPR    OREQ 'F'
+     C                     MOVE HDT1EP    ZWDT1
+     C                     MOVE HDL1EP    ZWDL1
+     C                     MOVE HDT2EP    ZWDT2
+     C                     MOVE HDL2EP    ZWDL2
+     C                     MOVE HDT3EP    ZWDT3
+     C                     MOVE HDL3EP    ZWDL3
+     *
+     C                     MOVE 'DOTF'    PXARGU
+     C                     MOVE ZWDT1     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    ZWDT1L
+     C                     MOVE ZWDT2     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    ZWDT2L
+     C                     MOVE ZWDT3     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    ZWDT3L
+F3  C                     END
+     *
+     C           AFDORE    TAG
+     C                     MOVE '1'       *IN34
+D3  C           DEAFPR    IFEQ 'D'                        DEVIS
+    C           DEAFPR    OREQ 'A'                        AFFICHE
+     C                     EXFMTWDOR
+X3  C                     ELSE                            PRODUIT/AFFICHE PRODU
+     C                     EXFMTWDORP
+F3  C                     END
+    C           *IN33     CABEQ'1'       FINEXT
+    C           *IN04     CASEQ'1'       TRTAID         35
+    C                     END
+    C   35                GOTO AFDORE
+     * ON TASSE VERS LE HAUT
+D3  C           ZWDF3     IFNE *BLANK
+    C           ZWDF2     ANDEQ*BLANK
+     C                     MOVE ZWDF3     ZWDF2
+     C                     MOVE LTFF3     LTFF2
+     C                     Z-ADDZWDS3     ZWDS2
+     C                     MOVE *BLANK    ZWDF3
+     C                     MOVE *BLANK    LTFF3
+     C                     Z-ADD*ZEROS    ZWDS3
+F3  C                     END
+D3  C           ZWDF2     IFNE *BLANK
+    C           ZWDF1     ANDEQ*BLANK
+     C                     MOVE ZWDF2     ZWDF1
+     C                     MOVE LTFF2     LTFF1
+     C                     Z-ADDZWDS2     ZWDS1
+     C                     MOVE *BLANK    ZWDF2
+     C                     MOVE *BLANK    LTFF2
+     C                     Z-ADD*ZEROS    ZWDS2
+F3  C                     END
+     *
+     C                     MOVE *BLANK    ERRDOR
+     C                     MOVE 'DOFF'    PXARGU
+D3  C           ZWDF1     IFEQ *BLANK
+     C                     MOVE ERD,1     ERRDOR
+    C                     GOTO AFDORE
+X3  C                     ELSE
+     C                     MOVE ZWDF1     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C   50                MOVE *BLANK    LTFF1
+     C   50                MOVE ERD,2     ERRDOR
+    C   50                GOTO AFDORE
+     C                     MOVELPXABRG    LTFF1
+F3  C                     END
+D3  C           ZWDS1     IFEQ *ZEROS
+     C                     MOVE ERD,3     ERRDOR
+    C                     GOTO AFDORE
+F3  C                     END
+     *
+D3  C           ZWDF2     IFNE *BLANK
+     C                     MOVE ZWDF2     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C   50                MOVE *BLANK    LTFF2
+     C   50                MOVE ERD,4     ERRDOR
+    C   50                GOTO AFDORE
+     C                     MOVELPXABRG    LTFF2
+D4  C           ZWDS2     IFEQ *ZEROS
+     C                     MOVE ERD,5     ERRDOR
+    C                     GOTO AFDORE
+F4  C                     END
+X3  C                     ELSE
+     C                     MOVE *BLANK    LTFF2
+F3  C                     END
+     *
+D3  C           ZWDF3     IFNE *BLANK
+     C                     MOVE ZWDF3     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C   50                MOVE *BLANK    LTFF3
+     C   50                MOVE ERD,6     ERRDOR
+    C   50                GOTO AFDORE
+     C                     MOVELPXABRG    LTFF3
+D4  C           ZWDS3     IFEQ *ZEROS
+     C                     MOVE ERD,7     ERRDOR
+    C                     GOTO AFDORE
+F4  C                     END
+X3  C                     ELSE
+     C                     MOVE *BLANK    LTFF3
+F3  C                     END
+     *
+    C* N12                GOTO AFDORE
+     *
+     C                     MOVE ZWPAS     HDPEP
+     C                     MOVE ZWDF1     HDF1EP
+     C                     MOVE ZWDF2     HDF2EP
+     C                     MOVE ZWDF3     HDF3EP
+     C                     MOVE ZWDS1     HDS1EP
+     C                     MOVE ZWDS2     HDS2EP
+     C                     MOVE ZWDS3     HDS3EP
+D3  C           DEAFPR    IFEQ 'P'
+    C           DEAFPR    OREQ 'F'
+     C                     MOVE ZWDT1     HDT1EP
+     C                     MOVE ZWDL1     HDL1EP
+     C                     MOVE ZWDT2     HDT2EP
+     C                     MOVE ZWDL2     HDL2EP
+     C                     MOVE ZWDT3     HDT3EP
+     C                     MOVE ZWDL3     HDL3EP
+F3  C                     END
+F2  C                     END
+    C* Affichage d'une fenetre si format Offset non standard
+     C                     EXSR CTLOFF
+F1  C                     END
+    C* Affichage DAF EN VISU EXTERIEUR
+D1  C           TIMPEX    IFEQ 4
+    C           *IN33     ANDEQ'1'
+D2  C           ZTEMEP    IFNE *BLANKS
+     C                     MOVE ZTEMEP    ZWTEM
+     C                     Z-ADDZPEMEP    ZWPEM
+D3  C           ZDEP1P    IFNE *BLANKS
+     C                     Z-ADD1         ZWPAS
+X3  C                     ELSE
+D4  C           ZDEP2P    IFNE *BLANKS
+     C                     Z-ADD2         ZWPAS
+X4  C                     ELSE
+     C                     Z-ADD3         ZWPAS
+F4  C                     END
+F3  C                     END
+    C                     GOTO WDAF
+F2  C                     END
+F1  C                     END
+    C*
+    C*
+     *--------------------------------------------------------*
+     *   IMPRESSION EXTERIEUR                                 *
+     *--------------------------------------------------------*
+     C           FINEXT    TAG
+D1  C           TIMPIN    IFEQ 4
+    C           *IN33     ANDNE'1'
+    C* CONTROLES COMMUN A TOUTES LES CONFIGURATIONS
+    C* COULEUR ET GROUPES ENCREURS
+    C*-------------------------------------
+D2  C           COUIN     IFEQ *ZEROS
+D3  C           ZGEIP1    IFNE *ZEROS
+    C           ZGEIP2    ORNE *ZEROS
+    C           ZGEIP3    ORNE *ZEROS
+     C                     SETON                     70    MESSAGE 224
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           COUIN     IFNE *ZEROS
+D3  C           ZGEIP1    IFEQ *ZEROS
+    C           ZGEIP2    ANDEQ*ZEROS
+    C           ZGEIP3    ANDEQ*ZEROS
+     C                     SETON                     70    MESSAGE 224
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           COUIN     IFNE *ZEROS
+    C           ZTE1IP    ANDEQ*BLANK
+     C                     SETON                     71    MESSAGE 233
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           COUIN     IFEQ *ZEROS
+D3  C           ZTE1IP    IFNE *BLANK
+    C           ZNE1IP    ORNE *BLANK
+     C                     SETON                     71    MESSAGE 233
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE1IP    IFEQ *BLANK
+    C           ZPE1IP    ANDNE*ZEROS
+     C                     SETON                     71    MESSAGE 233
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTE2IP    IFEQ *BLANK
+    C           ZPE2IP    ANDNE*ZEROS
+     C                     SETON                     87    MESSAGE 234
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           COUIN     IFEQ *ZEROS
+D3  C           ZTE1IP    IFNE *BLANK
+    C           ZNE1IP    ORNE *BLANK
+     C                     SETON                     71    MESSAGE 233
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE2IP    IFNE *BLANK
+    C           ZNE2IP    ORNE *BLANK
+D3  C           ZTE1IP    IFEQ *BLANK
+     C                     SETON                     87    MESSAGE 234
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     C/SPACE 2
+    C* ENCRE OU VERNIS
+    C*--------------------------------------
+D2  C           COUIN     IFEQ *ZEROS
+    C           ZTV1IP    ANDEQ*BLANKS
+     C                     SETON                     72    MESSAGE 149
+    C                     GOTO AFFICH
+F2  C                     END
+    C* VERNIS  1, 2, 3 ET PASSAGES
+    C*--------------------------------------
+D2  C           ZTV1IP    IFEQ *BLANKS
+    C           ZTV2IP    ANDNE*BLANKS
+    C           ZTV1IP    OREQ *BLANKS
+    C           ZTV3IP    ANDNE*BLANKS
+     C                     SETON                     73    MESSAGE 225
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTV2IP    IFEQ *BLANKS
+    C           ZTV3IP    ANDNE*BLANKS
+     C                     SETON                     74    MESSAGE 226
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTV1IP    IFNE *BLANKS
+D3  C           ZV1IP1    IFEQ *BLANKS
+    C           ZV1IP2    ANDEQ*BLANKS
+    C           ZV1IP3    ANDEQ*BLANKS
+     C                     SETON                     73    MESSAGE 225
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV2IP    IFNE *BLANKS
+D3  C           ZV2IP1    IFEQ *BLANKS
+    C           ZV2IP2    ANDEQ*BLANKS
+    C           ZV2IP3    ANDEQ*BLANKS
+     C                     SETON                     74    MESSAGE 226
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV3IP    IFNE *BLANKS
+D3  C           ZV3IP1    IFEQ *BLANKS
+    C           ZV3IP2    ANDEQ*BLANKS
+    C           ZV3IP3    ANDEQ*BLANKS
+     C                     SETON                     75    MESSAGE 227
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV1IP    IFEQ *BLANKS
+D3  C           ZPV1IP    IFNE *ZEROS
+    C           ZMV1IP    ORNE *ZEROS
+    C           ZV3IP1    ORNE *BLANKS
+    C           ZV3IP2    ORNE *BLANKS
+    C           ZV3IP3    ORNE *BLANKS
+     C                     SETON                     73    MESSAGE 225
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV2IP    IFEQ *BLANKS
+D3  C           ZPV2IP    IFNE *ZEROS
+    C           ZMV2IP    ORNE *ZEROS
+    C           ZV2IP1    ORNE *BLANKS
+    C           ZV2IP2    ORNE *BLANKS
+    C           ZV2IP3    ORNE *BLANKS
+     C                     SETON                     74    MESSAGE 226
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTV3IP    IFEQ *BLANKS
+D3  C           ZPV3IP    IFNE *ZEROS
+    C           ZMV3IP    ORNE *ZEROS
+    C           ZV3IP1    ORNE *BLANKS
+    C           ZV3IP2    ORNE *BLANKS
+    C           ZV3IP3    ORNE *BLANKS
+     C                     SETON                     75    MESSAGE 220
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+    C* OR CU ALU
+    C*--------------------------------------
+D2  C           ZTOAIP    IFEQ *BLANKS
+    C           ZPOAIP    ANDNE*ZEROS
+     C                     SETON                     76    MESSAGE 081
+    C                     GOTO AFFICH
+F2  C                     END
+    C* ENCRE FLUO
+    C*--------------------------------------
+D2  C           ZTEFIP    IFEQ *BLANKS
+    C           ZPEFIP    ANDNE*ZEROS
+     C                     SETON                     77    MESSAGE 083
+    C                     GOTO AFFICH
+F2  C                     END
+    C* DORURE A FROID
+    C*--------------------------------------
+D2  C           ZTEMIP    IFEQ *BLANKS
+    C           ZPEMIP    ANDNE*ZEROS
+     C                     SETON                     78    MESSAGE 228
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTEMIP    IFNE *BLANKS
+    C           ZDIP1P    ANDEQ*BLANKS
+    C           ZDIP2P    ANDEQ*BLANKS
+    C           ZDIP3P    ANDEQ*BLANKS
+     C                     SETON                     78    MESSAGE 228
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZDIP1P    IFNE *BLANKS
+    C           ZDIP2P    ANDNE*BLANKS
+    C           ZDIP1P    ORNE *BLANKS
+    C           ZDIP3P    ANDNE*BLANKS
+    C           ZDIP2P    ORNE *BLANKS
+    C           ZDIP3P    ANDNE*BLANKS
+     C                     SETON                     78    MESSAGE 228
+    C                     GOTO AFFICH
+F2  C                     END
+     * DORURE A FROIDS SUR UN PASSAGE ENCREUR
+D2  C           ZDIP1P    IFNE *BLANKS
+    C           ZGEIP1    ANDEQ*ZEROS
+    C           ZDIP2P    ORNE *BLANKS
+    C           ZGEIP2    ANDEQ*ZEROS
+    C           ZDIP3P    ORNE *BLANKS
+    C           ZGEIP3    ANDEQ*ZEROS
+     C                     SETON                     78    MESSAGE 221
+    C                     GOTO AFFICH
+F2  C                     END
+D2  C           ZTEMIP    IFNE *BLANKS
+     C                     MOVE ZTEMIP    ZWTEM
+     C                     Z-ADDZPEMIP    ZWPEM
+D3  C           ZDIP1P    IFNE *BLANKS
+     C                     Z-ADD1         ZWPAS
+X3  C                     ELSE
+D4  C           ZDIP2P    IFNE *BLANKS
+     C                     Z-ADD2         ZWPAS
+X4  C                     ELSE
+     C                     Z-ADD3         ZWPAS
+F4  C                     END
+F3  C                     END
+     C                     MOVE ZWPAS     HDPIP
+F2  C                     END
+     *
+D2  C           ZTEMIP    IFNE *BLANKS
+     C                     MOVEL'ENMO'    PXARGU
+     C                     MOVE ZTEMIP    PXVALE    P
+     C           KPARAM    CHAINPARAME               78    MESSAGE 228
+    C           *IN58     CABEQ'1'       AFFICH
+F2  C                     END
+    C* GRAINAGE
+    C*--------------------------------------
+D2  C           ZTGIP     IFEQ 'S'
+    C           ZGGIP     ANDEQ*BLANK
+    C           ZTGIP     OREQ *BLANK
+    C           ZGGIP     ANDNE*BLANK
+     C                     SETON                     79    MESSAGE 229
+    C                     GOTO AFFICH
+F2  C                     END
+    C* REPIQUAGE STANDARD
+    C*--------------------------------------
+D2  C           ZTV1IR    IFEQ *BLANKS
+D3  C           ZPV1IR    IFNE *ZEROS
+    C           ZMV1IR    ORNE *ZEROS
+     C                     SETON                     80    MESSAGE 105
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+D2  C           ZTE1IR    IFEQ *BLANK
+    C           ZNE1IR    ANDEQ*BLANK
+D3  C           ZPE1IR    IFNE *ZEROS
+    C           ZMESIR    ORNE *ZEROS
+    C           ZGEIR1    ORNE *ZEROS
+     C                     SETON                     81    MESSAGE 104
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZTE1IR    IFNE *BLANK
+    C           ZNE1IR    ORNE *BLANK
+D4  C           ZGEIR1    IFEQ *ZEROS
+     C                     SETON                     81    MESSAGE 104
+    C                     GOTO AFFICH
+F4  C                     END
+F3  C                     END
+F2  C                     END
+    C*
+    C* TYPE ET NATURE ENCRE 1
+    C*-------------------------
+D2  C           ZTE1IP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XENCA1
+     C                     MOVE ZTE1IP    XENCA2
+     C                     MOVELXENCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XENCRESS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             71    MESSAGE 233
+    C           *IN71     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZNE1IP    IFNE *BLANKS
+     C                     MOVEL'ENCR'    PXARGU
+     C                     MOVE ZNE1IP    PXVALE    P
+     C           KPARAM    CHAINPARAME               71    MESSAGE 233
+    C           *IN71     CABEQ'1'       AFFICH
+F2  C                     END
+    C* TYPE ET NATURE ENCRE 2
+    C*-------------------------
+D2  C           ZTE2IP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XENCA1
+     C                     MOVE ZTE2IP    XENCA2
+     C                     MOVELXENCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XENCRESS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             87    MESSAGE 233
+    C           *IN87     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZNE2IP    IFNE *BLANKS
+     C                     MOVEL'ENCR'    PXARGU
+     C                     MOVE ZNE2IP    PXVALE    P
+     C           KPARAM    CHAINPARAME               87    MESSAGE 233
+    C           *IN87     CABEQ'1'       AFFICH
+F2  C                     END
+     *
+    C* OR CUIVRE ALU
+    C*-------------------------
+D2  C           ZTOAIP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XORCA1
+     C                     MOVE ZTOAIP    XORCA2
+     C                     MOVELXORCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XORCUALU'TBLNOM
+     C           KTBA01    CHAINXTBASE01             76    MESSAGE 81
+    C           *IN76     CABEQ'1'       AFFICH
+F2  C                     END
+    C* FLUO
+    C*-------------------------
+D2  C           ZTEFIP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XFLUA1
+     C                     MOVE ZTEFIP    XFLUA2
+     C                     MOVELXFLUKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XFLUOSSS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             77    MESSAGE 83
+    C           *IN57     CABEQ'1'       AFFICH
+F2  C                     END
+    C*
+    C* ENCRE MORDANTE POUR DORURE A FROID  ???????????????????????????????????
+    C* BEN PAS PLUS, TESTÉ DANS ENMO
+    C*---------------------------------------
+    C*          ZTEMIP    IFNE *BLANKS
+    C*                    Z-ADD1         TBNSEG
+    C*                    MOVE 4         XENCA1
+    C*                    MOVE ZTEMIP    XENCA2
+    C*                    MOVELXENCKE    TBVARG
+    C*                    MOVE *BLANKS   TBVRES
+    C*                    MOVEL'XENCRESS'TBLNOM
+    C*          KTBA01    CHAINXTBASE01             78    MESSAGE 228
+    C*          *IN78     CABEQ'1'       AFFICH
+    C*                    END
+    C*
+    C* TYPE VERNIS
+    C*-------------------------
+D2  C           ZTV1IP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV1IP    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             73    MESSAGE 225
+    C           *IN73     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZTV2IP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV2IP    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             74    MESSAGE 226
+    C           *IN74     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZTV3IP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV3IP    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             75    MESSAGE 227
+    C           *IN75     CABEQ'1'       AFFICH
+F2  C                     END
+    C*
+    C* DIFFICULTE DECOR
+    C*-------------------------
+D2  C           ZDDIP     IFNE *BLANKS
+     C                     MOVEL'DDEC'    PXARGU
+     C                     MOVE ZDDIP     PXVALE    P
+     C           KPARAM    CHAINPARAME               82
+    C   82                GOTO AFFICH                     MESSAGE 85
+F2  C                     END
+    C*
+    C* DIFFICULTE APLAT
+    C*-------------------------
+D2  C           ZDAIP     IFNE *BLANKS
+     C                     MOVEL'APLA'    PXARGU
+     C                     MOVE ZDAIP     PXVALE    P
+     C           KPARAM    CHAINPARAME               83
+    C   83                GOTO AFFICH                     MESSAGE 87
+F2  C                     END
+     *
+    C* TRAIT OU SELECTION EXT
+    C*-------------------------
+D2  C           ZTSSIP    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XTRAA1
+     C                     MOVE ZTSSIP    XTRAA2
+     C                     MOVELXTRAKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XTRAISEL'TBLNOM
+     C           KTBA01    CHAINXTBASE01             84    MESSAGE 75
+    C           *IN84     CABEQ'1'       AFFICH
+F2  C                     END
+     *
+    C* TYPE MATERIEL
+    C*-------------------------
+D2  C           ZTMIP     IFNE *BLANKS
+     C                     MOVEL'CMAT'    PXARGU
+     C                     MOVE ZTMIP     PXVALE    P
+     C           KPARAM    CHAINPARAME               85
+    C   85                GOTO AFFICH                     MESSAGE 89
+     C                     MOVELPXLIBE    LIBMI
+X2  C                     ELSE
+     C                     MOVE *BLANK    LIBMI
+F2  C                     END
+     *
+    C* TYPE VERNIS  REPIQUAGE
+    C*-------------------------
+D2  C           ZTV1IR    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XVERA1
+     C                     MOVE ZTV1IR    XVERA2
+     C                     MOVELXVERKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XVERNISS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             80    MESSAGE 105
+    C           *IN80     CABEQ'1'       AFFICH
+F2  C                     END
+    C* TYPE ET NATURE ENCRE REPIQUAGE
+    C*-------------------------
+D2  C           ZTE1IR    IFNE *BLANKS
+     C                     Z-ADD1         TBNSEG
+     C                     MOVE 4         XENCA1
+     C                     MOVE ZTE1IR    XENCA2
+     C                     MOVELXENCKE    TBVARG
+     C                     MOVE *BLANKS   TBVRES
+     C                     MOVEL'XENCRESS'TBLNOM
+     C           KTBA01    CHAINXTBASE01             81    MESSAGE 104
+    C           *IN81     CABEQ'1'       AFFICH
+F2  C                     END
+D2  C           ZNE1IR    IFNE *BLANKS
+     C                     MOVEL'ENCR'    PXARGU
+     C                     MOVE ZNE1IR    PXVALE    P
+     C           KPARAM    CHAINPARAME               81    MESSAGE 104
+    C           *IN81     CABEQ'1'       AFFICH
+F2  C                     END
+    C* CONTROLES SPECIFIQUES PAR CONFIGURATION
+    C*----------------------------------------------
+D2  C           OTCOEP    IFEQ 1                          ** 6+1
+D3  C           COUIN     IFGT 6
+    C           ZGEIP2    ANDEQ0
+    C           COUIN     ORGT 12
+    C           ZGEIP3    ANDEQ0
+    C           COUIN     ORGT 18
+     C                     SETON                     86    MESSAGE 230
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZGEIP1    IFGT 6
+    C           ZGEIP2    ORGT 6
+    C           ZGEIP3    ORGT 6
+     C                     SETON                     70    MESSAGE 224
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     *
+D2  C           OTCOEP    IFEQ 2                          ** KBA 6+2
+D3  C           COUIN     IFGT 6
+     C                     SETON                     86    MESSAGE 230
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZGEIP1    IFGT 6
+    C           ZGEIP2    ORGT 6
+    C           ZGEIP3    ORGT 6
+     C                     SETON                     70    MESSAGE 224
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     *
+D2  C           OTCOEP    IFEQ 3                          ** 3B
+D3  C           COUIN     IFGT 27
+     C                     SETON                     86    MESSAGE 230
+    C                     GOTO AFFICH
+F3  C                     END
+D3  C           ZGEIP1    IFGT 9
+    C           ZGEIP2    ORGT 9
+    C           ZGEIP3    ORGT 9
+     C                     SETON                     70    MESSAGE 224
+    C                     GOTO AFFICH
+F3  C                     END
+F2  C                     END
+     * SI KBA: SI 2 TYPES ENCRE: TRADI OU UV MAIS PAS DE MÉLANGE
+D2  C           OMACEP    IFEQ '06'
+D3  C           ZTE1IP    IFNE *BLANKS                    2 ENCRES
+    C           ZTE2IP    ANDNE*BLANKS
+D4  C           ZTE1IP    IFEQ ' '                        1ERE TRADI
+    C           ZTE1IP    OREQ 'N'
+    C           ZTE1IP    OREQ 'T'
+D5  C           ZTE2IP    IFEQ 'O'                        2EME UV
+    C           ZTE2IP    OREQ 'P'
+    C           ZTE2IP    OREQ 'U'
+     C                     SETON                     87    MESSAGE  234
+    C                     GOTO AFFICH
+F5  C                     END
+X4  C                     ELSE                            1ERE UV
+D5  C           ZTE2IP    IFEQ ' '                        2EME TRADI
+    C           ZTE2IP    OREQ 'N'
+    C           ZTE2IP    OREQ 'T'
+     C                     SETON                     87    MESSAGE  234
+    C                     GOTO AFFICH
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+     **** FENETRE DE DORURE A FROID *****
+     *
+D2  C           ZTEMIP    IFNE *BLANKS
+     C           WINDOR    TAG
+     C                     MOVE HDF1IP    ZWDF1
+     C                     MOVE 'DOFF'    PXARGU
+     C                     MOVE ZWDF1     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    LTFF1
+     C   50                MOVE *BLANK    LTFF1
+     *
+     C                     MOVE HDF2IP    ZWDF2
+     C                     MOVE 'DOFF'    PXARGU
+     C                     MOVE ZWDF2     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    LTFF2
+     C   50                MOVE *BLANK    LTFF2
+     *
+     C                     MOVE HDF3IP    ZWDF3
+     C                     MOVE 'DOFF'    PXARGU
+     C                     MOVE ZWDF3     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    LTFF3
+     C   50                MOVE *BLANK    LTFF3
+     *
+     C                     MOVE HDS1IP    ZWDS1
+     C                     MOVE HDS2IP    ZWDS2
+     C                     MOVE HDS3IP    ZWDS3
+     *
+D3  C           DEAFPR    IFEQ 'P'
+    C           DEAFPR    OREQ 'F'
+     C                     MOVE HDT1IP    ZWDT1
+     C                     MOVE HDL1IP    ZWDL1
+     C                     MOVE HDT2IP    ZWDT2
+     C                     MOVE HDL2IP    ZWDL2
+     C                     MOVE HDT3IP    ZWDT3
+     C                     MOVE HDL3IP    ZWDL3
+     *
+     C                     MOVE 'DOTF'    PXARGU
+     C                     MOVE ZWDT1     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    ZWDT1L
+     C                     MOVE ZWDT2     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    ZWDT2L
+     C                     MOVE ZWDT3     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C  N50                MOVE PXABRG    ZWDT3L
+F3  C                     END
+     *
+     *
+     C           AFDORI    TAG
+     C                     MOVE '0'       *IN34
+D3  C           DEAFPR    IFEQ 'D'                        DEVIS
+    C           DEAFPR    OREQ 'A'                        AFFICHE
+     C                     EXFMTWDOR
+X3  C                     ELSE                            PRODUIT/AFFICHE PRODU
+     C                     EXFMTWDORP
+F3  C                     END
+    C           *IN33     CABEQ'1'       FININT
+    C           *IN04     CASEQ'1'       TRTAID         35
+    C                     END
+    C   35                GOTO AFDORI
+     * ON TASSE VERS LE HAUT
+D3  C           ZWDF3     IFNE *BLANK
+    C           ZWDF2     ANDEQ*BLANK
+     C                     MOVE ZWDF3     ZWDF2
+     C                     MOVE LTFF3     LTFF2
+     C                     Z-ADDZWDS3     ZWDS2
+     C                     MOVE *BLANK    ZWDF3
+     C                     MOVE *BLANK    LTFF3
+     C                     Z-ADD*ZEROS    ZWDS3
+F3  C                     END
+D3  C           ZWDF2     IFNE *BLANK
+    C           ZWDF1     ANDEQ*BLANK
+     C                     MOVE ZWDF2     ZWDF1
+     C                     MOVE LTFF2     LTFF1
+     C                     Z-ADDZWDS2     ZWDS1
+     C                     MOVE *BLANK    ZWDF2
+     C                     MOVE *BLANK    LTFF2
+     C                     Z-ADD*ZEROS    ZWDS2
+F3  C                     END
+     C                     MOVE *BLANK    ERRDOR
+     C                     MOVE 'DOFF'    PXARGU
+D3  C           ZWDF1     IFEQ *BLANK
+     C                     MOVE ERD,1     ERRDOR
+    C                     GOTO AFDORI
+X3  C                     ELSE
+     C                     MOVE ZWDF1     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C   50                MOVE *BLANK    LTFF1
+     C   50                MOVE ERD,2     ERRDOR
+    C   50                GOTO AFDORI
+     C                     MOVELPXABRG    LTFF1
+F3  C                     END
+D3  C           ZWDS1     IFEQ *ZEROS
+     C                     MOVE ERD,3     ERRDOR
+    C                     GOTO AFDORI
+F3  C                     END
+     *
+D3  C           ZWDF2     IFNE *BLANK
+     C                     MOVE ZWDF2     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C   50                MOVE *BLANK    LTFF2
+     C   50                MOVE ERD,4     ERRDOR
+    C   50                GOTO AFDORI
+     C                     MOVELPXABRG    LTFF2
+D4  C           ZWDS2     IFEQ *ZEROS
+     C                     MOVE ERD,5     ERRDOR
+    C                     GOTO AFDORI
+F4  C                     END
+X3  C                     ELSE
+     C                     MOVE *BLANK    LTFF2
+F3  C                     END
+     *
+D3  C           ZWDF3     IFNE *BLANK
+     C                     MOVE ZWDF3     PXVALE    P
+     C           KPARAM    CHAINPARAME               50
+     C   50                MOVE *BLANK    LTFF3
+     C   50                MOVE ERD,6     ERRDOR
+    C   50                GOTO AFDORI
+     C                     MOVELPXABRG    LTFF3
+D4  C           ZWDS3     IFEQ *ZEROS
+     C                     MOVE ERD,7     ERRDOR
+    C                     GOTO AFDORI
+F4  C                     END
+X3  C                     ELSE
+     C                     MOVE *BLANK    LTFF3
+F3  C                     END
+     *
+    C* N12                GOTO AFDORI
+     *
+     C                     MOVE ZWPAS     HDPIP
+     C                     MOVE ZWDF1     HDF1IP
+     C                     MOVE ZWDF2     HDF2IP
+     C                     MOVE ZWDF3     HDF3IP
+     C                     MOVE ZWDS1     HDS1IP
+     C                     MOVE ZWDS2     HDS2IP
+     C                     MOVE ZWDS3     HDS3IP
+D3  C           DEAFPR    IFEQ 'P'
+    C           DEAFPR    OREQ 'F'
+     C                     MOVE ZWDT1     HDT1IP
+     C                     MOVE ZWDL1     HDL1IP
+     C                     MOVE ZWDT2     HDT2IP
+     C                     MOVE ZWDL2     HDL2IP
+     C                     MOVE ZWDT3     HDT3IP
+     C                     MOVE ZWDL3     HDL3IP
+F3  C                     END
+F2  C                     END
+    C* Affichage d'une fenetre si format Offset non standard
+     C                     EXSR CTLOFF
+F1  C                     END
+    C*
+    C* Affichage DAF EN VISU INTERIEUR
+D1  C           TIMPIN    IFEQ 4
+    C           *IN33     ANDEQ'1'
+D2  C           ZTEMIP    IFNE *BLANKS
+     C                     MOVE ZTEMIP    ZWTEM
+     C                     Z-ADDZPEMIP    ZWPEM
+D3  C           ZDIP1P    IFNE *BLANKS
+     C                     Z-ADD1         ZWPAS
+X3  C                     ELSE
+D4  C           ZDIP2P    IFNE *BLANKS
+     C                     Z-ADD2         ZWPAS
+X4  C                     ELSE
+     C                     Z-ADD3         ZWPAS
+F4  C                     END
+F3  C                     END
+    C                     GOTO WINDOR
+F2  C                     END
+F1  C                     END
+     C           FININT    TAG
+     C                     MOVE 'OK'      CODRET
+     ********************************
+     * CHARGEMENT DES DONNÉES EN RETOUR
+     *
+D1  C           OCOMRV    IFEQ 'I '
+     C                     MOVE TIMPIN    TIMPEX
+     C                     MOVE USINT     USEXT
+     C                     MOVE PAPII     PAPIE
+     C                     MOVE GRAMI     GRAME
+     C                     MOVE REFOUI    REFOUE
+     C                     MOVE GRAREI    GRAREE
+F1  C                     END
+     *  EXTERIEUR PRICIPALE STANDARD OU COMPACT RECTO OU COMPACT RECTO VERSO
+     *  DANS LES DONNÉES EXTERIEURES  PRINCIPALES
+D1  C           TIMPEX    IFEQ 4
+D2  C           OCOMRV    IFEQ '  '
+    C           OCOMRV    OREQ 'E '
+    C           OCOMRV    OREQ 'EI'
+     C                     Z-ADDZGEEP1    OGEEP1
+     C                     Z-ADDZGEEP2    OGEEP2
+     C                     Z-ADDZGEEP3    OGEEP3
+     C                     MOVE ZTE1EP    OTE1EP
+     C                     MOVE ZNE1EP    ONE1EP
+     C                     Z-ADDZPE1EP    OPE1EP
+     C                     MOVE ZTE2EP    OTE2EP
+     C                     MOVE ZNE2EP    ONE2EP
+     C                     Z-ADDZPE2EP    OPE2EP
+     C                     MOVELZTOAEP    OTOAEP
+     C                     Z-ADDZPOAEP    OPOAEP
+     C                     MOVE ZTEFEP    OTEFEP
+     C                     Z-ADDZPEFEP    OPEFEP
+     C                     Z-ADDZMESEP    OMESEP
+     C                     MOVE ZTEMEP    OTEMEP
+D3  C           ZTEMEP    IFNE *BLANK
+     C                     Z-ADDZPEMEP    OPEMEP
+D4  C           ZDEP1P    IFEQ 'X'
+     C                     Z-ADD1         ODPEP
+X4  C                     ELSE
+D5  C           ZDEP2P    IFEQ 'X'
+     C                     Z-ADD2         ODPEP
+X5  C                     ELSE
+D6  C           ZDEP3P    IFEQ 'X'
+     C                     Z-ADD3         ODPEP
+X6  C                     ELSE
+     C                     Z-ADD0         ODPEP
+F6  C                     END
+F5  C                     END
+F4  C                     END
+     C                     MOVE HDPEP     ODPEP
+     C                     MOVE HDF1EP    ODF1EP
+     C                     MOVE HDF2EP    ODF2EP
+     C                     MOVE HDF3EP    ODF3EP
+     C                     MOVE HDS1EP    ODS1EP
+     C                     MOVE HDS2EP    ODS2EP
+     C                     MOVE HDS3EP    ODS3EP
+     C                     MOVE HDT1EP    ODT1EP
+     C                     MOVE HDL1EP    ODL1EP
+     C                     MOVE HDT2EP    ODT2EP
+     C                     MOVE HDL2EP    ODL2EP
+     C                     MOVE HDT3EP    ODT3EP
+     C                     MOVE HDL3EP    ODL3EP
+X3  C                     ELSE
+     C                     Z-ADD*ZEROS    OPEMEP
+     C                     Z-ADD*ZEROS    ODPEP
+     C                     MOVE *BLANK    ODF1EP
+     C                     MOVE *BLANK    ODF2EP
+     C                     MOVE *BLANK    ODF3EP
+     C                     Z-ADD*ZEROS    ODS1EP
+     C                     Z-ADD*ZEROS    ODS2EP
+     C                     Z-ADD*ZEROS    ODS3EP
+     C                     MOVE *BLANK    ODT1EP
+     C                     Z-ADD*ZEROS    ODL1EP
+     C                     MOVE *BLANK    ODT2EP
+     C                     Z-ADD*ZEROS    ODL2EP
+     C                     MOVE *BLANK    ODT3EP
+     C                     Z-ADD*ZEROS    ODL3EP
+F3  C                     END
+     C                     MOVE ZTV1EP    OTV1EP
+     C                     Z-ADDZPV1EP    OPV1EP
+     C                     Z-ADDZMV1EP    OMV1EP
+     C                     MOVE ZV1EP1    OV1EP1
+     C                     MOVE ZV1EP2    OV1EP2
+     C                     MOVE ZV1EP3    OV1EP3
+     C                     MOVE ZTV2EP    OTV2EP
+     C                     Z-ADDZPV2EP    OPV2EP
+     C                     Z-ADDZMV2EP    OMV2EP
+     C                     MOVE ZV2EP1    OV2EP1
+     C                     MOVE ZV2EP2    OV2EP2
+     C                     MOVE ZV2EP3    OV2EP3
+     C                     MOVE ZTV3EP    OTV3EP
+     C                     Z-ADDZPV3EP    OPV3EP
+     C                     Z-ADDZMV3EP    OMV3EP
+     C                     MOVE ZV3EP1    OV3EP1
+     C                     MOVE ZV3EP2    OV3EP2
+     C                     MOVE ZV3EP3    OV3EP3
+     C                     MOVE ZDPREP    ODPREP
+     C                     MOVE ZTGEP     OTGEP
+     C                     MOVE ZGGEP     OGGEP
+     C                     MOVE ZDDEP     ODDEP
+     C                     MOVE ZDAEP     ODAEP
+     C                     MOVE ZTSSEP    OTSSEP
+     C                     MOVE ZTMEP     OTMEP
+D3  C           DEAFPR    IFEQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE ZLICEP    CLICEP
+     C                     MOVE ZNDPEP    INDPEP
+F3  C                     END
+     *  EXTERIEUR REPIQUAGE STANDARD OU COMPACT RECTO
+     *  VERS LES DONNÉES EXTERIEURES
+D3  C           OCOMRV    IFEQ '  '
+    C           OCOMRV    OREQ 'E '
+     C                     Z-ADDZGEER1    OGEER1
+     C                     MOVE ZTE1ER    OTE1ER
+     C                     MOVE ZNE1ER    ONE1ER
+     C                     Z-ADDZPE1ER    OPE1ER
+     C                     Z-ADDZMESER    OMESER
+     C                     MOVE ZTV1ER    OTV1ER
+     C                     MOVE ' '       OV1ER1
+D4  C           OTV1ER    IFNE ' '
+     C                     MOVE 'V'       OV1ER1
+F4  C                     END
+     C                     Z-ADDZPV1ER    OPV1ER
+     C                     Z-ADDZMV1ER    OMV1ER
+X3  C                     ELSE
+     *  PAS DE REPIQUAGE SI COMPACT R/V MAIS ZONE DERNIER PASSAGE= REPIQUAGE
+     C                     MOVE ZDPREP    ODPREP
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     *  INTERIEUR PRICIPALE STANDARD  VERS  LES DONNÉES INTERIEURES
+D1  C           TIMPIN    IFEQ 4
+    C           OCOMRV    ANDEQ'  '
+     C                     Z-ADDZGEIP1    OGEIP1
+     C                     Z-ADDZGEIP2    OGEIP2
+     C                     Z-ADDZGEIP3    OGEIP3
+     C                     MOVE ZTE1IP    OTE1IP
+     C                     MOVE ZNE1IP    ONE1IP
+     C                     Z-ADDZPE1IP    OPE1IP
+     C                     MOVE ZTE2IP    OTE2IP
+     C                     MOVE ZNE2IP    ONE2IP
+     C                     Z-ADDZPE2IP    OPE2IP
+     C                     MOVE ZTOAIP    OTOAIP
+     C                     Z-ADDZPOAIP    OPOAIP
+     C                     MOVE ZTEFIP    OTEFIP
+     C                     Z-ADDZPEFIP    OPEFIP
+     C                     Z-ADDZMESIP    OMESIP
+     C                     MOVE ZTEMIP    OTEMIP
+D2  C           ZTEMIP    IFNE *BLANK
+     C                     Z-ADDZPEMIP    OPEMIP
+D3  C           ZDIP1P    IFEQ 'X'
+     C                     Z-ADD1         ODPIP
+X3  C                     ELSE
+D4  C           ZDIP2P    IFEQ 'X'
+     C                     Z-ADD2         ODPIP
+X4  C                     ELSE
+D5  C           ZDIP3P    IFEQ 'X'
+     C                     Z-ADD3         ODPIP
+X5  C                     ELSE
+     C                     Z-ADD0         ODPIP
+F5  C                     END
+F4  C                     END
+F3  C                     END
+     C                     MOVE HDPIP     ODPIP
+     C                     MOVE HDF1IP    ODF1IP
+     C                     MOVE HDF2IP    ODF2IP
+     C                     MOVE HDF3IP    ODF3IP
+     C                     MOVE HDS1IP    ODS1IP
+     C                     MOVE HDS2IP    ODS2IP
+     C                     MOVE HDS3IP    ODS3IP
+     C                     MOVE HDT1IP    ODT1IP
+     C                     MOVE HDL1IP    ODL1IP
+     C                     MOVE HDT2IP    ODT2IP
+     C                     MOVE HDL2IP    ODL2IP
+     C                     MOVE HDT3IP    ODT3IP
+     C                     MOVE HDL3IP    ODL3IP
+X2  C                     ELSE
+     C                     Z-ADD*ZEROS    OPEMIP
+     C                     Z-ADD*ZEROS    ODPIP
+     C                     MOVE *BLANK    ODF1IP
+     C                     MOVE *BLANK    ODF2IP
+     C                     MOVE *BLANK    ODF3IP
+     C                     Z-ADD*ZEROS    ODS1IP
+     C                     Z-ADD*ZEROS    ODS2IP
+     C                     Z-ADD*ZEROS    ODS3IP
+     C                     MOVE *BLANK    ODT1IP
+     C                     Z-ADD*ZEROS    ODL1IP
+     C                     MOVE *BLANK    ODT2IP
+     C                     Z-ADD*ZEROS    ODL2IP
+     C                     MOVE *BLANK    ODT3IP
+     C                     Z-ADD*ZEROS    ODL3IP
+F2  C                     END
+     C                     MOVE ZTV1IP    OTV1IP
+     C                     Z-ADDZPV1IP    OPV1IP
+     C                     Z-ADDZMV1IP    OMV1IP
+     C                     MOVE ZV1IP1    OV1IP1
+     C                     MOVE ZV1IP2    OV1IP2
+     C                     MOVE ZV1IP3    OV1IP3
+     C                     MOVE ZTV2IP    OTV2IP
+     C                     Z-ADDZPV2IP    OPV2IP
+     C                     Z-ADDZMV2IP    OMV2IP
+     C                     MOVE ZV2IP1    OV2IP1
+     C                     MOVE ZV2IP2    OV2IP2
+     C                     MOVE ZV2IP3    OV2IP3
+     C                     MOVE ZTV3IP    OTV3IP
+     C                     Z-ADDZPV3IP    OPV3IP
+     C                     Z-ADDZMV3IP    OMV3IP
+     C                     MOVE ZV3IP1    OV3IP1
+     C                     MOVE ZV3IP2    OV3IP2
+     C                     MOVE ZV3IP3    OV3IP3
+     C                     MOVE ZTGIP     OTGIP
+     C                     MOVE ZGGIP     OGGIP
+     C                     MOVE ZDDIP     ODDIP
+     C                     MOVE ZDAIP     ODAIP
+     C                     MOVE ZTSSIP    OTSSIP
+     C                     MOVE ZTMIP     OTMIP
+D2  C           DEAFPR    IFEQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE ZLICIP    CLICIP
+     C                     MOVE ZNDPIP    INDPIP
+F2  C                     END
+     *  INTERIEUR REPIQUAGE STANDARD  VERS  LES DONNÉES INTERIEURES
+     C                     Z-ADDZGEIR1    OGEIR1
+     C                     MOVE ZTE1IR    OTE1IR
+     C                     MOVE ZNE1IR    ONE1IR
+     C                     Z-ADDZPE1IR    OPE1IR
+     C                     Z-ADDZMESIR    OMESIR
+     C                     MOVE ZTV1IR    OTV1IR
+     C                     Z-ADDZPV1IR    OPV1IR
+     C                     Z-ADDZMV1IR    OMV1IR
+F1  C                     END
+     *
+     *  INTERIEUR PRICIPALE COMPACT VERSO VERS  LES DONNÉES EXTERIEUR
+D1  C           TIMPEX    IFEQ 4
+    C           OCOMRV    ANDEQ'I '
+     C                     Z-ADDCOUIN     COUEX
+     C                     Z-ADDZGEIP1    OGEEP1
+     C                     Z-ADDZGEIP2    OGEEP2
+     C                     Z-ADDZGEIP3    OGEEP3
+     C                     MOVE ZTE1IP    OTE1EP
+     C                     MOVE ZNE1IP    ONE1EP
+     C                     Z-ADDZPE1IP    OPE1EP
+     C                     MOVE ZTE2IP    OTE2EP
+     C                     MOVE ZNE2IP    ONE2EP
+     C                     Z-ADDZPE2IP    OPE2EP
+     C                     MOVELZTOAIP    OTOAEP
+     C                     Z-ADDZPOAIP    OPOAEP
+     C                     MOVE ZTEFIP    OTEFEP
+     C                     Z-ADDZPEFIP    OPEFEP
+     C                     Z-ADDZMESIP    OMESEP
+     C                     MOVE ZTEMIP    OTEMEP
+D2  C           ZTEMIP    IFNE *BLANK
+     C                     Z-ADDZPEMIP    OPEMEP
+D3  C           ZDIP1P    IFEQ 'X'
+     C                     Z-ADD1         ODPEP
+X3  C                     ELSE
+D4  C           ZDIP2P    IFEQ 'X'
+     C                     Z-ADD2         ODPEP
+X4  C                     ELSE
+D5  C           ZDIP3P    IFEQ 'X'
+     C                     Z-ADD3         ODPEP
+X5  C                     ELSE
+     C                     Z-ADD0         ODPEP
+F5  C                     END
+F4  C                     END
+F3  C                     END
+     C                     MOVE HDPIP     ODPEP
+     C                     MOVE HDF1IP    ODF1EP
+     C                     MOVE HDF2IP    ODF2EP
+     C                     MOVE HDF3IP    ODF3EP
+     C                     MOVE HDS1IP    ODS1EP
+     C                     MOVE HDS2IP    ODS2EP
+     C                     MOVE HDS3IP    ODS3EP
+     C                     MOVE HDT1IP    ODT1EP
+     C                     MOVE HDL1IP    ODL1EP
+     C                     MOVE HDT2IP    ODT2EP
+     C                     MOVE HDL2IP    ODL2EP
+     C                     MOVE HDT3IP    ODT3EP
+     C                     MOVE HDL3IP    ODL3EP
+X2  C                     ELSE
+     C                     Z-ADD*ZEROS    OPEMEP
+     C                     MOVE *BLANK    ODPEP
+     C                     MOVE *BLANK    ODF1EP
+     C                     MOVE *BLANK    ODF2EP
+     C                     MOVE *BLANK    ODF3EP
+     C                     Z-ADD*ZEROS    ODS1EP
+     C                     Z-ADD*ZEROS    ODS2EP
+     C                     Z-ADD*ZEROS    ODS3EP
+     C                     MOVE *BLANK    ODT1EP
+     C                     Z-ADD*ZEROS    ODL1EP
+     C                     MOVE *BLANK    ODT2EP
+     C                     Z-ADD*ZEROS    ODL2EP
+     C                     MOVE *BLANK    ODT3EP
+     C                     Z-ADD*ZEROS    ODL3EP
+F2  C                     END
+     C                     MOVE ZTV1IP    OTV1EP
+     C                     Z-ADDZPV1IP    OPV1EP
+     C                     Z-ADDZMV1IP    OMV1EP
+     C                     MOVE ZV1IP1    OV1EP1
+     C                     MOVE ZV1IP2    OV1EP2
+     C                     MOVE ZV1IP3    OV1EP3
+     C                     MOVE ZTV2IP    OTV2EP
+     C                     Z-ADDZPV2IP    OPV2EP
+     C                     Z-ADDZMV2IP    OMV2EP
+     C                     MOVE ZV2IP1    OV2EP1
+     C                     MOVE ZV2IP2    OV2EP2
+     C                     MOVE ZV2IP3    OV2EP3
+     C                     MOVE ZTV3IP    OTV3EP
+     C                     Z-ADDZPV3IP    OPV3EP
+     C                     Z-ADDZMV3IP    OMV3EP
+     C                     MOVE ZV3IP1    OV3EP1
+     C                     MOVE ZV3IP2    OV3EP2
+     C                     MOVE ZV3IP3    OV3EP3
+     C                     MOVE ZTGIP     OTGEP
+     C                     MOVE ZGGIP     OGGEP
+     C                     MOVE ZDDIP     ODDEP
+     C                     MOVE ZDAIP     ODAEP
+     C                     MOVE ZTSSIP    OTSSEP
+     C                     MOVE ZTMIP     OTMEP
+D2  C           DEAFPR    IFEQ 'F'                        AFFICHE/PRODUIT
+     C                     MOVE ZLICIP    CLICEP
+     C                     MOVE ZNDPIP    INDPEP
+F2  C                     END
+     *  INTERIEUR REPIQUAGE COMPACT VERSO VERS  LES DONNÉES EXTERIEUR REPIQUAGE
+     C                     Z-ADDZGEIR1    OGEER1
+     C                     MOVE ZTE1IR    OTE1ER
+     C                     MOVE ZNE1IR    ONE1ER
+     C                     Z-ADDZPE1IR    OPE1ER
+     C                     Z-ADDZMESIR    OMESER
+     C                     MOVE ZTV1IR    OTV1ER
+     C                     Z-ADDZPV1IR    OPV1ER
+     C                     Z-ADDZMV1IR    OMV1ER
+F1  C                     END
+     *
+     *  INTERIEUR PRICIPALE COMPACT E/I VERS LES DONNÉES EXTERIEUR REPIQUAGE
+D1  C           TIMPEX    IFEQ 4
+D2  C           OCOMRV    IFEQ 'EI'
+     C                     Z-ADDCOUIN     COUEXR
+     C                     Z-ADDZGEIP1    OGEER1
+     C                     Z-ADDZGEIP2    OGEER2
+     C                     Z-ADDZGEIP3    OGEER3
+     C                     MOVE ZTE1IP    OTE1ER
+     C                     MOVE ZNE1IP    ONE1ER
+     C                     Z-ADDZPE1IP    OPE1ER
+     C                     MOVE ZTE2IP    OTE2ER
+     C                     MOVE ZNE2IP    ONE2ER
+     C                     Z-ADDZPE2IP    OPE2ER
+     C                     MOVELZTOAIP    OTOAER
+     C                     Z-ADDZPOAIP    OPOAER
+     C                     MOVE ZTEFIP    OTEFER
+     C                     Z-ADDZPEFIP    OPEFER
+     C                     Z-ADDZMESIP    OMESER
+     C                     MOVE ZTEMIP    OTEMER
+D3  C           ZTEMIP    IFNE *BLANK
+     C                     Z-ADDZPEMIP    OPEMER
+D4  C           ZDIP1P    IFEQ 'X'
+     C                     Z-ADD1         ODPER
+X4  C                     ELSE
+D5  C           ZDIP2P    IFEQ 'X'
+     C                     Z-ADD2         ODPER
+X5  C                     ELSE
+D6  C           ZDIP3P    IFEQ 'X'
+     C                     Z-ADD3         ODPER
+X6  C                     ELSE
+     C                     Z-ADD0         ODPER
+F6  C                     END
+F5  C                     END
+F4  C                     END
+     C                     MOVE HDPIP     ODPER
+     C                     MOVE HDF1IP    ODF1ER
+     C                     MOVE HDF2IP    ODF2ER
+     C                     MOVE HDF3IP    ODF3ER
+     C                     MOVE HDS1IP    ODS1ER
+     C                     MOVE HDS2IP    ODS2ER
+     C                     MOVE HDS3IP    ODS3ER
+     C                     MOVE HDT1IP    ODT1ER
+     C                     MOVE HDL1IP    ODL1ER
+     C                     MOVE HDT2IP    ODT2ER
+     C                     MOVE HDL2IP    ODL2ER
+     C                     MOVE HDT3IP    ODT3ER
+     C                     MOVE HDL3IP    ODL3ER
+X3  C                     ELSE
+     C                     Z-ADD*ZEROS    OPEMER
+     C                     Z-ADD*ZEROS    ODPER
+     C                     MOVE *BLANK    ODF1ER
+     C                     MOVE *BLANK    ODF2ER
+     C                     MOVE *BLANK    ODF3ER
+     C                     Z-ADD*ZEROS    ODS1ER
+     C                     Z-ADD*ZEROS    ODS2ER
+     C                     Z-ADD*ZEROS    ODS3ER
+     C                     MOVE *BLANK    ODT1ER
+     C                     Z-ADD*ZEROS    ODL1ER
+     C                     MOVE *BLANK    ODT2ER
+     C                     Z-ADD*ZEROS    ODL2ER
+     C                     MOVE *BLANK    ODT3ER
+     C                     Z-ADD*ZEROS    ODL3ER
+F3  C                     END
+     C                     MOVE ZTV1IP    OTV1ER
+     C                     Z-ADDZPV1IP    OPV1ER
+     C                     Z-ADDZMV1IP    OMV1ER
+     C                     MOVE ZV1IP1    OV1ER1
+     C                     MOVE ZV1IP2    OV1ER2
+     C                     MOVE ZV1IP3    OV1ER3
+     C                     MOVE ZTV2IP    OTV2ER
+     C                     Z-ADDZPV2IP    OPV2ER
+     C                     Z-ADDZMV2IP    OMV2ER
+     C                     MOVE ZV2IP1    OV2ER1
+     C                     MOVE ZV2IP2    OV2ER2
+     C                     MOVE ZV2IP3    OV2ER3
+     C                     MOVE ZTV3IP    OTV3ER
+     C                     Z-ADDZPV3IP    OPV3ER
+     C                     Z-ADDZMV3IP    OMV3ER
+     C                     MOVE ZV3IP1    OV3ER1
+     C                     MOVE ZV3IP2    OV3ER2
+     C                     MOVE ZV3IP3    OV3ER3
+     C                     MOVE ZTGIP     OTGER
+     C                     MOVE ZGGIP     OGGER
+     C                     MOVE ZDDIP     ODDER
+     C                     MOVE ZDAIP     ODAER
+     C                     MOVE ZTSSIP    OTSSER
+     C                     MOVE ZTMIP     OTMER
+     *  PAS DE REPIQUAGE SI COMPACT E/I MAIS ZONE DERNIER PASSAGE= REPIQUAGE
+     C                     MOVE ZDPRER    ODPRER
+X2  C                     ELSE                            PAS DE RV
+     C                     Z-ADD*ZEROS    OGEER2
+     C                     Z-ADD*ZEROS    OGEER3
+    C*                    MOVE *BLANK    OTE1ER
+    C*                    MOVE *BLANK    ONE1ER
+    C*                    Z-ADD*ZEROS    OPE1ER
+     C                     MOVE *BLANK    OTE2ER
+     C                     MOVE *BLANK    ONE2ER
+     C                     Z-ADD*ZEROS    OPE2ER
+     C                     MOVE *BLANK    OTOAER
+     C                     Z-ADD*ZEROS    OPOAER
+     C                     MOVE *BLANK    OTEFER
+     C                     Z-ADD*ZEROS    OPEFER
+    C*                    Z-ADD*ZEROS    OMESER
+     C                     MOVE *BLANK    OTEMER
+     C                     Z-ADD*ZEROS    OPEMER
+     C                     Z-ADD0         ODPER
+     C                     MOVE *BLANK    ODPER
+     C                     MOVE *BLANK    ODF1ER
+     C                     MOVE *BLANK    ODF2ER
+     C                     MOVE *BLANK    ODF3ER
+     C                     MOVE *BLANK    ODS1ER
+     C                     MOVE *BLANK    ODS2ER
+     C                     MOVE *BLANK    ODS3ER
+     C                     MOVE *BLANK    ODT1ER
+     C                     MOVE *BLANK    ODT2ER
+     C                     MOVE *BLANK    ODT3ER
+     C                     MOVE *BLANK    ODL1ER
+     C                     MOVE *BLANK    ODL2ER
+     C                     MOVE *BLANK    ODL3ER
+    C*                    MOVE *BLANK    OTV1ER
+    C*                    Z-ADD*ZEROS    OPV1ER
+    C*                    Z-ADD*ZEROS    OMV1ER
+    C*                    MOVE *BLANK    OV1ER1
+     C                     MOVE *BLANK    OV1ER2
+     C                     MOVE *BLANK    OV1ER3
+     C                     MOVE *BLANK    OTV2ER
+     C                     Z-ADD*ZEROS    OPV2ER
+     C                     Z-ADD*ZEROS    OMV2ER
+     C                     MOVE *BLANK    OV2ER1
+     C                     MOVE *BLANK    OV2ER2
+     C                     MOVE *BLANK    OV2ER3
+     C                     MOVE *BLANK    OTV3ER
+     C                     Z-ADD*ZEROS    OPV3ER
+     C                     Z-ADD*ZEROS    OMV3ER
+     C                     MOVE *BLANK    OV3ER1
+     C                     MOVE *BLANK    OV3ER2
+     C                     MOVE *BLANK    OV3ER3
+     C                     MOVE *BLANK    OTGER
+     C                     MOVE *BLANK    OGGER
+     C                     MOVE *BLANK    ODDER
+     C                     MOVE *BLANK    ODAER
+     C                     MOVE *BLANK    OTSSER
+     C                     MOVE *BLANK    OTMER
+     *  PAS DE REPIQUAGE SI COMPACT R/V MAIS ZONE DERNIER PASSAGE= REPIQUAGE
+     C                     MOVE *BLANK    ODPRER
+F2  C                     END
+F1  C                     END
+    C*
+     C           FINFIN    TAG
+D1  C           OCOMRV    IFEQ 'I '
+     C                     MOVE TIMPIN    TIMPEX
+     C                     MOVE PAPII     PAPIE
+     C                     MOVE GRAMI     GRAME
+     C                     MOVE REFOUI    REFOUE
+     C                     MOVE GRAREI    GRAREE
+     C                     Z-ADDCOUIN     COUEX
+F1  C                     END
+D1  C           OCOMRV    IFEQ 'EI'
+    C           OCOMRV    OREQ 'I '
+     C                     MOVE *ZEROS    TIMPIN
+     C                     MOVE *BLANK    PAPII
+     C                     MOVE *BLANK    GRAMI
+     C                     MOVE *BLANK    REFOUI
+     C                     MOVE *ZEROS    GRAREI
+     C                     MOVE *ZEROS    COUIN
+F1  C                     END
+D1  C           TIMPEX    IFEQ 4
+     C                     Z-ADDUSINE     USEXT
+F1  C                     END
+D1  C           TIMPIN    IFEQ 4
+     C                     Z-ADDUSINE     USINT
+F1  C                     END
+     C                     SETON                     LR
+     *--------------------------------------------------------*
+    C           CTLOFF    BEGSR
+     *          ---------------
+D1  C           FORL      IFNE *ZEROS
+    C           FORH      ANDNE*ZEROS
+     C                     Z-ADD0         WAFF    10
+     C                     Z-ADD0         WAFF1   10
+     * Recherche du plus petit et du plus grand
+     * OUVERT = le plus grand, DEFIL = le plus petit
+D2  C           FORL      IFLT FORH
+     C                     Z-ADDFORH      OUVERT  40
+     C                     Z-ADDFORL      DEFIL   40
+X2  C                     ELSE
+     C                     Z-ADDFORL      OUVERT
+     C                     Z-ADDFORH      DEFIL
+F2  C                     END
+     * Test Mini Offset SAUF 3B
+D2  C           OTCOEP    IFNE 3
+D3  C           OUVERT    IFGE 850
+    C           DEFIL     ANDGE620
+X3  C                     ELSE
+     C                     Z-ADD1         WAFF
+F3  C                     END
+X2  C                     ELSE
+     * impression SUR LA 3B
+D3  C           OUVERT    IFLT 600
+    C           DEFIL     ORLT 500
+     C                     Z-ADD1         WAFF
+F3  C                     END
+F2  C                     END
+     *
+     * Impression offset en UV
+D2  C           TIMPEX    IFEQ 4
+D3  C           ZTE1EP    IFEQ 'U'
+    C           ZTE2EP    OREQ 'U'
+    C           ZTV1EP    OREQ 'U'
+    C           ZTV2EP    OREQ 'U'
+    C           ZTV3EP    OREQ 'U'
+D4  C           DEFIL     IFLE 1020
+    C           OUVERT    ANDLE1420
+X4  C                     ELSE
+     C                     Z-ADD1         WAFF
+F4  C                     END
+X3  C                     ELSE
+     * impression offset en TRADI
+D4  C           DEFIL     IFLE 1050
+    C           OUVERT    ANDLE1450
+X4  C                     ELSE
+     C                     Z-ADD1         WAFF
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+D2  C           TIMPIN    IFEQ 4
+D3  C           ZTE1IP    IFEQ 'U'
+    C           ZTE2IP    OREQ 'U'
+    C           ZTV1IP    OREQ 'U'
+    C           ZTV2IP    OREQ 'U'
+    C           ZTV3IP    OREQ 'U'
+D4  C           DEFIL     IFLE 1020
+    C           OUVERT    ANDLE1420
+X4  C                     ELSE
+     C                     Z-ADD1         WAFF
+F4  C                     END
+X3  C                     ELSE
+     * impression offset en TRADI
+D4  C           DEFIL     IFLE 1050
+    C           OUVERT    ANDLE1450
+X4  C                     ELSE
+     C                     Z-ADD1         WAFF
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+     * impression avec dorure
+D2  C           CODDOR    IFEQ '*'
+D3  C           OUVERT    IFGE 850
+    C           DEFIL     ANDGE620
+D4  C           DEFIL     IFLE 890
+    C           OUVERT    ANDLE1260
+X4  C                     ELSE
+     C                     MOVE LIBMSG,1  WMSGOF
+     C                     Z-ADD1         WAFF1
+F4  C                     END
+X3  C                     ELSE
+     C                     MOVE LIBMSG,1  WMSGOF
+     C                     Z-ADD1         WAFF1
+F3  C                     END
+F2  C                     END
+     *
+     *
+     * Affichage d'une fenetre avec alerte sur le format
+D2  C           WAFF      IFEQ 1
+     C                     Z-ADDFORL      EFORL
+     C                     Z-ADDFORH      EFORH
+     C                     EXFMTWOFFSET
+F2  C                     END
+     *
+     * Affichage d'une fenetre avec alerte pour dorrure
+D2  C           WAFF1     IFEQ 1
+     C                     Z-ADDFORL      EFORL
+     C                     Z-ADDFORH      EFORH
+     C                     EXFMTDOFFSET
+F2  C                     END
+     *
+F1  C                     END
+    C           FTLOFF    ENDSR
+     *--------------------------------------------------------*
+     * S/PROGRAMME : TOUCHE CDE 4                             *
+     *--------------------------------------------------------*
+    C           TRTAID    BEGSR
+     *          ---------------
+     C           £CURSO    DIV  256       HLIG
+     C                     MVR            HCOL
+    C           ZONZON    CASEQ'ZTSSEP'  AID01
+    C           ZONZON    CASEQ'ZTSSIP'  AID01
+    C           ZONZON    CASEQ'ZTE1EP'  AID02
+    C           ZONZON    CASEQ'ZTE2EP'  AID02
+    C           ZONZON    CASEQ'ZTE1IP'  AID02
+    C           ZONZON    CASEQ'ZTE2IP'  AID02
+    C           ZONZON    CASEQ'ZTE1ER'  AID02
+    C           ZONZON    CASEQ'ZTE1IR'  AID02
+    C           ZONZON    CASEQ'ZTV1EP'  AID03
+    C           ZONZON    CASEQ'ZTV2EP'  AID03
+    C           ZONZON    CASEQ'ZTV3EP'  AID03
+    C           ZONZON    CASEQ'ZTV1ER'  AID03
+    C           ZONZON    CASEQ'ZTV1IP'  AID03
+    C           ZONZON    CASEQ'ZTV2IP'  AID03
+    C           ZONZON    CASEQ'ZTV3IP'  AID03
+    C           ZONZON    CASEQ'ZTV1IR'  AID03
+    C           ZONZON    CASEQ'ZTOAEP'  AID04
+    C           ZONZON    CASEQ'ZTOAIP'  AID04
+    C           ZONZON    CASEQ'ZTEFEP'  AID05
+    C           ZONZON    CASEQ'ZTEFIP'  AID05
+    C           ZONZON    CASEQ'ZDDEP '  AID06
+    C           ZONZON    CASEQ'ZDDIP '  AID06
+    C           ZONZON    CASEQ'ZDAEP '  AID07
+    C           ZONZON    CASEQ'ZDAIP '  AID07
+    C           ZONZON    CASEQ'ZNE1EP'  AID08
+    C           ZONZON    CASEQ'ZNE2EP'  AID08
+    C           ZONZON    CASEQ'ZNE1ER'  AID08
+    C           ZONZON    CASEQ'ZNE1IP'  AID08
+    C           ZONZON    CASEQ'ZNE2IP'  AID08
+    C           ZONZON    CASEQ'ZNE1IR'  AID08
+    C           ZONZON    CASEQ'ZTMEP '  AID09
+    C           ZONZON    CASEQ'ZTMIP '  AID09
+    C           ZONZON    CASEQ'ZTEMEP'  AID10
+    C           ZONZON    CASEQ'ZTEMIP'  AID10
+    C           ZONZON    CASEQ'ZWDF1 '  AIDW1
+    C           ZONZON    CASEQ'ZWDF2 '  AIDW1
+    C           ZONZON    CASEQ'ZWDF3 '  AIDW1
+    C                     CAS            AID0
+    C                     END
+    C                     ENDSR
+    C           AID0      BEGSR
+     *          ---------------
+     C                     WRITEWMINI
+     C                     EXFMTWERR
+    C                     ENDSR
+      /SPACE 2
+    C           AID01     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'XTRAISEL'TBLNOM
+     C                     Z-ADD1         LG
+     C                     MOVE 'X'       FICH
+     C                     MOVEL'4 '      TBVAR
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTSSEP'
+     C                     MOVELCODE      ZTSSEP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTSSIP'
+     C                     MOVELCODE      ZTSSIP
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID02     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'XENCRESS'TBLNOM
+     C                     Z-ADD1         LG
+     C                     MOVE 'X'       FICH
+     C                     MOVEL'4 '      TBVAR
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTE1EP'
+     C                     MOVELCODE      ZTE1EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTE2EP'
+     C                     MOVELCODE      ZTE2EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTE1IP'
+     C                     MOVELCODE      ZTE1IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTE2IP'
+     C                     MOVELCODE      ZTE2IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTE1ER'
+     C                     MOVELCODE      ZTE1ER
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTE1IR'
+     C                     MOVELCODE      ZTE1IR
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID03     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'XVERNISS'TBLNOM
+     C                     Z-ADD1         LG
+     C                     MOVEL'4 '      TBVAR
+     C                     MOVE 'X'       FICH
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTV1EP'
+     C                     MOVELCODE      ZTV1EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV2EP'
+     C                     MOVELCODE      ZTV2EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV3EP'
+     C                     MOVELCODE      ZTV3EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV1IP'
+     C                     MOVELCODE      ZTV1IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV2IP'
+     C                     MOVELCODE      ZTV2IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV3IP'
+     C                     MOVELCODE      ZTV3IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV1ER'
+     C                     MOVELCODE      ZTV1ER
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTV1IR'
+     C                     MOVELCODE      ZTV1IR
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID04     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'XORCUALU'TBLNOM
+     C                     Z-ADD1         LG
+     C                     MOVEL'4 '      TBVAR
+     C                     MOVE 'X'       FICH
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTOAEP'
+     C                     MOVELCODE      ZTOAEP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTOAIP'
+     C                     MOVELCODE      ZTOAIP
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID05     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'XFLUOSSS'TBLNOM
+     C                     Z-ADD1         LG
+     C                     MOVEL'4 '      TBVAR
+     C                     MOVE 'X'       FICH
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTEFEP'
+     C                     MOVELCODE      ZTEFEP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTEFIP'
+     C                     MOVELCODE      ZTEFIP
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID06     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'DDEC'    TBLNOM
+     C                     Z-ADD7         LG
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZDDEP'
+     C                     MOVELCODE      ZDDEP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZDDIP'
+     C                     MOVELCODE      ZDDIP
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID07     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'APLA'    TBLNOM
+     C                     Z-ADD7         LG
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZDAEP'
+     C                     MOVELCODE      ZDAEP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZDAIP'
+     C                     MOVELCODE      ZDAIP
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AID08     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'ENCR'    TBLNOM
+     C                     Z-ADD7         LG
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZNE1EP'
+     C                     MOVELCODE      ZNE1EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZNE2EP'
+     C                     MOVELCODE      ZNE2EP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZNE1ER'
+     C                     MOVELCODE      ZNE1ER
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZNE1IP'
+     C                     MOVELCODE      ZNE1IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZNE2IP'
+     C                     MOVELCODE      ZNE2IP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZNE1IR'
+     C                     MOVELCODE      ZNE1IR
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+     *
+    C           AID09     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'CMAT'    TBLNOM
+     C                     Z-ADD7         LG
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTMEP '
+     C                     MOVELCODE      ZTMEP
+     C                     MOVELLIBEL     LIBME
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTMIP '
+     C                     MOVELCODE      ZTMIP
+     C                     MOVELLIBEL     LIBMI
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+     *
+    C           AID10     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'ENMO'    TBLNOM
+     C                     Z-ADD7         LG
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZTEMEP'
+     C                     MOVELCODE      ZTEMEP
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZTEMIP'
+     C                     MOVELCODE      ZTEMIP
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+      /SPACE 2
+    C           AIDW1     BEGSR
+     *          ---------------
+     C                     CLEARDSPAR2
+     C                     MOVEL'DOFF'    TBLNOM
+     C                     Z-ADD7         LG
+     C                     CALL 'DEV002£'
+     C                     PARM           DSPAR2
+D1  C           CODE      IFNE *BLANKS
+D2  C           ZONZON    IFEQ 'ZWDF1 '
+     C                     MOVELCODE      ZWDF1
+    C*                    MOVELLIBEL     LTFF1
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZWDF2 '
+     C                     MOVELCODE      ZWDF2
+    C*                    MOVELLIBEL     LTFF2
+F2  C                     END
+D2  C           ZONZON    IFEQ 'ZWDF3 '
+     C                     MOVELCODE      ZWDF3
+    C*                    MOVELLIBEL     LTFF3
+F2  C                     END
+F1  C                     END
+    C                     ENDSR
+     *--------------------------------------------------------*
+     * S/PROGRAMME : APPEL FICHE TECHNIQUE OFFSET             *
+     *--------------------------------------------------------*
+    C           TRTFTO    BEGSR
+D1  C           DEAFPR    IFEQ 'P'
+    C           DEAFPR    OREQ 'F'
+     C                     MOVE ANDEV     STE
+     C                     MOVE ETUDE     NOCLI
+     C                     MOVE SEQDE     NOPRO
+     C                     MOVE *BLANK    BLANK   2
+     C                     CALL 'FTOFF02L'
+     C                     PARM           DSPAR3
+F1  C                     END
+    C                     GOTO AFFICH
+    C                     ENDSR
+**
+1° FILM OBLIGATOIRE
+FILM 1° FAMILLE PRIX ERRONÉE
+FILM 1° SURFACE OBLIGATOIRE
+FILM 2° FAMILLE PRIX ERRONÉE
+FILM 2° SURFACE OBLIGATOIRE
+FILM 3° FAMILLE PRIX ERRONÉE
+FILM 3° SURFACE OBLIGATOIRE
+** LIBMSG
+DORURE

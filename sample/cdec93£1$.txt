@@ -1,0 +1,2935 @@
+     ***************************************************************
+     *                                                             *
+     *          PGM: CDEC93£1 REALISE PAR REMI COURTAINE           *
+     *                                                             *
+     *            BON DE FABRICATION IMPRESSION                    *
+     *            --------------------------                       *
+     ***************************************************************
+     *            INDICATEURS UTILISES DANS LE PROGAMME            *
+     *                                                             *
+     * -> U8  INDIQUE LA NOTION D'EDITION FORCEE DU BON            *
+     *                                                             *
+     * -> 30  INDIQUE LA NOTION DE BOBINE OU FORMAT DE V029        *
+     * -> 31  INDIQUE LA NOTION DE BOBINE OU FORMAT DE V031        *
+     *                                                             *
+     *  TOUTES LES ZONES D'EDITION SONT NOMMEES VXXX EN MARGE      *
+     *                                                             *
+     ***************************************************************
+     FPRLANCXGIF  E           K        DISK
+     FPRLANCX4IF  E           K        DISK
+     F            PRLANCF1                          KRENAMEPRLANC4
+    F*ESTPSLDIF  E           K        DISK
+     FPRLANCL8IF  E           K        DISK
+     FCARCDEL1IF  E           K        DISK
+     FCARCDEL2IF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDE2
+     FCLIENTS1IF  E           K        DISK
+     FPRODUI2 UF  E           K        DISK                      A
+     FPRODST2 IF  E           K        DISK
+     FPRODST3 IF  E           K        DISK
+     FPRODUL10IF  E           K        DISK
+     F            PRODUIF1                          KRENAMEPRODUIF
+     FCALENJL7IF  E           K        DISK
+     FCALENS  IF  E           K        DISK
+     FPARAME  IF  E           K        DISK
+     FCLIOBIL2IF  E           K        DISK
+     FCODBARL2IF  E           K        DISK
+     FHISTOF15IF  E           K        DISK
+     FBESOMAL1IF  E           K        DISK
+     FPLAMAL1 IF  E           K        DISK
+     FOBSPROL1UF  E           K        DISK
+     FCAIPALL1IF  E           K        DISK
+     FCDEOBSL2IF  E           K        DISK
+     FPLANIFL5IF  E           K        DISK
+     *
+     FLIEUSTL3IF  E           K        DISK                               PROD17
+     FBONIMP  O   F    3091            DISK
+     FBONEMB  O   F    2774            DISK
+     FSIECLE  IF  E           K        DISK                               PROD17
+     *
+     *****************************************************************
+     *     TABLES INTERNES
+     *****************************************************************
+     E                    TI      1  15  2 0 LIM    13
+     E                    CON     1  23 40
+     E                    ETA     1   5  1   LET    12
+     E                    TIM         7  1 0 TRE     1 0
+     E                    COP         7  1   NAT     1
+     E                    FOH         7  4 0 FOL     4 0
+     E                    VAR        20 40   VDT     6
+     E                    VEM        20  6
+     E                    CDE        10  7 0
+     E                    SUP         5 73
+     E                    BAR         8 56
+     E                    CAD        11 31
+     E                    TAL         7  3 2 STD     4 1
+     E                    RED         7  5 0
+     E                    CAR        75  1
+     E                    WAR        40  1
+     E                    TMA         5  2 0
+     E                    EMB        10 90
+     E                    UFA         9  1 0
+     E                    ADPA        7  6
+     E                    ADGR        7  3 0
+     E                    CXT       100  2               CODES EXTER.
+     E                    TPAP        7  3
+     E                    TGRA        7  3 0
+     E                    OVU         9  1 0 YU      1 0 DECALAGE/U
+     *****************************************************************
+     *
+     ICODBARF1
+     I              SUIMP                           BUIMP
+     *
+     ILIEUSTF1
+     I              NCONF                           LICONF
+     I              SEQFAB                          LISEQF
+     I              LIEUST                          LILIEU
+     I              EXPEDM                          LIPEDM
+     I              EXPEDJ                          LIPEDJ
+     I              USINE                           LIUSIN
+     I              NBCAIS                          LINBCA
+     *
+     *  ZONES DE PRODUI2 RENOMMEES  COMMENCENT PAR Y
+     IPRODUIF1
+     I              CCOL                            YCOL
+     I              FACON                           YACON
+     I              GARNT                           YARNT
+     I              NOFOR                           YOFOR
+     I              ONDH                            YNDH
+     I              ONDL                            YNDL
+     I              ONDUL                           YNDUL
+     I              POSF1                           YOSF1
+     I              TIMP1                           TIM,1
+     I              TIMP2                           TIM,2
+     I              TIMP3                           TIM,3
+     I              TIMP4                           TIM,4
+     I              TIMP5                           TIM,5
+     I              TIMP6                           TIM,6
+     I              TIMP7                           TIM,7
+     I              TREP1                           TRE,1
+     I              TREP2                           TRE,2
+     I              TREP3                           TRE,3
+     I              TREP4                           TRE,4
+     I              TREP5                           TRE,5
+     I              TREP6                           TRE,6
+     I              TREP7                           TRE,7
+     I              COUP1                           COP,1
+     I              COUP2                           COP,2
+     I              COUP3                           COP,3
+     I              COUP4                           COP,4
+     I              COUP5                           COP,5
+     I              COUP6                           COP,6
+     I              COUP7                           COP,7
+     I              FORH1                           FOH,1
+     I              FORH2                           FOH,2
+     I              FORH3                           FOH,3
+     I              FORH4                           FOH,4
+     I              FORH5                           FOH,5
+     I              FORH6                           FOH,6
+     I              FORH7                           FOH,7
+     I              FORL1                           FOL,1
+     I              FORL2                           FOL,2
+     I              FORL3                           FOL,3
+     I              FORL4                           FOL,4
+     I              FORL5                           FOL,5
+     I              FORL6                           FOL,6
+     I              FORL7                           FOL,7
+     I              NATE1                           NAT,1
+     I              NATE2                           NAT,2
+     I              NATE3                           NAT,3
+     I              NATE4                           NAT,4
+     I              NATE5                           NAT,5
+     I              NATE6                           NAT,6
+     I              NATE7                           NAT,7
+     I              USEXT                           YSEXT
+     I              USINT                           YSINT
+     I              QTFAB                           YTFAB
+     I              QTTOT                           YTTOT
+     I              QTPRE                           YTPRE
+     I              QTREN                           YTREN
+     IPRODUIF
+     I              ADPAP1                          ADPA,1
+     I              ADPAP2                          ADPA,2
+     I              ADPAP3                          ADPA,3
+     I              ADPAP4                          ADPA,4
+     I              ADPAP5                          ADPA,5
+     I              ADPAP6                          ADPA,6
+     I              ADPAP7                          ADPA,7
+     I              ADGRA1                          ADGR,1
+     I              ADGRA2                          ADGR,2
+     I              ADGRA3                          ADGR,3
+     I              ADGRA4                          ADGR,4
+     I              ADGRA5                          ADGR,5
+     I              ADGRA6                          ADGR,6
+     I              ADGRA7                          ADGR,7
+     I              PAPI1                           TPAP,1
+     I              PAPI2                           TPAP,2
+     I              PAPI3                           TPAP,3
+     I              PAPI4                           TPAP,4
+     I              PAPI5                           TPAP,5
+     I              PAPI6                           TPAP,6
+     I              PAPI7                           TPAP,7
+     I              GRAM1                           TGRA,1
+     I              GRAM2                           TGRA,2
+     I              GRAM3                           TGRA,3
+     I              GRAM4                           TGRA,4
+     I              GRAM5                           TGRA,5
+     I              GRAM6                           TGRA,6
+     I              GRAM7                           TGRA,7
+     I              FACON                           YACON
+     I              GARNT                           YARNT
+     I              NOFOR                           YOFOR
+     I              ONDH                            YNDH
+     I              ONDL                            YNDL
+     I              ONDUL                           YNDUL
+     I              CCOL                            YCOL
+     I              POSF1                           YOSF1
+     I              TIMP1                           TIM,1
+     I              TIMP2                           TIM,2
+     I              TIMP3                           TIM,3
+     I              TIMP4                           TIM,4
+     I              TIMP5                           TIM,5
+     I              TIMP6                           TIM,6
+     I              TIMP7                           TIM,7
+     I              TREP1                           TRE,1
+     I              TREP2                           TRE,2
+     I              TREP3                           TRE,3
+     I              TREP4                           TRE,4
+     I              TREP5                           TRE,5
+     I              TREP6                           TRE,6
+     I              TREP7                           TRE,7
+     I              COUP1                           COP,1
+     I              COUP2                           COP,2
+     I              COUP3                           COP,3
+     I              COUP4                           COP,4
+     I              COUP5                           COP,5
+     I              COUP6                           COP,6
+     I              COUP7                           COP,7
+     I              FORH1                           FOH,1
+     I              FORH2                           FOH,2
+     I              FORH3                           FOH,3
+     I              FORH4                           FOH,4
+     I              FORH5                           FOH,5
+     I              FORH6                           FOH,6
+     I              FORH7                           FOH,7
+     I              FORL1                           FOL,1
+     I              FORL2                           FOL,2
+     I              FORL3                           FOL,3
+     I              FORL4                           FOL,4
+     I              FORL5                           FOL,5
+     I              FORL6                           FOL,6
+     I              FORL7                           FOL,7
+     I              NATE1                           NAT,1
+     I              NATE2                           NAT,2
+     I              NATE3                           NAT,3
+     I              NATE4                           NAT,4
+     I              NATE5                           NAT,5
+     I              NATE6                           NAT,6
+     I              NATE7                           NAT,7
+     I              USEXT                           YSEXT
+     I              USINT                           YSINT
+     I              QTFAB                           YTFAB
+     I              QTTOT                           YTTOT
+     I              QTPRE                           YTPRE
+     I              QTREN                           YTREN
+     *  ZONES DE PRLANC RENOMMEES  COMMENCENT PAR W
+     IPRLANCF2
+     I              USFAB                           USFAB2
+     IPRLANCF1
+     I              STE                             WTE
+     I              NOCLI                           WOCLI
+     I              NOPRO                           WOPRO
+     I              NCONF                           WCONF
+     I              SEQFAB                          WEQFAB
+     I              CDEPRE                          WWPR
+     I              SUIMP                           WUIMP
+     IPRLANC4
+     I              STE                             WTE
+     I              NOCLI                           WOCLI
+     I              NOPRO                           WOPRO
+     I              NCONF                           WCONF
+     I              SEQFAB                          WEQFAB
+     I              CDEPRE                          WWPR
+     I              SUIMP                           WUIMP
+     *  ZONES DE CARCDE RENOMMEES  COMMENCENT PAR W
+     ICARCDEF1
+     I              STE                             WTE
+     I              NOCLI                           WOCLI
+     I              NOPRO                           WOPRO
+     I              NCONF                           WCONF
+     I              SEQFAB                          WEQFAB
+     I              USEXT                           WSEXT
+     I              USINT                           WSINT
+     I              USINE                           WSINE
+     I              AGENT                           WGENT
+     I              CDEPRE                          WDEPR2
+     I              GARNT                           WARNT
+     I              SSDEL                           WSDEL
+     I              ANDEL                           WNDEL
+     I              RGFAC                           WGFAC
+     I              RGLIV                           WGLIV
+     I              EDIMPM                          WDIMPM
+     I              EDIMPJ                          WDIMPJ
+     I              EDEXPM                          WDEXPM
+     I              EDEXPJ                          WDEXPJ
+     I              QTIMP                           WTIMP
+     I              QTFAC                           WTFAC
+     ICARCDE2
+     I              AGENT                           WW1
+     I              CDEPRE                          WW5
+     *  ZONES DE HISTOFA2 RENOMMEES  COMMENCENT PAR X
+     IHISTOFA
+     I              NCONF                           XCONF
+     I              NOSEQ                           XOSEQ
+     *  ZONES DE OBSPROL RENOMMEES
+     IOBSPROF1
+     I              AA                              ACRE
+     I              MM                              MCRE
+     I              JJ                              JCRE
+     *  ZONES DE BESOMAT  RENOMMEES  COMMENCENT PAR B
+     IBESOMATF
+     I              LMINI                           BMINI
+     I              UVENT                           BVENT
+     I              QTFAB                           BTFAB
+     I              QTTOT                           BTTOT
+     I              QTPRE                           BTPRE
+     I              QTREN                           BTREN
+     I              TALO1                           TAL,1
+     I              TALO2                           TAL,2
+     I              TALO3                           TAL,3
+     I              TALO4                           TAL,4
+     I              TALO5                           TAL,5
+     I              TALO6                           TAL,6
+     I              TALO7                           TAL,7
+     I              STD1                            STD,1
+     I              STD2                            STD,2
+     I              STD3                            STD,3
+     I              STD4                            STD,4
+     I              STD5                            STD,5
+     I              STD6                            STD,6
+     I              STD7                            STD,7
+     I              SUREG                           BUREG
+     *  ZONES DE PLANIFL5 RENOMMEES
+     IPLANIFF1
+     I              I                               PAS
+     I              SUREG                           WUREG
+     I              USFAB                           WUSFAB
+     *  ZONES DE PLAMA    RENOMMEES
+     IPLAMAF1
+     I              USFAC                           XUSFAC
+     ICALENDJ
+     I              OVRT                            OVU,2
+     I              OVTY                            OVU,3
+     I              OVNE                            OVU,4
+     I              OVCH                            OVU,5
+     I              OV06                            OVU,6
+     I              OV07                            OVU,7
+     I              OV08                            OVU,8
+     I              OV09                            OVU,9
+     *  ZONES DE PLAIMPL5 RENOMMEES
+     IPRODSTF2
+     I              SUPOR                           SUPOR3
+     *****************************************************************
+     *     RUPTURES   ET  DS
+     *****************************************************************
+     * Zone de Communications de Données DATCDE
+     * ----------------------------------------
+     *
+     I            DS
+     I                                        1   20AA
+     I                                        3   40MM
+     I                                        5   60JJ
+     I                                        1   60DATEJ
+     *
+     I            DS
+     I                                        1   20TITIMP
+     I                                        1   10TITREP
+     I                                        2   20TITPRI
+     *
+     IBT3         DS
+     I                                        1   1 BLANC
+     I                                        2   20YACON
+     I                                        3   40COAS1
+     *
+     I            DS
+     I                                        1   40DALAN
+     I                                        1   20LANIMP
+     I                                        3   40LANFAC
+     *
+     I            DS
+     I                                        1  10 V002
+     I                                        1   20DAY
+     I                                        5   60MONTH
+     I                                        9  100YEAR1
+     *
+     I            DS
+     I                                        1   60X014
+     I                                        1   20DAYX
+     I                                        3   40MONTHX
+     I                                        5   60YEAR1X
+     *
+     I            DS
+     I                                        1   60DATFAB
+     I                                        1   20AFAB
+     I                                        3   40MFAB
+     I                                        5   60JFAB
+     *
+     I            DS
+     I                                        1   60DTMAJ
+     I                                        1   20JMAJ
+     I                                        3   40MMAJ
+     I                                        5   60AMAJ
+     *
+     I            DS
+     I                                        1   60DTPAN
+     I                                        1   20PANAA
+     I                                        3   40PANMM
+     I                                        5   60PANJJ
+     *
+     I            DS
+     I                                        1   60DTPRDE
+     I                                        1   20AAPRDE
+     I                                        3   40MMPRDE
+     I                                        5   60JJPRDE
+     *
+     I            DS
+     I                                        1   60DTCRE
+     I                                        1   20JCRE
+     I                                        3   40MCRE
+     I                                        5   60ACRE
+     *
+     I            DS
+     I                                        1   60V008
+     I                                        1   20V0081
+     I                                        3   40V0082
+     I                                        5   60V0083
+     *
+     I            DS
+     I                                        1 100 PARAM2
+     I                                        1   10PUS
+     *
+     I            DS
+     I                                        1   60V009
+     I                                        1   20V0091
+     I                                        3   40V0092
+     I                                        5   60V0093
+     *
+     I            DS
+     I                                        1  40 V014
+     I                                       25  40 V0141
+     I                                       28  280V0142
+     *
+     I            DS
+     I                                        1 160 VCTL
+     I                                        1  40 V032
+     I                                       41  80 V033
+     I                                       81 120 V034
+     I                                      121 160 V035
+     *
+     I            DS
+     I                                        1  24 VDTL
+     I                                        1   60V036
+     I                                        7  120V037
+     I                                       13  180V038
+     I                                       19  240V039
+     *
+     I            DS
+     I                                        1 160 VCON
+     I                                        1  40 V040
+     I                                       41  80 V041
+     I                                       81 120 V042
+     I                                      121 160 V043
+     *
+     I            DS
+     I                                        1  24 VDON
+     I                                        1   60V044
+     I                                        7  120V045
+     I                                       13  180V046
+     I                                       19  240V047
+     *
+     I            DS
+     I                                        1 240 VIMPL1
+     I                                      241 480 VIMPL2
+     I                                        1  40 V048
+     I                                       41  80 V049
+     I                                       81 120 V050
+     I                                      121 160 V051
+     I                                      161 200 V052
+     I                                      201 240 V053
+     I                                      241 280 V054
+     I                                      281 320 V055
+     I                                      321 360 V056
+     I                                      361 400 V057
+     I                                      401 440 V058
+     I                                      441 480 V059
+     *
+     I            DS
+     I                                        1  72 VIMPD
+     I                                        1   60V072
+     I                                        7  120V073
+     I                                       13  180V074
+     I                                       19  240V075
+     I                                       25  300V076
+     I                                       31  360V077
+     I                                       37  420V078
+     I                                       43  480V079
+     I                                       49  540V080
+     I                                       55  600V081
+     I                                       61  660V082
+     I                                       67  720V083
+     *
+     I            DS
+     I                                        1  72 VIMPE
+     I                                        1   6 V060
+     I                                        7  12 V061
+     I                                       13  18 V062
+     I                                       19  24 V063
+     I                                       25  30 V064
+     I                                       31  36 V065
+     I                                       37  42 V066
+     I                                       43  48 V067
+     I                                       49  54 V068
+     I                                       55  60 V069
+     I                                       61  66 V070
+     I                                       67  72 V071
+     *
+     I            DS
+     I                                        1   70PRECDE
+     I                                        1   50ICONF
+     I                                        6   70IOSEQ
+     *
+     IDSPARA      DS
+     I                                        1   50WCONF1
+     I                                        6   90WOPRO1
+     I                                       10  160SURF
+     I                                       17  203SF
+     I                                       21  270MIN
+     I                                       28  340MAX
+     I                                       35  35 DS1
+     I                                       36  420SURFF
+     I                                       43  43 PROT
+     *
+     I            DS
+     I                                        1  73 V097
+     I                                        1   6 V0971
+     I                                       10  11 V0972
+     I                                       15  150V0973
+     I                                       20  200V0974
+     I                                       25  25 V0975
+     I                                       31  350V0976
+     I                                       38  442V0977
+     I                                       47  532V0978
+     I                                       56  560V0979
+     I                                       58  640V097A
+     I                                       67  732V097B
+     *
+     I            DS
+     I                                        1  73 V098
+     I                                        1   6 V0981
+     I                                       10  11 V0982
+     I                                       15  150V0983
+     I                                       20  200V0984
+     I                                       25  25 V0985
+     I                                       31  350V0986
+     I                                       38  442V0987
+     I                                       47  532V0988
+     I                                       56  560V0989
+     I                                       58  640V098A
+     I                                       67  732V098B
+     *
+     I            DS
+     I                                        1  73 V099
+     I                                        1   6 V0991
+     I                                       10  11 V0992
+     I                                       15  150V0993
+     I                                       20  200V0994
+     I                                       25  25 V0995
+     I                                       31  350V0996
+     I                                       38  442V0997
+     I                                       47  532V0998
+     I                                       56  560V0999
+     I                                       58  640V099A
+     I                                       67  732V099B
+     *
+     I            DS
+     I                                        1  73 V100
+     I                                        1   6 V1001
+     I                                       10  11 V1002
+     I                                       15  150V1003
+     I                                       20  200V1004
+     I                                       25  25 V1005
+     I                                       31  350V1006
+     I                                       38  442V1007
+     I                                       47  532V1008
+     I                                       56  560V1009
+     I                                       58  640V100A
+     I                                       67  732V100B
+     *
+     I            DS
+     I                                        1  73 V101
+     I                                        1   6 V1011
+     I                                       10  11 V1012
+     I                                       15  150V1013
+     I                                       20  200V1014
+     I                                       25  25 V1015
+     I                                       31  350V1016
+     I                                       38  442V1017
+     I                                       47  532V1018
+     I                                       56  560V1019
+     I                                       58  640V101A
+     I                                       67  732V101B
+     *
+     I            DS
+     I                                        1  56 W104
+     I                                       24  25 W1042
+     I                                       25  250W1041
+     *
+     I            DS
+     I                                        1 448 BAR
+     I                                        1  56 V104
+     I                                       24 112 V105
+     I                                      113 168 V106
+     I                                      169 224 V107
+     I                                      225 280 V108
+     I                                      281 336 V109
+     I                                      337 392 V110
+     I                                      393 448 V111
+     *
+     I            DS
+     I                                        1   50DTDEL
+     I                                        1   20ANDEL
+     I                                        3   40SEDEL
+     I                                        5   50JSDEL
+     *
+     I            DS
+     I                                        1  31 V115
+     I                                        1   20V1151
+     I                                        7  150V1152
+     I                                       21  250V1153
+     I                                       30  31 V1154
+     *
+     I            DS
+     I                                        1  31 V116
+     I                                        1   20V1161
+     I                                        7  150V1162
+     I                                       21  250V1163
+     I                                       30  31 V1164
+     *
+     I            DS
+     I                                        1  31 V117
+     I                                        1   20V1171
+     I                                        7  150V1172
+     I                                       21  250V1173
+     I                                       30  31 V1174
+     *
+     I            DS
+     I                                        1  31 V118
+     I                                        1   20V1181
+     I                                        7  150V1182
+     I                                       21  250V1183
+     I                                       30  31 V1184
+     *
+     I            DS
+     I                                        1  31 V119
+     I                                        1   20V1191
+     I                                        7  150V1192
+     I                                       21  250V1193
+     I                                       30  31 V1194
+     *
+     I            DS
+     I                                        1  31 V120
+     I                                        1   20V1201
+     I                                        7  150V1202
+     I                                       21  250V1203
+     I                                       30  31 V1204
+     *
+     I            DS
+     I                                        1  31 V121
+     I                                        1   20V1211
+     I                                        7  150V1212
+     I                                       21  250V1213
+     I                                       30  31 V1214
+     *
+     I            DS
+     I                                        1  31 V122
+     I                                        1   20V1221
+     I                                        7  150V1222
+     I                                       21  250V1223
+     I                                       30  31 V1224
+     *
+     I            DS
+     I                                        1  31 V123
+     I                                        1   20V1231
+     I                                        7  150V1232
+     I                                       21  250V1233
+     I                                       30  31 V1234
+     *
+     I            DS
+     I                                        1  31 V124
+     I                                        1   20V1241
+     I                                        7  150V1242
+     I                                       21  250V1243
+     I                                       30  31 V1244
+     *
+     I            DS
+     I                                        1   60DDEF
+     I                                        1   20ADEF
+     I                                        3   40MDEF
+     I                                        5   60JDEF
+     *
+     I            DS
+     I                                        1   60DDEF01
+     I                                        1   20ADEF01
+     I                                        3   40MDEF01
+     I                                        5   60JDEF01
+     *
+     I            DS
+     I                                        1   60DDEF02
+     I                                        1   20ADEF02
+     I                                        3   40MDEF02
+     I                                        5   60JDEF02
+     *
+     I            DS
+     I                                        1   60DDEF03
+     I                                        1   20ADEF03
+     I                                        3   40MDEF03
+     I                                        5   60JDEF03
+     *
+     I            DS
+     I                                        1   60DDEF04
+     I                                        1   20ADEF04
+     I                                        3   40MDEF04
+     I                                        5   60JDEF04
+     *
+     I            DS
+     I                                        1  24 VARNT
+     I                                        1   9 YARNT2
+     I                                       11  12 YARNT
+     I                                       11  11 YARNT1
+     I                                       12  12 YARNT3
+     I                                       14  14 EGAL
+     I                                       16  20 OFCONF
+     I                                       21  22 OFSEQ
+     I                                       23  23 OFSUP
+     I                                       24  24 OFLETR
+     *
+     I            DS
+     I                                        1  90 T007
+     I                                        1  75 T0071
+     I                                       76  800T0072
+     I                                       82  840T0073
+     I                                       86  900T0074
+     *
+     I            DS
+     I                                        1  90 T008
+     I                                        1  75 T0081
+     I                                       76  800T0082
+     I                                       82  840T0083
+     I                                       86  900T0084
+     *
+     I            DS
+     I                                        1  90 T009
+     I                                        1  75 T0091
+     I                                       76  800T0092
+     I                                       82  840T0093
+     I                                       86  900T0094
+     *
+     I            DS
+     I                                        1  90 T010
+     I                                        1  75 T0101
+     I                                       76  800T0102
+     I                                       82  840T0103
+     I                                       86  900T0104
+     *
+     I            DS
+     I                                        1   2 HABIL1
+     I                                        1   1 HABI11
+     I                                        2   2 HABI12
+     *
+     I            DS
+     I                                        1   2 HABIL2
+     I                                        1   1 HABI21
+     I                                        2   2 HABI22
+     *
+     I            DS
+     I                                        1   2 HABIL3
+     I                                        1   1 HABI31
+     I                                        2   2 HABI32
+     *
+     *
+     I            DS
+     I                                        1  27 DSFA
+     I                                        1   30FAOND
+     I                                        1   10UFA1
+     I                                        4   60FACOL
+     I                                        4   40UFA2
+     I                                        7   90FATYE
+     I                                        7   70UFA3
+     I                                       10  120FATYI
+     I                                       10  100UFA4
+     I                                       13  150FADEC
+     I                                       13  130UFA5
+     I                                       16  180FAAUT
+     I                                       16  160UFA6
+     I                                       19  210FAFEN
+     I                                       19  190UFA7
+     I                                       22  240FAAS1
+     I                                       22  220UFA8
+     I                                       25  270FAAS2
+     I                                       25  250UFA9
+     *
+     IHLIREF      DS
+     I                                        1   1 HTE
+     I                                        3   6 HOCLI
+     I                                        8  11 HOPRO
+     I                                       13  17 HCONF
+     I                                       19  20 HEQFAB
+     I            DS
+     I                                        1   5 DSSSSM
+     I                                        1   10USFAB
+     I                                        2   2 SECTD
+     I                                        3   3 SSECTD
+     I                                        4   5 NOMAC
+     *
+     IDSPROG      DS
+     I                                        1   10STEP
+     I                                        2   50NOCLIP
+     I                                        6   90NOPROP
+     I                                       10  100USP
+     I                                       11  11 SECT
+     I                                       12  12 SSECT
+     I                                       13  13 INN
+     I                                       21  300TMA
+     *
+     ICDEPRO      DS
+     I                                        1   50CBCONF
+     I                                        6   70CBSEQ
+     I                                        8  110CBPRO
+     *
+     I            DS
+     I                                        1  10 ISO
+     I                                        1   10USISO
+     I                                        2  10 PXVA
+     *
+     I            DS
+     I                                        1   70V0941
+     I                                        1   50CENT1
+     I                                        6   70CENT2
+     *
+     I            DS
+     I                                        1   7 DEMAN
+     I                                        1   6 RIREP
+     *
+     I            DS
+     I                                        1  10 TPOSTE
+     I                                        8   8 TSUP
+     I                                        9   9 TCOUL
+     I                                       10  10 TVERN
+     *
+     *****************************************************************
+     *     CLES D'ACCES AUX FICHIERS
+     *****************************************************************
+     *
+     * cle pour le fichier parametre .
+     C           KPARAM    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+     *
+     * cle pour le fichier PRLANC .
+     C           KPRLAN    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           PECPAP
+     C                     KFLD           PANSA
+     C                     KFLD           PANMM
+     C                     KFLD           PANJJ
+     *
+     C           KPRLA9    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           PECPAP
+     C                     KFLD           PANSS
+     C                     KFLD           PANAA
+     C                     KFLD           PANMM
+     C                     KFLD           PANJJ
+     *
+     C           KPRLA2    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           PECPAP
+     *
+     *  CLE D'ACCES FICHIER PRLANCL0
+     C           KPRLA1    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           WCONF
+     C                     KFLD           WWQFAB
+     C                     KFLD           PECPAP
+     *
+     * cle pour le fichier PRLANCL8
+     C           KPRLA8    KLIST
+     C                     KFLD           WCONF
+     C                     KFLD           WOPRO
+     C                     KFLD           WEQFAB
+     *
+     C           KPRL18    KLIST
+     C                     KFLD           NCONF
+     C                     KFLD           NOPRO
+     C                     KFLD           SEQFAB
+     *
+     * cle pour le fichier CARCDE .
+     C           KCARCD    KLIST
+     C                     KFLD           WCONF
+     C                     KFLD           WOPRO
+     C                     KFLD           WEQFAB
+     *
+     C           KCAR22    KLIST
+     C                     KFLD           ICONF
+     C                     KFLD           WOPRO
+     *
+     C           KCARC2    KLIST
+     C                     KFLD           ICONF
+     C                     KFLD           WOPRO
+     C                     KFLD           IOSEQ
+     *
+     C           KCAR12    KLIST
+     C                     KFLD           WCONF
+     C                     KFLD           WOPRO
+     *
+     C           KCARCU    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     *
+     * cle pour le fichier CARCDEZ8
+     C           KCARZ8    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           SSS
+     C                     KFLD           AAA
+     C                     KFLD           MMM
+     *
+     * cle pour le fichier CALENS .
+     C           KCALEN    KLIST
+     C                     KFLD           YEARS
+     C                     KFLD           YEAR
+     C                     KFLD           MONTH
+     C                     KFLD           DAY
+     *
+     C           KCAL01    KLIST
+     C                     KFLD           SDEF    20
+     C                     KFLD           ADEF
+     C                     KFLD           MDEF
+     C                     KFLD           JDEF
+     *
+     * cle pour le fichier CALENJL7 .
+     C           KCAL07    KLIST
+     C                     KFLD           YEARS
+     C                     KFLD           YEAR
+     C                     KFLD           CALNOJ
+     *
+     *  CLE D'ACCES FICHIER CLIENTS
+     C           KCLIL1    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     *
+     *  CLE D'ACCES FICHIER HISTOF15
+     C           KHIS05    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           NPRO    40
+     C                     KFLD           SHIVAL  20
+     C                     KFLD           HIVAL   60
+     *
+     C           KHIS15    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           NPRO
+     *
+     *  CLE D'ACCES FICHIER PRODUI2 ET MVTIMP
+     C           KPRO10    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     *
+     C           KHIVAL    KLIST
+     C                     KFLD           CLIVAL
+     C                     KFLD           PROVAL
+     *
+     *  CLE D'ACCES FICHIER OBSPROL
+     C           KOBSP1    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           DEST
+     *
+     C           KOBSP2    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           DEST
+     C                     KFLD           EMET
+     *
+     *  CLE D'ACCES FICHIER PLAMA
+     C           KPLAM1    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           WCONF
+     *
+     C           KPLAM2    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           WCONF
+     C                     KFLD           WEQFAB
+     *
+     *  CLE D'ACCES FICHIER RESPAPL5
+     C           KRESPA    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           WCONF
+     C                     KFLD           WEQFAB
+     C                     KFLD           PECPAP
+     C                     KFLD           SUPOR
+     C           KRESP     KLIST
+     C                     KFLD           PUS
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           WCONF
+     C                     KFLD           WEQFAB
+     C                     KFLD           PEC     1
+     C                     KFLD           PUP     1
+     C                     MOVE 'C'       PEC
+     *
+     *  CLE D'ACCES FICHIER
+     C           KBARL1    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     *
+     *  CLE D'ACCES FICHIER CLIOBI
+     C           KCLIOB    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WCOD    8
+     *
+     *  CLE D'ACCES FICHIER BESOMAT
+     C           KBESL1    KLIST
+     C                     KFLD           WCONF
+     C                     KFLD           WOPRO
+     *
+     *
+     *  CLE D'ACCES FICHIER RESTPSLD
+     C           KRESLD    KLIST
+     C                     KFLD           WCONF
+     C                     KFLD           WOPRO
+     C                     KFLD           WEQFAB
+     C                     KFLD           PRIORI
+     *
+     * cle pour le fichier CAIPALL1
+     C           KCAIL1    KLIST
+     C                     KFLD           PUS
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           EMBNO
+     *
+     *  CLE D'ACCES FICHIER PLANIFL5
+     C           KPLAL5    KLIST
+     C                     KFLD           WTE
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     C                     KFLD           WCONF
+     C                     KFLD           FECT    1
+     C                     KFLD           FSECT   1
+     C                     KFLD           FI      10
+     *
+     *
+     C           *ENTRY    PLIST
+     C                     PARM           PARAM 100
+     C                     MOVE PARAM     PARAM2
+     ***************************************************************
+     *   DEBUT DU PROGRAMME                                        *
+     ***************************************************************
+     C                     MOVE *BLANKS   V102   60
+     C                     Z-ADD0         C       30
+     C                     MOVE 'CEXT'    PXARGU
+     C           PXARGU    CHAINPARAME               80
+D1  C           *IN80     DOWEQ'0'
+D2  C           PXMONT    IFEQ 0
+     C                     ADD  1         C
+     C                     MOVE PXVALE    CXT,C
+F2  C                     END
+     C           PXARGU    READEPARAME                   80
+F1  C  N80                END
+     C           *NAMVAR   DEFN           DATCDE  6
+D1  C           *INU1     IFEQ '0'
+     C           PUS       COMP 5                        05
+     C           PUS       COMP 7                        07
+     C  N05N07   PUS       COMP 3                    040203
+     C                     IN   DATCDE
+     C                     MOVE DATCDE    DATEJ
+     C           AA        CHAINSIECLE               99
+     C                     Z-ADDSS        SSJ     20
+X1  C                     ELSE
+     C                     MOVEL*YEAR     SSJ
+     C                     Z-ADDUYEAR     AA
+     C                     Z-ADDUMONTH    MM
+     C                     Z-ADDUDAY      JJ
+F1  C                     END
+     C                     Z-ADDPUS       PUSI    10
+     C                     Z-ADDPUS       USISO
+     C                     MOVE 'P'       PRIREP  1
+     C                     MOVE *BLANKS   V127   15
+     C                     MOVE *ZEROS    DSFA
+     C                     Z-ADD20        SSS     20
+     C                     Z-ADD99        AAA     20
+     C                     Z-ADD99        MMM     20
+     C                     Z-ADD0         YACON
+     C                     Z-ADD0         COAS1
+     C                     Z-ADD0         TITIMP
+     C                     Z-ADD0         SURF
+     C                     Z-ADD0         SF
+     C                     Z-ADD0         MAX
+     C                     Z-ADD0         MIN
+     C                     Z-ADD0         DTMAJ
+     C                     Z-ADD0         DTCRE
+     C                     Z-ADD0         WCONF1
+     C                     Z-ADD0         WOPRO1
+     C                     MOVE 'F'       PECPAP  1
+     C                     MOVE *HIVAL    SHIVAL
+     C                     MOVE *HIVAL    HIVAL
+     C                     Z-ADDAA        YEAR1
+     C                     Z-ADDSSJ       YEARS
+     C                     Z-ADDAA        YEAR
+     C                     Z-ADDMM        MONTH
+     C                     Z-ADDJJ        DAY
+     C                     Z-ADDAA        YEAR1X
+     C                     Z-ADDMM        MONTHX
+     C                     Z-ADDJJ        DAYX
+     C                     Z-ADD9999      CLIVAL  40
+     C                     Z-ADD9999      PROVAL  40
+     C                     Z-ADD9999      NOCLI
+     C                     Z-ADD9999      NOPRO
+     C                     Z-ADD0         UFA
+     C           KHIVAL    CHAINPRODUI2              81
+     C   81                WRITEPRODUIF1
+     *
+D1  C           *INU1     IFEQ '0'
+D2  C           *INU2     IFEQ '0'
+D3  C           *IN02     IFEQ '1'
+     C           *NAMVAR   DEFN           DALANR  4
+     C                     IN   DALANR
+     C                     MOVE DALANR    DALAN
+F3  C                     END
+     *
+D3  C           *IN04     IFEQ '1'
+     C           *NAMVAR   DEFN           DALANN  4
+     C                     IN   DALANN
+     C                     MOVE DALANN    DALAN
+F3  C                     END
+     *
+D3  C           *IN05     IFEQ '1'
+     C           *NAMVAR   DEFN           DALANC  4
+     C                     IN   DALANC
+     C                     MOVE DALANC    DALAN
+F3  C                     END
+     *
+D3  C           *IN07     IFEQ '1'
+     C           *NAMVAR   DEFN           DALANF  4
+     C                     IN   DALANF
+     C                     MOVE DALANF    DALAN
+F3  C                     END
+X2  C                     ELSE
+D3  C           *IN02     IFEQ '1'
+     C           *NAMVAR   DEFN           DANUIR  4
+     C                     IN   DANUIR
+     C                     MOVE DANUIR    DALAN
+F3  C                     END
+     *
+     *
+D3  C           *IN04     IFEQ '1'
+     C           *NAMVAR   DEFN           DANUIN  4
+     C                     IN   DANUIN
+     C                     MOVE DANUIN    DALAN
+F3  C                     END
+F2  C                     END
+     *
+    C*          PUS       IFEQ 2
+    C*          *INU8     ANDEQ'0'
+    C*                    GOTO FIN
+    C*                    END
+    C           LANFAC    CABEQ0         FIN
+     *
+     *  RECHERCHE DE LA DATE DU TRAITEMENT
+     *  ==================================
+     *
+     C           KCALEN    CHAINCALENS               80
+     C           KCAL07    CHAINCALENJL7             80
+     C                     READ CALENJL7                 80
+    C           *IN80     CABEQ'1'       FIN
+     *
+     * SI JOUR = OV  FAIRE COMME SI  =  FIN DE S.(RECHERCHE DE LA SEM.
+     * =========================================             SUIVANTE)
+     C                     Z-ADD0         CPT     20
+D2  C           *IN80     DOWEQ'0'
+     *
+D3  C           CALJOU    IFEQ 'SAMEDI  '
+    C           CALJOU    OREQ 'DIMANCHE'
+    C           CALJOU    OREQ 'FERIE   '
+    C           CALJOU    OREQ 'OV      '
+    C           OVU,PUS   OREQ 1
+     C                     READ CALENJL7                 80
+    C           *IN80     CABEQ'1'       FIN
+X3  C                     ELSE
+     C                     ADD  1         CPT
+     C           CPT       COMP LANIMP                   80
+     C  N80                READ CALENJL7                 80
+F3  C                     END
+F2  C  N80                END
+     *
+     C                     Z-ADDCALAA     PANAA   20
+     C                     Z-ADDCALMM     PANMM   20
+     C                     Z-ADDCALJJ     PANJJ   20
+     C                     MOVELCALSS     PANSA   40
+     C                     MOVELCALSS     PANSS   20
+     C                     MOVE PANAA     PANSA
+F1  C                     END
+     *
+     *              ///////////////////////////
+     *              /  DEBUT DU TRAITEMENT :  /
+     *              ///////////////////////////
+     *
+     C           DEBUT     TAG
+     C   U8                SETON                     18
+     *
+D1  C           *IN18     IFEQ '0'
+     C           KPRLA2    CHAINPRLANCXG             80
+    C           *IN80     CABEQ'1'       FIN
+     *
+X1  C                     ELSE
+     *
+     C                     SETOF                     8052
+     C           KPRLA2    CHAINPRLANCX4             80
+    C           *IN80     CABEQ'1'       FIN            23
+     C                     Z-ADDWEQFAB    WWQFAB  20
+F1  C                     END
+     *
+D1  C           *IN80     DOWEQ'0'
+     *
+     C                     SETOF                     303142
+     C                     SETOF                     4179
+     C           KPREI1    CHAINPRODST3              81
+     C           *IN81     COMP '0'                      79
+     *  LA CDE NE DOIT PAS AVOIR ETE EDITEE
+     *  ...................................
+     C  N52      KCARCD    CHAINCARCDEL1             81
+    C  N79      *IN81     CABEQ'1'       SUITE
+D2  C           *INU1     IFEQ '1'
+    C*          WDEPR2    CABNE' '       SUITE
+    C           WARNT     CABEQ'RE'      SUITE
+X2  C                     ELSE
+     *
+    C           WARNT     CABEQ'RE'      SUITE
+     *
+    C           MMFABD    CABNE*ZEROS    SUITE
+D3  C           FORDOC    IFEQ *BLANK
+    C           *IN18     ANDEQ'0'
+    C           CODEL     CABEQ'  '      SUITE
+    C           CODEL     CABEQ'PR'      SUITE
+    C           CODEL     CABEQ'AT'      SUITE
+    C           WSDEL     CABEQ*ZEROS    SUITE
+F3  C                     END
+F2  C                     END
+     *
+     *
+     C           PUS       COMP 5                        05
+     C           PUS       COMP 7                        07
+     C  N05N07   PUS       COMP 3                    040203
+     C                     MOVE *BLANKS   T007
+     C                     Z-ADD0         T0072
+     C                     Z-ADD0         T0073
+     C                     Z-ADD0         T0074
+     C                     MOVE T007      T008
+     C                     MOVE T007      T009
+     C                     MOVE T007      T010
+     *
+     C           KBESL1    CHAINBESOMAL1             81
+    C           *IN81     CABEQ'1'       SUITE
+D2  C           SBFE      IFEQ *ZEROS
+     C           FORLBM    MULT 0,001     WORLBM  43
+     C           FORHBM    MULT 0,001     WORHBM  43
+     C           WORLBM    MULT WORHBM    SBFE
+D3  C           SBFE      IFEQ *ZEROS
+     C                     Z-ADDSBZ       SBFE
+F3  C                     END
+F2  C                     END
+     *
+     C                     MOVE WOCLI     WOCLI1  4
+     C                     MOVE WOPRO     WOPRO2  4
+     *
+     C                     Z-ADDWCONF     CBCONF
+     C                     Z-ADDWEQFAB    CBSEQ
+     C                     Z-ADDWOPRO     CBPRO
+     *
+     *  ---> TITRE IMPRESSION
+     *  ---------------------
+     *
+     C                     MOVE *BLANKS   V001   13
+     C                     Z-ADD0         FAIME
+     C                     Z-ADD0         FAIMI
+     C                     SETOF                     79
+     C           KHIVAL    CHAINPRODUI2              81
+     C           KPRO10    CHAINPRODUL10             81
+D2  C           *IN81     IFEQ '1'
+    C           WOPRO     ANDGT8000
+     C           KPREI1    CHAINPRODST3              81
+D3  C           *IN81     IFEQ '0'
+     C                     SETON                     79
+     C                     MOVE USA       WSEXT
+     C                     Z-ADDIMPA      TIM,3
+     C                     MOVE RIMA1     TRE,3
+D4  C           LAIA      IFNE 0
+     C                     MOVE 'B'       COP,3
+F4  C                     END
+     C                     MOVE NATA      NAT,3
+     C                     Z-ADDLA        FOL,3
+     C                     Z-ADDHA        FOH,3
+     C                     MOVE PAPA      TPAP,3
+     C                     MOVE GRAA      TGRA,3
+     C                     MOVE REFA      ADPA,3
+     C                     MOVE GRELA     ADGR,3
+     C                     MOVE LA        ZB84
+     C                     Z-ADDLA        FORLST
+     C                     Z-ADDHA        FORHST
+D4  C           MASSI     IFNE *BLANKS
+     C                     MOVE LA        ZB84
+     C           HA        DIV  2         ZB851   40
+     C                     MOVE ZB851     ZB85
+X4  C                     ELSE
+D5  C           FMASAL    IFNE *ZEROS
+     C                     Z-ADDFMASAL    FORLST
+     C                     Z-ADDFMASAH    FORHST
+     C                     MOVE LA        ZB84
+     C                     MOVE HA        ZB85
+X5  C                     ELSE
+     C                     MOVEL' 0000'   ZB84
+     C                     MOVEL' 0000'   ZB85
+F5  C                     END
+F4  C                     END
+D4  C           CLIA      IFNE ' 00000'
+     C                     MOVE CLIA      REFEX
+F4  C                     END
+D4  C           CLIAR     IFNE ' 00000'
+     C                     MOVE CLIAR     REREP
+F4  C                     END
+D4  C           USGF1     IFNE 0
+     C                     Z-ADDUSGF1     UFA1
+F4  C                     END
+D4  C           USGF2     IFNE 0
+     C                     Z-ADDUSGF2     UFA1
+F4  C                     END
+D4  C           USMAS     IFNE 0
+     C                     Z-ADDUSMAS     UFA1
+F4  C                     END
+F3  C                     END
+    C                     GOTO SUIST3
+F2  C                     END
+    C           *IN81     CABEQ'1'       SUITE
+     *
+     C                     Z-ADD1         I
+     C           4         LOKUPTIM,I                    50
+     *
+    C           *IN50     CABEQ'0'       SUITE
+     C           KPREI1    KLIST
+     C                     KFLD           WOCLI
+     C                     KFLD           WOPRO
+     *
+     C           KPREI1    CHAINPRODST2              81
+     C           SUIST3    TAG
+     C                     Z-ADDUSFAB     USFAC   10
+     C                     Z-ADDUSFAB     USIMP   10
+     C                     Z-ADD0         ZB841
+     C                     Z-ADD0         ZB851
+D2  C           ZB84      IFNE *BLANKS
+     C                     MOVE ZB84      ZB841   40
+     C                     MOVE 'X'       ZBX     1
+F2  C                     END
+D2  C           ZB85      IFNE *BLANKS
+     C                     MOVE ZB85      ZB851   40
+F2  C                     END
+     *
+     C                     Z-ADD1         I
+     C           4         LOKUPTIM,I                    50
+    C           *IN50     CABEQ'0'       SUITE
+    C           COP,I     CABNE'O'       SUITE
+     C                     MOVE TIM,I     TITIMP  20
+     C                     MOVELTRE,I     TITIMP
+     C                     Z-ADDI         SU      10
+D2  C           I         IFLE 3
+     C                     MOVE 'E'       SUPOR
+X2  C                     ELSE
+     C                     MOVE 'I'       SUPOR
+F2  C                     END
+     *
+     C                     Z-ADD1         I
+     C           TITIMP    LOKUPTI,I                     50
+D2  C           *IN50     IFEQ '1'
+     C                     MOVELLIM,I     V001
+F2  C                     END
+D2  C           WDEPR2    IFNE *BLANKS
+     C                     MOVELCON,19    V001
+F2  C                     END
+     *
+     *  ---> DATE D'EDITION DU DOCUMENT
+     *  -------------------------------
+     *
+     *       YEAR,MONTH,DAY
+     *
+     *  ---> USINE IMPRESSION ,USINE FACONNAGE
+     *  --------------------------------------
+     *
+     C                     MOVE *BLANKS   V003   12
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'USIN'    PXARGU
+     C                     MOVE USFAB     PXVALE
+     C           KPARAM    CHAINPARAME               90
+D2  C           *IN90     IFEQ '0'
+     C                     MOVELPXABRG    V003
+     C                     MOVELPXABRG    V0031   2
+     C                     MOVE V0031     V003
+F2  C                     END
+     *
+     C                     Z-ADD0         WUSFAB
+     *
+     C                     MOVE USDEST    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D2  C           *IN90     IFEQ '0'
+     C                     MOVELPXABRG    V0031   2
+     C                     MOVE V0031     V003
+F2  C                     END
+     *
+     *
+     *  ---> NOM DU CLIENT OU "PRE-IMPRIME STOCKE"
+     *  ------------------------------------------
+     *
+     C                     MOVE *BLANKS   V004   40
+     C                     MOVE *BLANKS   X002   15
+     C           KCLIL1    CHAINCLIENTS1             71
+    C           *IN71     CABEQ'1'       SUITE
+     C                     MOVE NOMCLI    V004
+     C                     MOVELNOMCLI    X002
+     *
+     *  ---> NUMERO DU CLIENT
+     *  ---------------------
+     *
+     C                     MOVE WOCLI     V005    40
+     *
+     *  ---> NUMERO DU PRODUIT
+     *  ----------------------
+     *
+     C                     MOVE WOPRO     V006    40
+     *
+     *  ---> CONFIRMATION + SEQUENCE
+     *  ----------------------------
+     *
+     C                     MOVELWCONF     V0071   50
+     C                     MOVE WEQFAB    V0072   20
+     *
+     *  ---> DATE DERNIERE FABRICATION
+     *  ------------------------------
+     *
+     C                     MOVE *ZEROS    V008
+     C                     Z-ADDWOPRO     NPRO
+     C                     SETOF                     82
+     C           KHIS05    SETLLHISTOF15
+     C           KHIS15    READEHISTOF15                 81
+D2  C           *IN81     IFEQ '0'
+     C                     Z-ADDXCONF     XCONF1  50
+     C                     Z-ADDXOSEQ     XOSEQ1  20
+     *
+D3  C           *IN81     DOWEQ'0'
+     C           KHIS15    READEHISTOF15                 81
+D4  C           XCONF     IFNE XCONF1
+    C           XCONF     OREQ XCONF1
+    C           XOSEQ     ANDNEXOSEQ1
+     C                     SETON                     8182
+F4  C                     END
+F3  C  N81                END
+     C   82                READPHISTOF15                 81
+     C                     Z-ADDAFAB      V0083
+     C                     Z-ADDMFAB      V0082
+     C                     Z-ADDJFAB      V0081
+     *
+X2  C                     ELSE
+     C  N79                Z-ADDANPRO     NPRO
+     C           KHIS05    SETLLHISTOF15
+     C           KHIS15    READEHISTOF15                 81
+D3  C           *IN81     IFEQ '0'
+     C                     Z-ADDXCONF     XCONF1
+     C                     Z-ADDXOSEQ     XOSEQ1
+D4  C           *IN81     DOWEQ'0'
+     C           KHIS15    READEHISTOF15                 81
+D5  C           XCONF     IFNE XCONF1
+    C           XCONF     OREQ XCONF1
+    C           XOSEQ     ANDNEXOSEQ1
+     C                     SETON                     8182
+F5  C                     END
+F4  C  N81                END
+     C   82                READPHISTOF15                 81
+     C                     Z-ADDAFAB      V0083
+     C                     Z-ADDMFAB      V0082
+     C                     Z-ADDJFAB      V0081
+F3  C                     END
+F2  C                     END
+     *
+     *  ---> DATE MISE A DISPOSITION
+     *  ----------------------------
+     *
+     C                     MOVE *ZEROS    V009
+     C           KPRLA8    CHAINPRLANCL8             81
+D2  C           *IN81     IFEQ '0'
+     C                     Z-ADDLANSS     YEARS   20
+     C                     Z-ADDLANAA     YEAR    20
+     C                     Z-ADDLANJOU    CALNOJ
+     C           KCAL07    CHAINCALENJL7             81
+     C                     Z-ADDCALAA     V0093
+     C                     Z-ADDCALMM     V0092
+     C                     Z-ADDCALJJ     V0091
+F2  C                     END
+     *
+     *  ---> ANCIEN NUMERO DE PRODUIT
+     *  -----------------------------
+     *
+     C                     MOVE *ZEROS    V010    40
+     C                     MOVE ANPRO     V010
+     *
+     *  ---> CAUSE CHANGEMENT DE PRODUIT
+     *  --------------------------------
+     *
+     C                     MOVE *BLANKS   V011   40
+     C                     MOVEL'CAUSE '  DEST
+     C           KOBSP1    CHAINOBSPROL1             81
+D2  C           *IN81     IFEQ '0'
+     C                     MOVE OBSLIB    V011
+D3  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F3  C                     END
+F2  C                     END
+     *
+     *  ---> DESIGNATION PRODUIT
+     *  ------------------------
+     *
+     C                     MOVE *BLANKS   V012   40
+     C                     MOVE *BLANKS   V013   40
+     C                     MOVE *BLANKS   V014   40
+     C                     MOVE *BLANKS   V015   40
+     C                     MOVE *BLANKS   V016   40
+     C                     MOVE *BLANKS   V017   40
+     C                     MOVE *BLANKS   V018   40
+     *
+     * SI PRODUIT
+     C                     MOVE BLOC1     V012
+     C                     MOVE BLOC2     V013
+     *
+     * CONSTITUTUION DU BLOC3
+D2  C           SUPB3     IFEQ ' '
+    C           *IN79     ANDEQ'0'
+     C                     MOVE ' BL3'    PXARGU
+     C                     MOVE BT3       PXVALE
+     C           KPARAM    CHAINPARAME               99
+D3  C           *IN99     IFEQ '0'
+     C                     MOVE PXLIBE    V014
+D4  C           NBRFE     IFGT 0
+     C                     MOVE ' 999'    PXVALE
+     C           KPARAM    CHAINPARAME               98
+D5  C           *IN98     IFEQ '0'
+     C                     MOVELPXLIBE    V0141
+     C                     MOVE NBRFE     V0142
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     *
+     C                     MOVE BLOC4     V015
+     C                     MOVE BLOC5     V016
+     C                     MOVE BLOC6     V017
+     C                     MOVE BLOC7     V018
+     *
+     *  ---> MATERIEL IMPRESSION, MATERIEL DECOUPAGE
+     *  --------------------------------------------
+     *
+     C                     MOVE *BLANKS   V020   12
+     C                     MOVE *BLANKS   V021   12
+     C           KPLAM2    SETLLPLAMAL1
+     C           KPLAM1    READEPLAMAL1                  82
+D2  C           *IN82     IFEQ '0'
+     C                     Z-ADD1         I       30
+     C                     Z-ADD1         J       30
+D3  C           SUPOR     IFEQ 'E'
+D4  C           TIM01     IFNE ' '
+     C           ETAT01    LOKUPETA,I                    55
+     C   55                MOVELLET,I     V020
+     C   55                Z-ADDDDEF01    DV020   60
+F4  C                     END
+D4  C           TITIMP    IFNE 41
+D5  C           TIM02     IFNE ' '
+     C           ETAT02    LOKUPETA,J                    55
+     C   55      J         COMP I                      55
+     C   55                MOVELLET,J     V020
+     C   55                Z-ADDDDEF02    DV020
+F5  C                     END
+F4  C                     END
+F3  C                     END
+     *
+D3  C           SUPOR     IFEQ 'I'
+D4  C           TIM03     IFNE ' '
+     C           ETAT03    LOKUPETA,I                    55
+     C   55                MOVELLET,I     V020
+     C   55                Z-ADDDDEF03    DV020
+F4  C                     END
+D4  C           TITIMP    IFNE 41
+D5  C           TIM04     IFNE ' '
+     C           ETAT04    LOKUPETA,J                    55
+     C   55      J         COMP I                      55
+     C   55                MOVELLET,J     V020
+     C   55                Z-ADDDDEF04    DV020
+F5  C                     END
+F4  C                     END
+F3  C                     END
+     *
+D3  C           YACON     IFEQ 6
+    C           YACON     OREQ 7
+    C           YACON     OREQ 8
+     C                     Z-ADD1         J
+     C           ETAFOR    LOKUPETA,J                    55
+     C   55                MOVELLET,J     V021
+F3  C                     END
+F2  C                     END
+     *
+     *
+     *  ---> SUPPORT
+     *  ------------
+     *
+     C                     MOVE *BLANKS   V022    9
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVELCON,2     V022
+F2  C                     END
+     *
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVELCON,3     V022
+F2  C                     END
+     *
+     *  ---> CLICHE
+     *  ------------
+     *
+     C                     MOVE *ZEROS    V023    6
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE REFEX     V023
+     C                     MOVELREREP     W103    6
+F2  C                     END
+     *
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVE REFIN     V023
+     C                     MOVELRIREP     W103
+F2  C                     END
+     *
+     *  ---> NUMERO DE FORME
+     *  --------------------
+     *
+     C                     MOVE *ZEROS    V024    50
+     C                     MOVE YOFOR     V024
+D2  C           ZB16      IFNE ' '
+     C                     MOVE '-'       V0921   1
+     C                     MOVE ZB16      V0922   1
+F2  C                     END
+     *
+     *  ---> QUALITE
+     *  ------------
+     *
+     C                     MOVE TPAP,SU   V0251   3
+     C                     MOVE TGRA,SU   V0252   30
+     C                     MOVE ADPA,SU   V0261   6
+     C                     MOVE ADGR,SU   V0262   30
+     C                     MOVE 'F'       HOUB    1
+     C                     MOVE *BLANKS   X012    6
+     *
+     *  ---> DEVELOPPE
+     *  --------------
+     *
+     C                     MOVE *ZEROS    V027    40
+     *
+     C                     MOVE YNDH      V027
+     *
+     *  ---> NOMBRE DE POSES
+     *  --------------------
+     *
+     C                     MOVE *ZEROS    V028    31
+     C                     Z-ADDYOSF1     V028
+     *
+     *  ---> LAIZE OU FORMAT
+     *  --------------------
+     *
+     C                     MOVE *ZEROS    V0291   40
+     C                     MOVE 'X'       V0292   1
+     C                     MOVE *ZEROS    V0293   40
+     C                     MOVE *ZEROS    V0294   41
+     *
+     *
+     C                     SETON                     30
+     C                     Z-ADDYNDL      V0291
+     C                     Z-ADDYNDH      V0293
+     *
+     *  ---> DEVELOPPE MINI
+     *  -------------------
+     *
+     C                     MOVE *ZEROS    V030    40
+     *
+     *  ---> LAIZE OU FORMAT MINI
+     *  -------------------------
+     *
+     C                     Z-ADDBMINI     LMU     41
+     C                     MOVE *ZEROS    V0311   40
+     C                     MOVE 'X'       V0312   1
+     C                     MOVE *ZEROS    V0313   40
+     C                     MOVE *ZEROS    V0314   41
+     *
+     C                     SETON                     31
+    C*                    Z-ADDFOL,SU    V0311
+    C*                    Z-ADDFOH,SU    V0313
+    C*          FOL,SU    MULT 0,001     WFOL    43
+    C*          FOH,SU    MULT 0,001     WFOH    43
+     *
+     *  ---> OBSERVATION CONTROLE
+     *  -------------------------
+     *
+     C                     MOVE *BLANKS   VAR
+     C                     MOVE *ZEROS    VDT
+     C                     Z-ADD0         I
+     *
+     *
+     C                     MOVE 'QUALIT'  EMET
+     *
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE 'IMPEXT'  DEST
+F2  C                     END
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVE 'IMPINT'  DEST
+F2  C                     END
+     *
+     C           KOBSP2    CHAINOBSPROL1             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT4
+     C                     ADD  1         I
+     C                     MOVE OBSLIB    VAR,I
+     C                     MOVE DTCRE     VDT,I
+D3  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F3  C                     END
+     C           KOBSP2    READEOBSPROL1                 81
+F2  C  N81                END
+    C           I         CABEQ4         OBSCTL
+     *
+     C                     MOVE 'QUALIT'  EMET
+     C                     MOVE 'PRODUI'  DEST
+     *
+     C           KOBSP2    CHAINOBSPROL1             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT4
+     C                     ADD  1         I
+     C                     MOVE OBSLIB    VAR,I
+     C                     MOVE DTCRE     VDT,I
+D3  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F3  C                     END
+     C           KOBSP2    READEOBSPROL1                 81
+F2  C  N81                END
+    C           I         CABEQ4         OBSCTL
+     *
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE 'QUAEXT  'WCOD
+     C           KCLIOB    CHAINCLIOBIL2             81
+D3  C           *IN81     DOWEQ'0'
+    C           I         ANDLT4
+D4  C           RGFAC     IFEQ *ZEROS
+    C           RGFAC     OREQ WGFAC
+    C           RGLIV     OREQ *ZEROS
+    C           RGLIV     OREQ WGLIV
+     C                     ADD  1         I
+     C                     MOVE LIBOBI    VAR,I
+D5  C           DTMAJ     IFEQ 0
+     C                     MOVE DTCRE     VDT,I
+X5  C                     ELSE
+     C                     MOVE DTMAJ     VDT,I
+F5  C                     END
+F4  C                     END
+     C           KCLIOB    READECLIOBIL2                 81
+F3  C  N81                END
+F2  C                     END
+    C           I         CABEQ4         OBSCTL
+     *
+     *
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVE 'QUAINT  'WCOD
+     C           KCLIOB    CHAINCLIOBIL2             81
+D3  C           *IN81     DOWEQ'0'
+    C           I         ANDLT4
+D4  C           RGFAC     IFEQ *ZEROS
+    C           RGFAC     OREQ WGFAC
+    C           RGLIV     OREQ *ZEROS
+    C           RGLIV     OREQ WGLIV
+     C                     ADD  1         I
+     C                     MOVE LIBOBI    VAR,I
+D5  C           DTMAJ     IFEQ 0
+     C                     MOVE DTCRE     VDT,I
+X5  C                     ELSE
+     C                     MOVE DTMAJ     VDT,I
+F5  C                     END
+F4  C                     END
+     C           KCLIOB    READECLIOBIL2                 81
+F3  C  N81                END
+F2  C                     END
+    C           I         CABEQ4         OBSCTL
+     *
+     C                     MOVE 'CONTROLE'WCOD
+     C           KCLIOB    CHAINCLIOBIL2             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT4
+D3  C           RGFAC     IFEQ *ZEROS
+    C           RGFAC     OREQ WGFAC
+    C           RGLIV     OREQ *ZEROS
+    C           RGLIV     OREQ WGLIV
+     C                     ADD  1         I
+     C                     MOVE LIBOBI    VAR,I
+D4  C           DTMAJ     IFEQ 0
+     C                     MOVE DTCRE     VDT,I
+X4  C                     ELSE
+     C                     MOVE DTMAJ     VDT,I
+F4  C                     END
+F3  C                     END
+     C           KCLIOB    READECLIOBIL2                 81
+F2  C  N81                END
+     *
+     C           OBSCTL    TAG
+     C                     MOVEAVAR,1     VCTL
+     C                     MOVEAVDT,1     VDTL
+     *
+     *  ---> OBSERVATION POUR INDICE DIFFICULTE
+     C                     MOVE *BLANKS   V129    4
+     C                     MOVE *BLANKS   V130    4
+     C                     MOVE 'INDIMP  'WCOD
+     C           KCLIOB    CHAINCLIOBIL2             81
+D2  C           *IN81     IFEQ '0'
+     C                     MOVELLIBOBI    INDI    2
+D3  C           SUPOR     IFEQ 'E'
+     C                     MOVELINDI      IND
+F3  C                     END
+D3  C           SUPOR     IFEQ 'I'
+     C                     MOVE INDI      IND
+F3  C                     END
+     C                     MOVELIND       V129
+F2  C                     END
+     *
+     C                     MOVE 'INDFAB  'WCOD
+     C           KCLIOB    CHAINCLIOBIL2             81
+D2  C           *IN81     IFEQ '0'
+     C                     MOVELLIBOBI    IND     1
+     C                     MOVELIND       V130
+F2  C                     END
+     *
+     *  ---> OBSERVATION CONDUCTEUR
+     *  ---------------------------
+     *
+     C                     MOVE *BLANKS   VAR
+     C                     MOVE *ZEROS    VDT
+     C                     Z-ADD0         I
+     *
+     *
+     C                     MOVE 'CONDUC'  EMET
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE 'IMPEXT'  DEST
+F2  C                     END
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVE 'IMPINT'  DEST
+F2  C                     END
+     *
+     C           KOBSP2    CHAINOBSPROL1             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT4
+     C                     ADD  1         I
+     C                     MOVE OBSLIB    VAR,I
+     C                     MOVE DTCRE     VDT,I
+D3  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F3  C                     END
+     C           KOBSP2    READEOBSPROL1                 81
+F2  C  N81                END
+     *
+     C                     MOVEAVAR,1     VCON
+     C                     MOVEAVDT,1     VDON
+     *
+     *  ---> OBSERVATION IMPRESSION
+     *  ---------------------------
+     *
+     C                     MOVE *BLANKS   VAR
+     C                     MOVE *ZEROS    VDT
+     C                     MOVE *BLANKS   VEM
+     C                     Z-ADD0         I
+     *
+     C                     MOVE 'PRODUI'  DEST
+     *
+     C           KOBSP1    CHAINOBSPROL1             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT12
+    C           EMET      ANDNE'QUALIT'
+     C                     ADD  1         I
+     C                     MOVE OBSLIB    VAR,I
+     C                     MOVE EMET      VEM,I
+     C                     MOVE DTCRE     VDT,I
+D3  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F3  C                     END
+     C           KOBSP1    READEOBSPROL1                 81
+F2  C  N81                END
+     *
+     *
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE 'IMPEXT'  DEST
+F2  C                     END
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVE 'IMPINT'  DEST
+F2  C                     END
+     *
+     C           KOBSP1    CHAINOBSPROL1             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT12
+D3  C           EMET      IFNE 'CONDUC'
+    C           EMET      ANDNE'QUALIT'
+     C                     ADD  1         I
+     C                     MOVE OBSLIB    VAR,I
+     C                     MOVE EMET      VEM,I
+     C                     MOVE DTCRE     VDT,I
+D4  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F4  C                     END
+F3  C                     END
+     C           KOBSP1    READEOBSPROL1                 81
+F2  C  N81                END
+     *
+     C           KCAR12    CHAINCDEOBSL2             81
+D2  C           *IN81     IFEQ '0'
+    C           I         ANDLT12
+    C           TYPOBS    ANDEQ'A'
+     C                     ADD  1         I
+     C                     MOVE OBSERV    VAR,I
+F2  C                     END
+     *
+     C                     MOVEAVAR,1     VIMPL1
+     C                     MOVEAVAR,7     VIMPL2
+     C                     MOVEAVDT,1     VIMPD
+     C                     MOVEAVEM,1     VIMPE
+D2  C           PUS       IFEQ 5
+    C           WOCLI     ANDEQ8928
+     C                     MOVELCON,21    V058
+     C                     MOVE CLIREF    V058
+F2  C                     END
+     *
+     *  ---> OBSERVATIONS ATTENTION
+     *  ---------------------------
+     *
+     C                     MOVE *BLANKS   VAR
+     C                     Z-ADD0         I
+     *
+     *  - GROUPAGE
+D2  C           YARNT1    IFEQ 'M'
+    C           YARNT3    ANDGT'0'
+     C                     ADD  1         I
+     C                     MOVELCON,4     VAR,I
+F2  C                     END
+     *
+     *  - GARNITURE
+D2  C           YARNT1    IFNE 'M'
+    C           YARNT1    ANDNE' '
+     C                     ADD  1         I
+     C                     MOVELCON,5     YARNT2
+     C                     MOVEL'-'       EGAL
+     C                     MOVELWCONF     OFCONF
+     C                     MOVELWEQFAB    OFSEQ
+     C                     MOVELSUPOR     OFSUP
+     C                     MOVELYARNT1    OFLETR
+     C                     MOVELVARNT     VAR,I
+F2  C                     END
+     *
+     *  - COMMANDE D'ESSAIS
+D2  C           YARNT     IFEQ 'MD'
+     C                     ADD  1         I
+     C                     MOVELCON,6     VAR,I
+F2  C                     END
+     *
+     *  - COMMANDE D'HOMOLOGATION
+D2  C           YARNT     IFEQ 'MH'
+     C                     ADD  1         I
+     C                     MOVELCON,7     VAR,I
+F2  C                     END
+     *
+     *          IMPRESSION EXT. INT.
+D2  C           SUPOR     IFEQ 'E'
+D3  C           TIM,4     IFEQ *ZEROS
+    C           TIM,5     ANDEQ*ZEROS
+    C           TIM,6     ANDEQ*ZEROS
+    C           TIM,7     ANDEQ*ZEROS
+    C           NIMPI1    ANDEQ*BLANKS
+     C                     SETOF                     61
+X3  C                     ELSE
+     C                     SETON                     61
+F3  C                     END
+F2  C                     END
+D2  C           SUPOR     IFEQ 'I'
+D3  C           TIM,1     IFEQ *ZEROS
+    C           TIM,2     ANDEQ*ZEROS
+    C           TIM,3     ANDEQ*ZEROS
+    C           NIMPE1    ANDEQ*BLANKS
+     C                     SETOF                     61
+X3  C                     ELSE
+     C                     SETON                     61
+F3  C                     END
+F2  C                     END
+D2  C           *IN61     IFEQ '1'
+     C                     ADD  1         I
+     C                     MOVELCON,8     VAR,I
+F2  C                     END
+     *
+     C           I         COMP 4                        50
+    C           *IN50     CABEQ'1'       FINATT
+     *
+D2  C           SUPOR     IFEQ 'E'
+     C                     MOVE 'IMPEXT'  DEST
+F2  C                     END
+D2  C           SUPOR     IFEQ 'I'
+     C                     MOVE 'IMPINT'  DEST
+F2  C                     END
+     C                     MOVE 'ST    '  EMET
+     *
+     C           KOBSP2    CHAINOBSPROL1             81
+D2  C           *IN81     IFEQ '0'
+     C                     ADD  1         I
+     C                     MOVELCON,9     VAR,I
+D3  C           NATOBS    IFEQ 'T'
+     C  NU1                DELETOBSPROF1
+F3  C                     END
+F2  C                     END
+     C           I         COMP 4                        50
+    C           *IN50     CABEQ'1'       FINATT
+     *
+D2  C           TYPPRP    IFEQ 'L'
+     C                     ADD  1         I
+     C                     MOVELCON,10    VAR,I
+F2  C                     END
+     C           I         COMP 4                        50
+    C           *IN50     CABEQ'1'       FINATT
+     *
+D2  C           TYPPRP    IFEQ 'A'
+     C                     ADD  1         I
+     C                     MOVELCON,11    VAR,I
+F2  C                     END
+     C           I         COMP 4                        50
+    C           *IN50     CABEQ'1'       FINATT
+     *
+D2  C           TYPPRP    IFEQ 'Z'
+     C                     ADD  1         I
+     C                     MOVELCON,23    VAR,I
+F2  C                     END
+     C           I         COMP 4                        50
+    C           *IN50     CABEQ'1'       FINATT
+     *
+     *  - NATURE D'ENCRE
+D2  C           NAT,SU    IFNE ' '
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'ENCR'    PXARGU
+     C                     MOVE NAT,SU    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D3  C           *IN90     IFEQ '0'
+     C                     ADD  1         I
+     C                     MOVEAPXABRG    VAR,I
+F3  C                     END
+F2  C                     END
+     C           I         COMP 4                        50
+    C           *IN50     CABEQ'1'       FINATT
+     *
+     *  - IMPRESSION POUR FACONNAGE DE NEUVILLE
+D2  C           USDEST    IFEQ 4
+    C           USFAB     ANDEQ2
+     C                     ADD  1         I
+     C                     MOVELCON,18    VAR,I
+F2  C                     END
+     *  - IMPRESSION POUR FACONNAGE DE CHABANAIS
+D2  C           USDEST    IFEQ 5
+    C           USFAB     ANDEQ2
+     C                     ADD  1         I
+     C                     MOVELCON,20    VAR,I
+F2  C                     END
+     *  - IMPRESSION POUR FACONNAGE DE FEGERSHEIM
+D2  C           USDEST    IFEQ 7
+    C           USFAB     ANDEQ2
+     C                     ADD  1         I
+     C                     MOVELCON,22    VAR,I
+F2  C                     END
+     *
+     *
+     C           FINATT    TAG
+     C                     MOVELVAR,1     V084   24
+     C                     MOVELVAR,2     V085   24
+     C                     MOVELVAR,3     V086   24
+     C                     MOVELVAR,4     V087   24
+     *
+     *  ---> QTE DEMANDEE
+     *  -----------------
+     *
+     C  N79                Z-ADDWTIMP     V088    70
+     C   79                Z-ADDQTPLAN    V088
+     *
+     *  ---> QTE EN RELIQUAT
+     *  --------------------
+     *
+     C                     Z-ADD*ZEROS    V089    70
+     C                     Z-ADD*ZEROS    V090    70
+     C                     Z-ADD*ZEROS    I
+     C           KPRO10    CHAINLIEUSTL3             99
+D2  C           *IN99     DOWEQ'0'
+     C                     SETON                     92
+D3  C           LILIEU    IFEQ 6
+    C           CODEXT    ANDNE'  '
+     C                     Z-ADD1         C
+     C           CODEXT    LOKUPCXT,C                    92
+F3  C                     END
+D3  C           LILIEU    IFNE 8
+    C           *IN92     ANDEQ'1'
+     C                     ADD  STOLIE    STOCK   80                      PROD17
+F3  C                     END
+     C           KPRO10    READELIEUSTL3                 99              *PROD17
+F2  C        N99          END                                           *PROD17
+     *
+     C                     SETOF                     5094
+     *
+     C           STOCK     COMP 0                      82
+     C   82                Z-ADD0         STOCK
+D2  C           *IN50     IFEQ '0'
+     C                     Z-ADDSTOCK     V090
+F2  C                     END
+     *
+     *  ---> QTE A LANCER
+     *  -----------------
+     *
+     C                     Z-ADD*ZEROS    V091    70
+     C                     Z-ADD*ZEROS    V0951   70
+     C                     MOVE *BLANKS   V0952   2
+     C                     Z-ADD*ZEROS    V0961   70
+     C                     Z-ADD*ZEROS    RED
+     C                     MOVE *BLANKS   V0962   2
+     C                     Z-ADDV088      V091
+D2  C           *IN50     IFEQ '1'
+     C                     Z-ADD0         V090
+F2  C                     END
+     *
+     *
+     *  ---> QTE A REALISER MINI ET MAXI
+     *  --------------------------------
+     *
+     *  ---> QTE A APPROVISIONNER
+     *  -------------------------
+     *
+     C                     Z-ADD*ZEROS    V0941   70
+     C                     MOVE *BLANKS   V0942   2
+     *
+     *
+     *  ---> INFORMATIONS DES PASSAGES
+     *  ------------------------------
+     *
+     C                     MOVE *BLANKS   V097   73
+     C                     MOVE *ZEROS    V0973
+     C                     MOVE *ZEROS    V0974
+     C                     MOVE *ZEROS    V0976
+     C                     MOVE *ZEROS    V0977
+     C                     MOVE *ZEROS    V0978
+     C                     MOVE *ZEROS    V0979
+     C                     MOVE *ZEROS    V097A
+     C                     MOVE *ZEROS    V097B
+     C                     MOVE V097      V098   73
+     C                     MOVE V097      SUP,1
+     C                     MOVE V097      SUP,2
+     C                     MOVE V097      SUP,3
+     C                     MOVE V097      SUP,4
+     C                     MOVE V097      SUP,5
+     C                     Z-ADD0         I
+     C           *LIKE     DEFN REDEC     DEBREG
+     C                     Z-ADD0         DEBREG
+     C                     Z-ADD0         DEBROU  63
+     C                     SETOF                     2206
+     *
+     C                     MOVE '4'       FECT
+     C                     MOVE '4'       FSECT
+     C                     MOVE '1'       FI
+     C           KPLAL5    CHAINPLANIFL5             81
+     *
+D2  C           *IN81     DOWEQ'0'
+     *
+     C                     MOVELLIM,3     V0971
+     *
+     C                     MOVE NOMAC     V0972
+     *
+     C                     Z-ADDPAS       V0973
+     *
+     C                     MOVE TCOUL     V0974
+     *
+     C                     MOVE TVERN     V0975
+     *
+     C  N04                Z-ADDRETPS     V0977
+     C  N04                Z-ADDROEFF     V0979
+     C  N04                Z-ADDNETPS     V097B
+     C                     Z-ADD0         W1     155
+     C                     Z-ADDTPSTOT    V0978
+D3  C           WTFAC     IFNE QTFAB
+     C           WTFAC     DIV  QTFAB     W5      85
+     C           TPSTOT    MULT W5        W2     102
+     C                     Z-ADDW2        V0978
+F3  C                     END
+     *
+     C                     Z-ADDREDEC     V0976
+     *
+     C                     ADD  1         I
+     C                     MOVE V097      SUP,I
+     *
+     C           SUITPI    TAG
+     C           KPLAL5    READEPLANIFL5                 81
+     C                     MOVE V098      V097
+F2  C  N81                END
+     *
+     C                     MOVE SUP,1     V097
+     C                     MOVE SUP,2     V098
+     C                     MOVE SUP,3     V099   73
+     C                     MOVE SUP,4     V100   73
+     C                     MOVE SUP,5     V101   73
+     *
+     *
+     *  ---> CODES A BARRE
+     *  ------------------
+     *
+     C                     MOVE *BLANKS   W104
+     C                     MOVE *ZEROS    W1042
+     C                     MOVE *BLANKS   BAR
+     C                     Z-ADD0         I
+     C           KBARL1    CHAINCODBARL2             81
+D2  C           *IN81     DOWEQ'0'
+    C           I         ANDLT8
+     C                     ADD  1         I
+     C                     MOVELREFCO     W104
+     C                     MOVE GENCOD    W104
+D3  C           POSCO     IFLT 9
+     C                     Z-ADDPOSCO     W1041
+X3  C                     ELSE
+     C                     MOVE POSCO     W1042
+F3  C                     END
+     C                     MOVE W104      BAR,I
+     C           KBARL1    READECODBARL2                 81
+     C                     MOVE *BLANKS   W104
+     C                     MOVE *ZEROS    W1042
+F2  C  N81                END
+     *
+     *  ---> QTES EN UNITE DE VENTE
+     *  ---------------------------
+     *
+     *
+     C                     Z-ADDBTTOT     V112    80
+     C                     Z-ADDBTPRE     V113    70
+     C                     Z-ADDBTREN     V114    70
+     *
+     C           SUIT      TAG
+     *
+     *  ---> CADENCEMENT POUR BON DE COMMANDE
+     *  -------------------------------------
+     *
+     *
+     C                     MOVE *ZEROS    CAD
+     C                     MOVE '  '      CAD,1
+     C                     MOVE '  '      CAD,2
+     C                     MOVE '  '      CAD,3
+     C                     MOVE '  '      CAD,4
+     C                     MOVE '  '      CAD,5
+     C                     MOVE '  '      CAD,6
+     C                     MOVE '  '      CAD,7
+     C                     MOVE '  '      CAD,8
+     C                     MOVE '  '      CAD,9
+     C                     MOVE '  '      CAD,10
+     C                     MOVE '  '      CAD,11
+D2  C           *INU1     IFEQ '1'
+     C                     Z-ADD0         I
+     C           KCARCD    CHAINCARCDEL2             81
+     C           KCAR12    READECARCDEL2                 81
+D3  C           *IN81     DOWEQ'0'
+D4  C           QTFAC     IFNE *ZEROS
+    C           DTDEL     ANDNE*ZEROS
+     C                     ADD  1         I
+     C                     MOVE SEQFAB    V1151
+     C                     Z-ADDQTFAC     V1152
+     C                     Z-ADDDTDEL     V1153
+     C                     MOVE CODEL     V1154
+     C                     MOVE V115      CAD,I
+F4  C                     END
+     C           KCAR12    READECARCDEL2                 81
+F3  C  N81                END
+     C                     MOVE CAD,1     V115
+     C                     MOVE CAD,2     V116
+     C                     MOVE CAD,3     V117
+     C                     MOVE CAD,4     V118
+     C                     MOVE CAD,5     V119
+     C                     MOVE CAD,6     V120
+     C                     MOVE CAD,7     V121
+     C                     MOVE CAD,8     V122
+     C                     MOVE CAD,9     V123
+     C                     MOVE CAD,10    V124
+F2  C                     END
+     *
+     *
+     *  ---> PRELEVEMENT SED
+     *  --------------------
+     *
+     C                     MOVE *BLANKS   V126    4
+     *
+     C   U1      USFAC     COMP 7                        07
+     C   U1N07   USFAC     COMP 3                    040203
+     C                     MOVE *BLANKS   V059
+     C                     MOVELCDEPRO    V059
+     * REF ISO RECHERCHE DANS LA TABLE (TISO)
+     * --------------------------------------
+     C                     MOVE *BLANKS   V128   20
+     *
+D2  C           *INU1     IFEQ '1'
+     C                     MOVEL'COMMAND 'PXVA
+X2  C                     ELSE
+     C                     MOVEL'BONFAC  'PXVA
+F2  C                     END
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'TISO'    PXARGU
+     C                     MOVELISO       PXVALE
+     C           KPARAM    CHAINPARAME               90
+D2  C           *IN90     IFEQ '0'
+     C                     MOVELPXLIBE    V128
+F2  C                     END
+     *
+     C                     EXCPTBONIM
+     *
+D2  C           *INU1     IFEQ '0'
+    C           TITPRI    ANDEQ4
+    C           PUS       ANDNEUSFAB2
+     C                     MOVE *BLANKS   CAR
+     C                     MOVE T007      EMB
+     C                     Z-ADD0         N       20
+     C                     Z-ADD0         CPT
+     *
+     C                     Z-ADD9         EMBNO
+     *
+     C           KCAIL1    CHAINCAIPALL1             81
+     *
+     * //////////////  PALETTE
+D3  C           *IN81     IFEQ '0'
+    C           EMBNAT    ANDEQ'P'
+     C                     MOVE *BLANKS   CAR
+     C                     Z-ADD1         I
+     * CONSTITUTION DE LA PREMIERE LIGNE
+     *
+     C                     MOVELEMBNAT    DSNAT   2
+     C                     MOVE EMBTYP    DSNAT
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMNT'    PXARGU
+     C                     MOVE DSNAT     PXVALE
+     C           KPARAM    CHAINPARAME               90
+D4  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXABRG    WAR
+     C                     MOVEAWAR,1     CAR,I
+F4  C                     END
+     *
+     C                     EXSR SPCAR
+     C                     ADD  2         I
+     *
+     C                     MOVELEMBNAT    DSCON   2
+     C                     MOVE EMBCON    DSCON
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMCE'    PXARGU
+     C                     MOVE DSCON     PXVALE
+     C           KPARAM    CHAINPARAME               90
+D4  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXABRG    WAR
+     C                     MOVEAWAR,1     CAR,I
+F4  C                     END
+     *
+     C                     EXSR SPCAR
+     C                     ADD  2         I
+     *
+     C                     MOVE *BLANKS   WAR
+     C                     MOVELEMBLA     WC1     3
+     C                     MOVEAWC1       WAR
+     C                     Z-ADD1         J
+D4  C           WAR,J     DOWEQ'0'
+     C                     MOVE ' '       WAR,J
+     C                     ADD  1         J
+F4  C                     END
+     C                     MOVEAWAR,1     CAR,I
+     C                     ADD  4         I
+     C                     MOVEL'x'       CAR,I
+     C                     ADD  2         I
+     *
+     C                     MOVE *BLANKS   WAR
+     C                     MOVELEMBLO     WC1
+     C                     MOVEAWC1       WAR
+     C                     Z-ADD1         J
+D4  C           WAR,J     DOWEQ'0'
+     C                     MOVE ' '       WAR,J
+     C                     ADD  1         J
+F4  C                     END
+     C                     MOVEAWAR,1     CAR,I
+     C                     ADD  4         I
+     C                     MOVEL'x'       CAR,I
+     C                     ADD  2         I
+     *
+     C                     MOVE *BLANKS   WAR
+     C                     MOVELEMBHT     WC1
+     C                     MOVEAWC1       WAR
+     C                     Z-ADD1         J
+D4  C           WAR,J     DOWEQ'0'
+     C                     MOVE ' '       WAR,J
+     C                     ADD  1         J
+F4  C                     END
+     C                     MOVEAWAR,1     CAR,I
+     *
+     C                     ADD  1         N
+     C                     MOVEACAR       T0071
+     C                     Z-ADDNBDECP    T0072
+D4  C           NBDECP    IFNE *ZEROS
+     C           V0941     DIV  NBDECP    W1
+     C                     MOVE W1        REST    40
+D5  C           REST      IFGT *ZERO
+     C                     ADD  1         W1
+F5  C                     END
+     C                     Z-ADDW1        T0074
+F4  C                     END
+     C                     MOVEAT007      EMB,N
+     *
+     *
+     * CONSTITUTION DE LA DEUXIEME LIGNE
+     *
+     C                     Z-ADDT0074     T0094
+     C                     MOVE T008      T007
+D4  C           PLANBR    IFNE *ZEROS
+     C                     MOVE *BLANKS   CAR
+     C                     Z-ADD1         I
+     C                     MOVE *BLANKS   WAR
+     C                     MOVELPLANBR    WC3     1
+     C                     MOVEAWC3       WAR
+     C                     Z-ADD1         J
+D5  C           WAR,J     DOWEQ'0'
+     C                     MOVE ' '       WAR,J
+     C                     ADD  1         J
+F5  C                     END
+     C                     MOVEAWAR,1     CAR,I
+     C                     ADD  2         I
+     *
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMPL'    PXARGU
+     C                     MOVE PLATYP    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D5  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXLIBE    WAR
+     C                     MOVEAWAR,1     CAR,I
+F5  C                     END
+     *
+     C                     EXSR SPCAR
+     C                     ADD  2         I
+     *
+     C                     MOVE *BLANKS   WAR
+     C                     MOVELPLALON    WC1
+     C                     MOVEAWC1       WAR
+     C                     Z-ADD1         J
+D5  C           WAR,J     DOWEQ'0'
+     C                     MOVE ' '       WAR,J
+     C                     ADD  1         J
+F5  C                     END
+     C                     MOVEAWAR,1     CAR,I
+     C                     ADD  4         I
+     C                     MOVEL'x'       CAR,I
+     C                     ADD  2         I
+     C                     MOVE *BLANKS   WAR
+     C                     MOVELPLALAR    WC1
+     C                     MOVEAWC1       WAR
+     C                     Z-ADD1         J
+D5  C           WAR,J     DOWEQ'0'
+     C                     MOVE ' '       WAR,J
+     C                     ADD  1         J
+F5  C                     END
+     C                     MOVEAWAR,1     CAR,I
+     *
+     C                     ADD  1         N
+     C                     MOVEACAR       T0071
+     C           T0094     MULT PLANBR    T0074
+     C                     MOVEAT007      EMB,N
+F4  C                     END
+     *
+     *
+     * CONSTITUTION DE LA TROISIEME LIGNE
+     *
+     C                     MOVE *BLANKS   CAR
+     C                     Z-ADD1         I
+     C                     MOVEA'FINITION'CAR,I
+     C                     ADD  9         I
+     *
+D4  C           HABIL1    IFNE *BLANKS
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMHA'    PXARGU
+     C                     MOVE HABI11    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D5  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXABRG    WAR
+     C                     MOVEAWAR,1     CAR,I
+F5  C                     END
+     *
+     C                     EXSR SPCAR
+     C                     ADD  2         I
+     *
+     C                     MOVEA'par'     CAR,I
+     C                     ADD  4         I
+     C                     MOVE HABI12    CAR,I
+     C                     ADD  2         I
+F4  C                     END
+     *
+D4  C           HABIL2    IFNE *BLANKS
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMHA'    PXARGU
+     C                     MOVE HABI21    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D5  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXABRG    WAR
+     C                     MOVEAWAR,1     CAR,I
+F5  C                     END
+     *
+     C                     EXSR SPCAR
+     C                     ADD  2         I
+     *
+     C                     MOVEA'par'     CAR,I
+     C                     ADD  4         I
+     C                     MOVELHABI22    CAR,I
+     C                     ADD  2         I
+F4  C                     END
+     *
+D4  C           HABIL3    IFNE *BLANKS
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMHA'    PXARGU
+     C                     MOVE HABI31    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D5  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXABRG    WAR
+     C                     MOVEAWAR,1     CAR,I
+F5  C                     END
+     *
+     C                     EXSR SPCAR
+     C                     ADD  2         I
+     *
+     C                     MOVEA'par'     CAR,I
+     C                     ADD  4         I
+     C                     MOVELHABI32    CAR,I
+     C                     ADD  2         I
+F4  C                     END
+     *
+D4  C           PROTEC    IFNE *BLANKS
+     C                     MOVEA'PROTECTI'CAR,I
+     C                     ADD  8         I
+     C                     MOVEA'ON'      CAR,I
+     C                     ADD  3         I
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'EMPR'    PXARGU
+     C                     MOVE PROTEC    PXVALE
+     C           KPARAM    CHAINPARAME               90
+D5  C           *IN90     IFEQ '0'
+     C                     MOVE *BLANKS   WAR
+     C                     MOVEAPXABRG    WAR
+     C                     MOVEAWAR,1     CAR,I
+F5  C                     END
+F4  C                     END
+     *
+     C                     ADD  1         N
+     C                     MOVEACAR       EMB,N
+     *
+     *
+     * CONSTITUTION DE LA QUATRIEME LIGNE
+     *
+     C                     MOVEL'EMBIMP'  DEST
+     C           KOBSP1    CHAINOBSPROL1             82
+D4  C           *IN82     IFEQ '0'
+     C                     ADD  1         N
+     C                     MOVEAOBSLIB    EMB,N
+D5  C           NATOBS    IFEQ 'T'
+     C                     DELETOBSPROF1
+F5  C                     END
+F4  C                     END
+     *
+     C                     MOVE EMB,1     T007
+     C                     MOVE EMB,2     T008
+     C                     MOVE EMB,3     T009
+     C                     MOVE EMB,4     T010
+     * REF ISO RECHERCHE DANS LA TABLE (TISO)
+     * --------------------------------------
+     C                     MOVE *BLANKS   T043   20
+     *
+     C                     MOVEL'BONEMB  'PXVA
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE 'TISO'    PXARGU
+     C                     MOVELISO       PXVALE
+     C           KPARAM    CHAINPARAME               90
+D4  C           *IN90     IFEQ '0'
+     C                     MOVELPXLIBE    T043
+F4  C                     END
+     *
+     C                     EXCPTBONEF
+F3  C                     END
+F2  C                     END
+     *
+     *
+D2  C           TITPRI    IFEQ 1
+    C           TITREP    ANDEQ4
+    C           TITPRI    OREQ 2
+    C           TITREP    ANDEQ4
+     C                     Z-ADDV088      V091
+F2  C                     END
+     *
+     *
+     C           SUITE     TAG
+D2  C           *IN18     IFEQ '0'
+     C           KPRLA2    READEPRLANCXG                 80
+     *
+X2  C                     ELSE
+     *
+     C           KPRLA2    READEPRLANCX4                 80
+F2  C                     END
+F1  C  N80                END
+     C           FIN       TAG
+     C                     SETON                     LR
+     C           KHIVAL    DELETPRODUIF1             81
+     *
+     ***************************************************************
+    C           SPCAR     BEGSR
+     C                     Z-ADD75        I
+D1  C           CAR,I     DOWEQ' '
+     C                     SUB  1         I
+     C           I         COMP 1                        82
+F1  C  N82                END
+    C                     ENDSR
+     *
+     ***************************************************************
+     OBONIMP  E                BONIM                                      PROD02
+     O                         V001      13                               PROD02
+     O                         V002      23                               PROD02
+     O                         V003      35                               PROD02
+     O                         V004      75                               PROD02
+     O                         V005  4   79                               PROD02
+     O                         V006  4   83                               PROD02
+     O                         V0071 4   88                               PROD02
+     O                         V0072 4   92                               PROD02
+     O                         V008     100 '  /  / 0'                    PROD02
+     O                         V009     108 '  /  / 0'                    PROD02
+     O                         V010  4  112                               PROD02
+     O                         V011     152                               PROD02
+     O                         V012     192                               PROD02
+     O                         V013     232                               PROD02
+     O                         V014     272                               PROD02
+     O                         V015     312                               PROD02
+     O                         V016     352                               PROD02
+     O                         V017     392                               PROD02
+     O                         V018     432                               PROD02
+     O                         V020     444                               PROD02
+     O                         V021     456                               PROD02
+     O                         V022     465                               PROD02
+     O                         V023     471                               PROD02
+     O                         V024  4  476                               PROD02
+     O                         V0251    479                               PROD02
+     O                         V0252 4  483                               PROD02
+     O                         V0261    489                               PROD02
+     O                         V0262 4  494                               PROD02
+     O                         V027  4  498                               PROD02
+     O                         V028  4  502                               PROD02
+     O                N30      V0294 4  510                               PROD02
+     O                 30      V0291 4  506                               PROD02
+     O                 30      V0292    508                               PROD02
+     O                 30      V0293 4  513                               PROD02
+     O                         V030  4  517                               PROD02
+     O                N31      V0314 4  525                               PROD02
+     O                 31      V0311 4  521                               PROD02
+     O                 31      V0312    523                               PROD02
+     O                 31      V0313 4  528                               PROD02
+     O                         V032     568                               PROD02
+     O                         V033     608                               PROD02
+     O                         V034     648                               PROD02
+     O                         V035     688                               PROD02
+     O                         V036     696 '  /  / 0'                    PROD02
+     O                         V037     704 '  /  / 0'                    PROD02
+     O                         V038     712 '  /  / 0'                    PROD02
+     O                         V039     720 '  /  / 0'                    PROD02
+     O                         V040     760                               PROD02
+     O                         V041     800                               PROD02
+     O                         V042     840                               PROD02
+     O                         V043     880                               PROD02
+     O                         V044     888 '  /  / 0'                    PROD02
+     O                         V045     896 '  /  / 0'                    PROD02
+     O                         V046     904 '  /  / 0'                    PROD02
+     O                         V047     912 '  /  / 0'                    PROD02
+     O                         V048     952                               PROD02
+     O                         V049     992                               PROD02
+     O                         V050    1032                               PROD02
+     O                         V051    1072                               PROD02
+     O                         V052    1112                               PROD02
+     O                         V053    1152                               PROD02
+     O                         V054    1192                               PROD02
+     O                         V055    1232                               PROD02
+     O                         V056    1272                               PROD02
+     O                         V057    1312                               PROD02
+     O                         V058    1352                               PROD02
+     O                         V059    1392                               PROD02
+     O                         V060    1398                               PROD02
+     O                         V061    1404                               PROD02
+     O                         V062    1410                               PROD02
+     O                         V063    1416                               PROD02
+     O                         V064    1422                               PROD02
+     O                         V065    1428                               PROD02
+     O                         V066    1434                               PROD02
+     O                         V067    1440                               PROD02
+     O                         V068    1446                               PROD02
+     O                         V069    1452                               PROD02
+     O                         V070    1458                               PROD02
+     O                         V071    1464                               PROD02
+     O                         V072    1472 '  /  / 0'                    PROD02
+     O                         V073    1480 '  /  / 0'                    PROD02
+     O                         V074    1488 '  /  / 0'                    PROD02
+     O                         V075    1496 '  /  / 0'                    PROD02
+     O                         V076    1504 '  /  / 0'                    PROD02
+     O                         V077    1512 '  /  / 0'                    PROD02
+     O                         V078    1520 '  /  / 0'                    PROD02
+     O                         V079    1528 '  /  / 0'                    PROD02
+     O                         V080    1536 '  /  / 0'                    PROD02
+     O                         V081    1544 '  /  / 0'                    PROD02
+     O                         V082    1552 '  /  / 0'                    PROD02
+     O                         V083    1560 '  /  / 0'                    PROD02
+     O                         V084    1584                               PROD02
+     O                         V085    1608                               PROD02
+     O                         V086    1632                               PROD02
+     O                         V087    1656                               PROD02
+     O                         V088  2 1665                               PROD02
+     O                         V089  2 1674                               PROD02
+     O                         V090  2 1683                               PROD02
+     O                         V091  2 1692                               PROD02
+     O                         V0921  B1693                               PROD02
+     O                         V0922  B1694                               PROD02
+     O                         V0941 2 1713                               PROD02
+     O                         V0942   1716                               PROD02
+     O                         V0951 2 1725                               PROD02
+     O                         V0952   1728                               PROD02
+     O                N04      V0961 2 1737                               PROD02
+     O                N04      V0962   1740                               PROD02
+     O                         V0971   1746                               PROD02
+     O                         V0972   1751                               PROD02
+     O                         V0973 4 1755                               PROD02
+     O                         V0974 4 1760                               PROD02
+     O                         V0975   1765                               PROD02
+     O                         V0976 2 1775                               PROD02
+     O                         V0977 4 1784                               PROD02
+     O                         V0978 4 1793                               PROD02
+     O                         V0979 4 1796                               PROD02
+     O                         V097A 4 1804                               PROD02
+     O                         V097B 4 1813                               PROD02
+     O                         V0981   1819                               PROD02
+     O                         V0982   1824                               PROD02
+     O                         V0983 4 1828                               PROD02
+     O                         V0984 4 1833                               PROD02
+     O                         V0985   1838                               PROD02
+     O                         V0986 2 1848                               PROD02
+     O                         V0987 4 1857                               PROD02
+     O                         V0988 4 1866                               PROD02
+     O                         V0989 4 1869                               PROD02
+     O                         V098A 4 1877                               PROD02
+     O                         V098B 4 1886                               PROD02
+     O                         V0991   1892                               PROD02
+     O                         V0992   1897                               PROD02
+     O                         V0993 4 1901                               PROD02
+     O                         V0994 4 1906                               PROD02
+     O                         V0995   1911                               PROD02
+     O                         V0996 2 1921                               PROD02
+     O                         V0997 4 1930                               PROD02
+     O                         V0998 4 1939                               PROD02
+     O                         V0999 4 1942                               PROD02
+     O                         V099A 4 1950                               PROD02
+     O                         V099B 4 1959                               PROD02
+     O                         V1001   1965                               PROD02
+     O                         V1002   1970                               PROD02
+     O                         V1003 4 1974                               PROD02
+     O                         V1004 4 1979                               PROD02
+     O                         V1005   1984                               PROD02
+     O                         V1006 2 1994                               PROD02
+     O                         V1007 4 2003                               PROD02
+     O                         V1008 4 2012                               PROD02
+     O                         V1009 4 2015                               PROD02
+     O                         V100A 4 2023                               PROD02
+     O                         V100B 4 2032                               PROD02
+     O                         V1011   2038                               PROD02
+     O                         V1012   2043                               PROD02
+     O                         V1013 4 2047                               PROD02
+     O                         V1014 4 2052                               PROD02
+     O                         V1015   2057                               PROD02
+     O                         V1016 2 2067                               PROD02
+     O                         V1017 4 2076                               PROD02
+     O                         V1018 4 2085                               PROD02
+     O                         V1019 4 2088                               PROD02
+     O                         V101A 4 2096                               PROD02
+     O                         V101B 4 2105                               PROD02
+     O                         V102    2165                               PROD02
+     O                         W103    2171                               PROD02
+     O                         V104    2281                               PROD02
+     O                         V105    2337                               PROD02
+     O                         V106    2393                               PROD02
+     O                         V107    2449                               PROD02
+     O                         V108    2505                               PROD02
+     O                         V109    2561                               PROD02
+     O                         V110    2617                               PROD02
+     O                         V111    2673                               PROD02
+     O                         V112  2 2683                               PROD02
+     O                         V113  2 2692                               PROD02
+     O                         V114  2 2701                               PROD02
+     O                 U1      V1151 4 2703                               PROD02
+     O                 U1      V1152 2 2716                               PROD02
+     O                 U1      V1153   2726 '  .  .0'                     PROD02
+     O                 U1      V1154   2732                               PROD02
+     O                 U1      V1161 4 2734                               PROD02
+     O                 U1      V1162 2 2747                               PROD02
+     O                 U1      V1163   2757 '  .  .0'                     PROD02
+     O                 U1      V1164   2763                               PROD02
+     O                 U1      V1171 4 2765                               PROD02
+     O                 U1      V1172 2 2778                               PROD02
+     O                 U1      V1173   2788 '  .  .0'                     PROD02
+     O                 U1      V1174   2794                               PROD02
+     O                 U1      V1181 4 2796                               PROD02
+     O                 U1      V1182 2 2809                               PROD02
+     O                 U1      V1183   2819 '  .  .0'                     PROD02
+     O                 U1      V1184   2825                               PROD02
+     O                 U1      V1191 4 2827                               PROD02
+     O                 U1      V1192 2 2840                               PROD02
+     O                 U1      V1193   2850 '  .  .0'                     PROD02
+     O                 U1      V1194   2856                               PROD02
+     O                 U1      V1201 4 2858                               PROD02
+     O                 U1      V1202 2 2871                               PROD02
+     O                 U1      V1203   2881 '  .  .0'                     PROD02
+     O                 U1      V1204   2887                               PROD02
+     O                 U1      V1211 4 2889                               PROD02
+     O                 U1      V1212 2 2902                               PROD02
+     O                 U1      V1213   2912 '  .  .0'                     PROD02
+     O                 U1      V1214   2918                               PROD02
+     O                 U1      V1221 4 2920                               PROD02
+     O                 U1      V1222 2 2933                               PROD02
+     O                 U1      V1223   2943 '  .  .0'                     PROD02
+     O                 U1      V1224   2949                               PROD02
+     O                 U1      V1231 4 2951                               PROD02
+     O                 U1      V1232 2 2964                               PROD02
+     O                 U1      V1233   2974 '  .  .0'                     PROD02
+     O                 U1      V1234   2980                               PROD02
+     O                 U1      V1241 4 2982                               PROD02
+     O                 U1      V1242 2 2995                               PROD02
+     O                 U1      V1243   3005 '  .  .0'                     PROD02
+     O                 U1      V1244   3011                               PROD02
+     O                         ZB841 4 3015                               PROD02
+     O                         ZBX     3017                               PROD02
+     O                         ZB851 4 3022                               PROD02
+     O                         USFAC   3043P                              PROD02
+     O                         USIMP   3044P                              PROD02
+     O                         V126    3048                               PROD02
+     O                         V127    3063                               PROD02
+     O                         V128    3083                               PROD02
+     O                 04NU1   V129    3087
+     O                 04NU1   V130    3091
+     OBONEMB  E                BONEF                                      PROD02
+     O                         V005  4    4                               PROD02
+     O                         V004      44                               PROD02
+     O                         V006  4   48                               PROD02
+     O                         V012      88                               PROD02
+     O                         V013     128                               PROD02
+     O                         V0071 4  133                               PROD02
+     O                         V0072 4  137                               PROD02
+     O                         T0071    212
+     O                         T0072 4  217
+     O                         T0073 4  221
+     O                         T0074 4  227
+     O                         T0081    302
+     O                         T0082 4  307
+     O                         T0083 4  311
+     O                         T0084 4  317
+     O                         T0091    392
+     O                         T0092 4  397
+     O                         T0093 4  401
+     O                         T0094 4  407
+     O                         T0101    482
+     O                         T0102 4  487
+     O                         T0103 4  491
+     O                         T0104 4  497
+     O                         USFAB   2745P                              PROD02
+     O                         USIMP   2746P                              PROD02
+     O                         T043    2766                               PROD02
+**  TABLE DES TYPES D'IMPRESSION
+01HELIO
+02FLEXO
+04OFFSET
+12HELIO-FLEXO
+14HELIO-OFFSET
+21FLEXO-HELIO
+24FLEXO-OFFSET
+44OFFSET-OFFSET
+10HELIO
+20FLEXO
+40OFFSET
+41OFFSET-HELIO
+30COUPEU
+67ST DOR
+67ST PEL
+**  TABLE DES CONSTANTES
+PRE-IMPRIME STOCKE
+EXTERIEUR
+INTERIEUR
+GROUPAGE
+GARNITURE
+COMMANDE D'ESSAIS
+COMMANDE D'HOMOLOGATION
+IMPRESSION EXT. INT.
+SOUS-TRAITANCE
+PRODUIT DE LUXE
+AMALGAME
+ N° PRODUIT SOFHUNIC :   8928
+ COMMANDE SOFHUNIC   :
+ATTENTION !!!    COMMANDE SANS VETO
+IS/92/26
+IS/IMP 94 N/012
+CXH -->Forme: ..... Prod. :
+IMPRESSION POUR NEUVILLE
+ PREVISIONNELLE
+IMPRESSION POUR CHABANAIS
+ORIGINE DE LA CDE :
+IMPRESSION POUR FEGERSHEIM
+CONTACT ALIMENTAIRE
+**  TABLE DES ETAT MATERIEL
+CCREATION
+MMODIFICATION
+RREFECTION
+EEXISTANT
+ EXISTANT

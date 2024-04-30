@@ -1,0 +1,3137 @@
+      *%CSTD===========================================================*
+      ** Application. : EMAGE      Logiciel métier DS Smith            *
+      ** Composant. . : FAB526£                       Type: RPG        *
+      **===============================================================*
+      ** Sous-système :                                                *
+      ** Fonction . . :                                                *
+      ** Sous-fonction:                                                *
+      **%S=============================================================*
+      ** Description des fonctionnalités:                              *
+      **                                                               *
+      **                                                               *
+      **                                                               *
+      **%E=============================================================*
+      ** AUTEUR:                          00:00                        *
+      ** MODIFS: 03 NOUZIERES  17/07/2023 12:00  90.91.11 FM 23/  110  *
+      **           rename des machines                                 *
+      **         02 TMAVDI     13/05/2019 10:50  01.01.16 FM 19/   74  *
+      **           INC0700624 Automatisat. bascule P.Finis en Neutre   *
+      **         01 NOUZIERES  06/03/2019 16:51  01.00.83 FM 19/   29  *
+      **           spécifique pour PF-> Neutre                         *
+      *%ECSTD==========================================================*
+    H*****************************************************************
+    H*                                                               *
+    H*  SUIVI DE FABRICATION : ENTREE EN STOCK PALETTE ENCOURS       *
+    H*                         OU PRODUIT FINI                       *
+    H*                                                               *
+    H*****************************************************************
+    H* PHILIPPE   |  11/06/2015 | INC0011699 : SI PALETTE EN "BP"    *
+    H*            |             | COMME POUR TOURY, AFFICHER L'ÉCRAN *
+    H*            |             | DE SAISIE D'INFORMATIONS           *
+    H*            |             |                                    *
+    H* TMAFBU     |  30/04/2018 | INC0571247 : ENTREE AUTOMATIQUE    *
+    H*            |             | DES PALETTES PF POUR NEUVILLE      *
+    H*            |             | RESS 3197 CLIENT 8928              *
+    H*            |             |                                    *
+    H*****************************************************************
+     FPRODAL8 IF  E           K        DISK
+     FCLIENTS1IF  E           K        DISK
+     FMVTIMPL2IF  E           K        DISK
+     FPREIMP2 IF  E           K        DISK
+     FPRODST3 IF  E           K        DISK
+     FPARAME  IF  E           K        DISK
+     FFAB04L01IF  E           K        DISK
+     FFAB05L23IF  E           K        DISK
+     FFAB10L02IF  E           K        DISK
+    FFAB10L03UF  E           K        DISK                      A
+     FFAB10L09IF  E           K        DISK
+     F            XFAB10                            KRENAMEYFAB10
+     FFAB10L24IF  E           K        DISK
+     F            XFAB10                            KRENAMETFAB10
+     FFAB11L10IF  E           K        DISK
+     FFAB11L16IF  E           K        DISK
+     F            XFAB11                            KRENAMETFAB11
+     FFAB15L01IF  E           K        DISK
+    FFAB16L01UF  E           K        DISK
+    FFAB20L01UF  E           K        DISK
+    FFAB21L01O   E           K        DISK                      A
+    FPRF01L01UF  E           K        DISK                      A
+    FFAB25L01UF  E           K        DISK                      A
+    FPRF02L01O   E           K        DISK                      A
+    FPRF05L01O   E           K        DISK                      A
+     FPRF05L03IF  E           K        DISK
+     FPRF11L01IF  E           K        DISK
+     FPRF11L03IF  E           K        DISK
+     F            XPRF11                            KRENAMEYPRF11
+     FMACHIN  IF  E           K        DISK
+     FPREACOP2IF  E           K        DISK
+     FPALETTL1IF  E           K        DISK
+     FCODBARL2IF  E           K        DISK
+     FFAB526D CF  E                    WORKSTN
+     E                    EBCAD       6  2               HISTOFA2:CODES AD
+     E                    EBTAD       6  4 2             HISTOFA2:TEMPS AD
+     E                    EBIAD       6  1               HISTOFA2:INCLUS AD
+     E                    EBEAD       6  1 0             HISTOFA2:EFFECTIFS AD
+     E                    PAG        50  2 0
+     E                    AF1         9  2 0
+     E                    AF2         9 40
+     E                    AF3         9 40
+     E                    AF4         9  1 0
+     E                    T3      1   2 64
+     E                    LB      1   1 20                                PA010
+     E                    ZO      1   9 10
+     IPRODUIF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IRECAPTF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IPRODARF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IPRODSTF2
+     I              MAIME1                          XAIME1
+     I              MAIME2                          XAIME2
+     I              MAIME3                          XAIME3
+     I              MAIME4                          XAIME4
+     I              MAIME5                          XAIME5
+     I              MIMRE1                          XIMRE1
+     I              MIMRE2                          XIMRE2
+     I              MIMRE3                          XIMRE3
+     I              MIMRE4                          XIMRE4
+     I              MIMRE5                          XIMRE5
+     I              RMIME1                          XMIME1
+     I              RMIME2                          XMIME2
+     I              RMIME3                          XMIME3
+     I              RMIME4                          XMIME4
+     I              RMIME5                          XMIME5
+     I              RMIRE1                          XMIRE1
+     I              RMIRE2                          XMIRE2
+     I              RMIRE3                          XMIRE3
+     I              RMIRE4                          XMIRE4
+     I              RMIRE5                          XMIRE5
+     I              MAGAU1                          XAGAU1
+     I              MAGAU2                          XAGAU2
+     I              DMACP1                          XMACP1
+     I              DMACP2                          XMACP2
+     I              DMACP3                          XMACP3
+     I              DMACP4                          XMACP4
+     IMVTIMPF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NOCLI                           XNOCLI
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              NOPRO                           XNOPRO
+     I              PAPI                            XPAPI
+     I              GRAMM                           XGRAMM
+     I              REFOUR                          XRFOUR
+     I              GRAREL                          XGRARE
+     I              PDSBOB                          XPDSBO
+     I              NBFE                            XNBFE
+     I              FORH                            XFORH
+     I              FORL                            XFORL
+     I              MLBON                           XMLBON
+     I              MLTOT                           XMLTOT
+     I              NOBOU                           XBOUCH
+     IMACHINF1
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     IXFAB16
+     I              USINE                           XAUSIN
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              FAOPNU                          XAOPNU
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IXFAB25
+     I              USINE                           XXUSI
+     I              STE                             XXSTE
+     I              NOCLI                           XXCLI
+     I              NOPRO                           XXPRO
+     ITFAB10
+     I              FFUSIN                          XAUSIN
+     I              FFCONF                          XFCONF
+     I              FFSEQ                           XFSEQ
+     I              FFISEQ                          XFISEQ
+     I              FFPRO                           XFPRO
+     I              FFOPNU                          XFOPNU
+     I              FACBPA                          XACBPA
+     I              NOBOU                           XBOUCH
+     I              FFAA                            XPAA
+     I              FFMM                            XPMM
+     I              FFJJ                            XPJJ
+     I              FFEQUI                          XPEQUI
+     I              FAASOR                          XAASOR
+     I              FAMSOR                          XAMSOR
+     I              FAJSOR                          XAJSOR
+     I              FAHSOR                          XAHSOR
+     I              FATENC                          XXTENC
+     ITFAB11
+     I              FAUSIN                          XAUSIN
+     I              FACBPA                          XACBPA
+     I              BOUCH2                          XBOUCH
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IXFAB15
+     I              USINE                           XAUSIN
+     I              OPEFRO                          XPEFRO
+     IPREACOPF
+     I              OPEFRO                          XPEFRO
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              MAC                             XMAC
+     IXFAB20
+     I              FAJEDI                          YAJEDI
+     I              FAMEDI                          YAMEDI
+     I              FAAEDI                          YAAEDI
+     I              FAHEDI                          YAHEDI
+     IXPRF11
+     I              STE                             YSTE
+     I              PFCONF                          YFCONF
+     I              PFSEQ                           YFSEQ
+     IYPRF11
+     I              STE                             GENSTE
+     I              PFCLI                           GENCLI
+     I              PFPRO                           GENPRO
+     I              PFCONF                          UFCONF
+     I              PFSEQ                           UFSEQ
+     I           IDS                                                      PROD13
+     I                                        1  25 GENCOD                PROD13
+     I                                        1   10GENSTE                PROD13
+     I                                        2   50GENCLI                PROD13
+     I                                        6   90GENPRO                PROD13
+     I            DS
+     I                                        1  18 AF1
+     I                                        1   20TYP001
+     I                                        3   40TYP002
+     I                                        5   60TYP003
+     I                                        7   80TYP004
+     I                                        9  100TYP005
+     I                                       11  120TYP006
+     I                                       13  140TYP007
+     I                                       15  160TYP008
+     I                                       17  180TYP009
+     I            DS
+     I                                        1 360 AF2
+     I                                        1  40 LIB001
+     I                                       41  80 LIB002
+     I                                       81 120 LIB003
+     I                                      121 160 LIB004
+     I                                      161 200 LIB005
+     I                                      201 240 LIB006
+     I                                      241 280 LIB007
+     I                                      281 320 LIB008
+     I                                      321 360 LIB009
+     I           IDS
+     I                                        1  68 PARM1
+     I                                        1   10ZAUSIN
+     I                                        2   5 ZRESS
+     I                                        2   2 ZSECT
+     I                                        3   3 ZSSECT
+     I                                        2   3 ZAATEL
+     I                                        4   5 ZNOMAC
+     I                                        6  100ZACONF
+     I                                       11  120ZASEQ
+     I                                       13  130ZAISEQ
+     I                                       14  140ZSTE
+     I                                       15  180ZNOCLI
+     I                                       19  220ZNOPRO
+     I                                       23  260ZAOPNU
+     I                                       27  280ZPJJ
+     I                                       29  300ZPMM
+     I                                       31  340ZPAA
+     I                                       35  350ZPEQUI
+     I                                       27  340ZATEQ                 CCS013
+     I                                       27  350ZTEQ                  CCS013
+     I                                       36  360ZATENC                CCS013
+     I                                       37  430ZCMATR                CCS013
+     I                                       44  44 FLASH                 CCS013
+     I                                       45  54 FANPRT                CCS013
+     I                                       55  610TOT                   CCS013
+     I                                       62  680TOTBON                CCS013
+     I           IDS
+     I                                        1  28 PARM2
+     I                                        1   80ZROBCB
+     I                                        3   80ZROBC1
+     I                                        9  120ZROBNP
+     I                                       13  180ZROBQT
+     I                                       19  210ZROBCA
+     I                                       22  260ZROBBT
+     I                                       27  280ZROBCP
+     I            DS
+     I                                        1  68 PAS1A
+     I                                       44  44 FLASH2                CCS013
+     I           IDS
+     I                                        1  18 PAS2
+     I                                        1   10WAUSIN
+     I                                        2   60WACONF
+     I                                        7   80WASEQ
+     I                                        9   90WAISEQ
+     I                                       10  130WNOPRO
+     I                                       14  170WAOPNU
+     I                                       18  18 TAGOK
+     IPARAM      IDS                             27
+     I                                        1   10PFUSIN
+     I                                        2   60PFCONF
+     I                                        7   80PFSEQ
+     I                                        9  100PFORDA
+     I                                       11  170PFCBPA
+     I                                       18  210PFPRO
+     I                                       22  270RBCBPA
+     I           IDS
+     I                                        1  140HEUR14
+     I                                        1   60HR14
+     I                                        7  140DT14
+     I           IDS
+     I                                        1 132 ENR1
+     I                                        1   50NCONF
+     I                                        6   70SEQFAB
+     I                                        8  110NOPRO
+     I                                       12  13 NATEL
+     I                                       14  15 NNOMAC
+     I                                       16  16 XIMPAR
+     I                                       17  170USINE
+     I                                       18  180TYPSTK
+     I                                       19  240NOBOB
+     I                                       30  30 OK
+     I                                       31  340NOCLI
+     I                                       35  35 SECSUP
+     I                                       36  391LAIZE1
+     I                                       40  430FORL
+     I                                       44  470FORH
+     I                                       48  520MLBON
+     I                                       53  570MLTOT
+     I                                       72  770NBF
+     I                                       78  78 CODRR
+     I                                       79  830FORCXH
+     I                                       84  840STECXH
+     I                                       85  880CLICXH
+     I                                       89  920PROCXH
+     I                                       93  95 PAPI
+     I                                       96  980GRAMM
+     I                                       99 104 REFOUR
+     I                                      105 1070GRAREL
+     I                                      108 1110PDSBOB
+     I                                      112 1120NSTE
+     IENREG2     IDS
+     I                                        1 186 ENR2
+     I                                        1   10EBUSIN
+     I                                        2   60EBCONF
+     I                                        7   80EBSEQ
+     I                                        9   90EBSTE
+     I                                       10  130EBCLI
+     I                                       14  170EBPRO
+     I                                       18  18 EBSEC
+     I                                       19  19 EBSSEC
+     I                                       20  21 EBMAC
+     I                                       22  290EBDAT1
+     I                                       30  370EBDAT2
+     I                                       38  410EBHEUR
+     I                                       42  420EBEQU
+     I                                       43  430EBPAS
+     I                                       44  500EBCOND
+     I                                       51  552EBTCAL
+     I                                       56  602EBTROU
+     I                                       61  652EBTDIV
+     I                                       66  660EBEFFC
+     I                                       67  670EBEFFR
+     I                                       68  740EBQTOT
+     I                                       75  810EBQBON
+     I                                       82  880EBQRC
+     I                                       89  950EBQRR
+     I                                       96  97 EBCAD1
+     I                                       98  99 EBCAD2
+     I                                      100 101 EBCAD3
+     I                                      102 103 EBCAD4
+     I                                      104 105 EBCAD5
+     I                                      106 107 EBCAD6
+     I                                       96 107 EBCAD
+     I                                      108 1112EBTAD1
+     I                                      112 1152EBTAD2
+     I                                      116 1192EBTAD3
+     I                                      120 1232EBTAD4
+     I                                      124 1272EBTAD5
+     I                                      128 1312EBTAD6
+     I                                      108 131 EBTAD
+     I                                      132 1320EBEAD1
+     I                                      133 1330EBEAD2
+     I                                      134 1340EBEAD3
+     I                                      135 1350EBEAD4
+     I                                      136 1360EBEAD5
+     I                                      137 1370EBEAD6
+     I                                      132 137 EBEAD
+     I                                      138 138 EBIAD1
+     I                                      139 139 EBIAD2
+     I                                      140 140 EBIAD3
+     I                                      141 141 EBIAD4
+     I                                      142 142 EBIAD5
+     I                                      143 143 EBIAD6
+     I                                      138 143 EBIAD
+     I                                      144 145 EBETIQ
+     I                                      146 1460EBCOUL
+     I                                      147 147 EBTVER
+     I                                      148 150 EBCELI
+     I                                      151 1570EBQELI
+     I                                      158 1620EBOPNU
+     I                                      163 164 EBOPST
+     I                                      165 165 EBSUP
+     I                                      166 166 EBTAG
+     I                                      167 168 EBTRSP
+     I                                      169 1732EBPOS1
+     I                                      174 1782EBPOS2
+     I                                      179 1850EBQACO
+     I                                      186 1860EBNCAL
+     I           IDS
+     I                                        1   40FAHENT                CCS013
+     I                                        1   20XXDEBH                CCS013
+     I                                        3   40XXDEBM                CCS013
+     I           IDS
+     I                                        1   80DATEQ                 CCS013
+     I                                        1   20PPJJ                  CCS013
+     I                                        3   40PPMM                  CCS013
+     I                                        5   80PPAA                  CCS013
+     I                                        9   90PPEQUI                CCS013
+     I                                        1   90DTEQ                  CCS013
+     I           IDS
+     I                                        1   80NUMERO
+     I                                        1   10FAUSIN
+     I                                        2   20FATENC
+     I                                        3   80FACBPA
+     I           IDS
+     I                                        1   2 FAATEL
+     I                                        1   1 SECT
+     I                                        2   2 SSECT
+     I           IDS
+     I                                        1   2 FFATEL
+     I                                        1   1 FFSEC                 CCS013
+     I                                        2   2 FFSSEC                CCS013
+     I           IDS
+     I                                        1   80DATEDI                CCS013
+     I                                        1   20FAJEDI                CCS013
+     I                                        3   40FAMEDI                CCS013
+     I                                        5   80FAAEDI                CCS013
+     I           IDS
+     I                                        1   80YATEDI                CCS013
+     I                                        1   20YAJEDI                CCS013
+     I                                        3   40YAMEDI                CCS013
+     I                                        5   80YAAEDI                CCS013
+     I           IDS
+     I                                        1   80DATENT                CCS013
+     I                                        1   20FAJENT                CCS013
+     I                                        3   40FAMENT                CCS013
+     I                                        5   80FAAENT                CCS013
+     I           IDS
+     I                                        1   80DATSOR                CCS013
+     I                                        1   20FAJSOR                CCS013
+     I                                        3   40FAMSOR                CCS013
+     I                                        5   80FAASOR                CCS013
+     I           IDS
+     I                                        1   80DATTRA                CCS013
+     I                                        1   20FAJTRA                CCS013
+     I                                        3   40FAMTRA                CCS013
+     I                                        5   80FAATRA                CCS013
+     I           IDS
+     I                                        1   80DATEQ2                CCS013
+     I                                        1   20FFJJ                  CCS013
+     I                                        3   40FFMM                  CCS013
+     I                                        5   80FFAA                  CCS013
+     I                                        9   90FFEQUI                CCS013
+     I                                        1   90DTEQ2                 CCS013
+     I           IDS
+     I                                        1   80DATES                 CCS013
+     I                                        1   20FAJES                 CCS013
+     I                                        3   40FAMES                 CCS013
+     I                                        5   80FAAES                 CCS013
+     ILIBEL      IDS
+     I                                        1  40 BLOC1
+     I                                        1  20 LIB20
+     I                                       41  80 BLOC2
+     I                                       81 120 BLOC4
+     I           IDS
+     I                                        1  140DTHR
+     I                                        1   60HOUR
+     I                                        7   80DAY
+     I                                        9  100MONTH
+     I                                       11  120SIECLE
+     I                                       13  140YEAR
+     I                                       11  140SSYEAR
+     I           IDS
+     I                                        1   2 FAQAST                CCS013
+     I                                        1   1 CERCLE                CCS013
+     I                                        2   2 DERDER                CCS013
+     I           IDS                                                      PROD13
+     I                                        1  240PARM3                 PROD13
+     I                                        1   10ZXUSIN                PROD13
+     I                                        2   20ZXSTE                 PROD13
+     I                                        3   60ZXCLI                 PROD13
+     I                                        7  100ZXPRO                 PROD13
+     I                                       11  120ZXORDA                PROD13
+     I                                       13  180ZXPAL
+     I                                       19  240ZXCAI
+     IDSPUST      DS                              8
+     I                                        1   10USIPUS
+     I                                        2   80PFCPUS
+    I** TMAELE 20130103 - DEBUT
+     I           IDS
+     I                                        1  95 P533D
+     I                                        1  30 FALENC
+     I                                       31  45 ABRCLI
+     I                                       46  510FAQTFE
+     I                                       52  53 FAUNIT
+     I                                       54  55 FAACST
+     I                                       56  95 PXLIBE
+     * TRANSFO PF EN NE
+     IPPDN9       DS
+     I                                        1   10PDN9US
+     I                                        2  090PDN9NE
+     IPPDN10      DS
+     I                                        1   10PDN1US
+     I                                        2   90PDN1PF
+     I                                       10  170PDN1NE
+    I** TMAELE 20130103 - FIN
+     C           *LIKE     DEFN PFNPAL    PFNPA1
+     C           *LIKE     DEFN POSF1     POSFX
+     C           *LIKE     DEFN FAQTFE    QTEPIL
+     C           *LIKE     DEFN FAQTFE    FAQTF2
+     C           *LIKE     DEFN PFNBT1    SVNBT1
+     C           *LIKE     DEFN PFQTHE    RFQTHE
+    C**
+     C           *LIKE     DEFN NCONF     SVCONF
+     C           *LIKE     DEFN SEQFAB    SVSEQ
+     C           *LIKE     DEFN PAPI      SVPAPI
+     C           *LIKE     DEFN REFOUR    SVFOUR
+     C           *LIKE     DEFN GRAMM     SVGRAM
+     C           *LIKE     DEFN GRAREL    SVGRAR
+     C           *LIKE     DEFN NOCLI     SVCLI
+     C           *LIKE     DEFN NOPRO     SVPRO
+     C           *LIKE     DEFN USINE     SVUSIN
+     C           *LIKE     DEFN NSTE      SVSTE
+     C           *LIKE     DEFN CFINIT    LUXE
+     C           *LIKE     DEFN ORD       SVORD
+    C**
+    C******  DEFINITION DES CLES
+    C**
+     C           KEYUSI    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+     C           KCLI01    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C           KIMP2     KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KIMP01    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           XACBPA
+     C                     KFLD           XBOUCH
+     C           KEYPRO    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KMAC01    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZSECT
+     C                     KFLD           ZSSECT
+     C                     KFLD           ZNOMAC
+     C           KPREOP    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZAOPNU
+     C           KFAB04    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZSECT
+     C                     KFLD           ZSSECT
+     C                     KFLD           ZNOMAC
+     C                     KFLD           ZCMATR
+     C           KFAB05    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C           KFAB16    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZSECT
+     C                     KFLD           ZSSECT
+     C                     KFLD           ZNOMAC
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C                     KFLD           ZPAA
+     C                     KFLD           ZPMM
+     C                     KFLD           ZPJJ
+     C                     KFLD           ZPEQUI
+     C           KFAB10    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FATENC
+     C                     KFLD           FACBPA
+     C           KFA10A    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FATENC
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPAL
+     C           KFA10B    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FATENC
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C           KFA10C    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZSECT
+     C                     KFLD           ZSSECT
+     C                     KFLD           ZNOMAC
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C                     KFLD           ZPAA
+     C                     KFLD           ZPMM
+     C                     KFLD           ZPJJ
+     C                     KFLD           ZPEQUI
+     C                     KFLD           FACBPA
+     C                     KFLD           NOBOU
+     C           KFA10D    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C                     KFLD           ZPAA
+     C                     KFLD           ZPMM
+     C                     KFLD           ZPJJ
+     C                     KFLD           ZPEQUI
+     C                     KFLD           FAASOR
+     C                     KFLD           FAMSOR
+     C                     KFLD           FAJSOR
+     C                     KFLD           FAHSOR
+     C                     KFLD           XACBPA
+     C           KFA10E    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C           KFAB11    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZSECT
+     C                     KFLD           ZSSECT
+     C                     KFLD           ZNOMAC
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C                     KFLD           ZPAA
+     C                     KFLD           ZPMM
+     C                     KFLD           ZPJJ
+     C                     KFLD           ZPEQUI
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           FACBPA
+     C           KFA11B    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C                     KFLD           ZPAA
+     C                     KFLD           ZPMM
+     C                     KFLD           ZPJJ
+     C                     KFLD           ZPEQUI
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           FAAES
+     C                     KFLD           FAMES
+     C                     KFLD           FAJES
+     C                     KFLD           FAHES
+     C                     KFLD           XACBPA
+     C           KFA11C    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           ZACONF
+     C                     KFLD           ZASEQ
+     C                     KFLD           ZAISEQ
+     C                     KFLD           ZNOPRO
+     C                     KFLD           ZAOPNU
+     C           KFAB15    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAISEQ
+     C                     KFLD           FAOPNU
+     C           KFAB20    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FATENC
+     C           KPRF01    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           NOPRO
+     C                     KFLD           PFCONF
+     C                     KFLD           PFSEQ
+     C                     KFLD           PFORDA
+     C           KPRF05    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           PFCONF
+     C                     KFLD           PFSEQ
+     C                     KFLD           PFORDA
+     C                     KFLD           NOPRO
+     C                     KFLD           PFNPA1
+     C           KPRF5A    KLIST
+     C                     KFLD           ZAUSIN
+     C                     KFLD           PFCONF
+     C                     KFLD           PFSEQ
+     C                     KFLD           PFORDA
+     C                     KFLD           NOPRO
+     C           KPRF11    KLIST
+     C                     KFLD           AMSTE
+     C                     KFLD           AMCLI
+     C                     KFLD           AMPRO
+     C                     KFLD           AMCONF
+     C                     KFLD           AMSEQ
+     C           KPR11A    KLIST
+     C                     KFLD           AMSTE
+     C                     KFLD           AMCLI
+     C                     KFLD           AMPRO
+     C                     KFLD           AMCONF
+     C                     KFLD           AMSEQ
+     C                     KFLD           GENSTE
+     C                     KFLD           GENCLI
+     C                     KFLD           GENPRO
+     C           KEYPAL    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           EMBNO
+     C           KEYAMA    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           ORD
+     C           KEYAM1    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KFAB25    KLIST
+     C                     KFLD           XXUSI
+     C                     KFLD           XXSTE
+     C                     KFLD           XXCLI
+     C                     KFLD           XXPRO
+    C**
+    C******  RECEPTION DES PARAMETRES
+    C**
+     C           *ENTRY    PLIST
+     C           PAS1      PARM PAS1      PAS1   68
+     C           INDIC     PARM INDIC     INDIC   1
+     C           PASROB    PARM PASROB    PASROB 28
+     C                     MOVE PAS1      PARM1
+     C                     MOVE PAS1      PAS1A
+     C                     MOVE PASROB    PARM2
+     C                     CLEARENREG2
+     C                     MOVE *OFF      *IN12
+    C**
+    C******  SI USINE = ROCHE,TOURY,NEUVI,CHABA ==> ZONES COMPTEURS
+    C******         NON AFFICHABLES  INDICATEUR 30=ON
+    C**
+D1  C           INDIC     IFEQ '1'
+D2  C           ZAUSIN    IFEQ 2
+    C           ZAUSIN    OREQ 3
+    C           ZAUSIN    OREQ 4
+    C           ZAUSIN    OREQ 5
+     C                     MOVE *ON       *IN30
+X2  C                     ELSE
+     C                     MOVE *OFF      *IN30
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+D1  C           INDIC     IFEQ *BLANK
+     C                     WRITEF00
+     C                     MOVE '1'       INDIC
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+D1  C           INDIC     IFEQ '2'
+     C                     WRITEF00
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+    C******  FEG => AMALGAME 8928 => RECUP ZONE ORD DANS FAISEQ
+    C******         LA ZONE FAISEQ N'EST PAS GEREE
+    C**
+     C                     Z-ADD0         SVORD
+D1  C           ZAUSIN    IFEQ 7
+    C           ZNOCLI    ANDEQ8928
+    C           ZAISEQ    ANDNE0
+     C                     Z-ADDZAISEQ    SVORD
+     C                     Z-ADD0         ZAISEQ
+F1  C                     ENDIF
+    C**
+    C******  CREATION ET EDITION NOUVELLE FICHE PALETTE
+    C**
+D1  C           FLASH     IFEQ 'N'
+     C                     Z-ADDZAUSIN    FAUSIN
+     C                     Z-ADDZACONF    FACONF
+     C                     Z-ADDZASEQ     FASEQ
+     C                     Z-ADDZAISEQ    FAISEQ
+     C                     Z-ADDZSTE      STE
+     C                     Z-ADDZNOCLI    NOCLI
+     C                     Z-ADDZNOPRO    NOPRO
+     C                     Z-ADDZATENC    FATENC
+     C                     Z-ADDZAOPNU    FAOPNU
+     **
+     C                     MOVE *BLANK    FA1001
+     **
+     ******  TOURY : ZONE FAQASTE => POS1=CERCLAGE/POS2=DERNIERE PAL.
+     ******  LA POSITION 2 EST REMISE A BLANC A CHAQUE NLLE PALETTE
+     *
+D2  C           ZAUSIN    IFNE 3
+     C                     MOVE *BLANK    FAQAST
+X2  C                     ELSE
+     C                     MOVE ' '       FAQAST
+F2  C                     ENDIF
+    C**
+     C                     MOVE 'OK'      FAACST
+    C**
+     C                     Z-ADD0         DATSOR
+     C                     Z-ADD0         DATTRA
+     C                     Z-ADD0         FAUDES
+     C                     Z-ADD0         NOBOU
+     C                     Z-ADD0         FAQTFR
+    C**
+    C******  NEUVILLE : TEST SI PALETTE PF ISSUE DU ROBOT
+    C**
+D2  C           ZATENC    IFEQ 9
+    C           ZAUSIN    ANDEQ4
+    C           ZROBC1    ANDGE500000
+     C                     Z-ADDZROBC1    FACBPA
+     C                     Z-ADDZROBNP    FAOPAL
+     C                     Z-ADDZROBNP    PFNPAL
+     C                     Z-ADDZROBCP    ORD
+     C                     Z-ADDZROBCP    PFORDA
+    C**
+D3  C           ORD       IFGT 0
+     C           KEYAMA    CHAINCODBARF1             99
+D4  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNUE'REFCO
+F4  C                     ENDIF
+F3  C                     ENDIF
+    C**
+     C           KFAB20    CHAINXFAB20              N99
+    C                     GOTO NEW
+F2  C                     ENDIF
+     **
+     ******  TEST SI PRODUIT FINI EN AMALGAME : SI OUI=>CHOIX ARTICLE
+     **                                         ==> *IN33 = '1'
+     C                     MOVE '0'       *IN33
+D2  C           FATENC    IFEQ 9
+     C                     EXSR WINAMA
+    C           *IN12     CABEQ'1'       FIN
+F2  C                     ENDIF
+     **
+     ******  LECTURE PROCHAIN CODE BARRE DS FAB20P
+     **
+     C           KFAB20    CHAINXFAB20               9944
+     **
+     ****** ENREGISTREMENT VERROUILLE PAR UN AUTRE JOB
+     **
+D2  C           *IN44     IFEQ *ON
+     C                     MOVE T3,2      ERREUR
+X2  C                     ELSE
+     **
+     ****** CONTROLE SI LE PROCHAIN N° EXISTE DEJA DS FAB10P
+     **
+     C           FACB      ADD  1         FACBPA
+     **
+     ****** SI LA SERIE DE N° RECOMMENCE AU DEBUT ==> NUM = 1
+     **
+D3  C           FACBPA    IFEQ 0
+     C                     Z-ADD1         FACBPA
+F3  C                     ENDIF
+     **
+     ****** NEUVILLE : SI PF PROVENANCE ROBOT => SERIE 500000 RESERVEE
+     **
+D3  C           FATENC    IFEQ 9
+    C           FAUSIN    ANDEQ4
+    C           FACBPA    ANDEQ500000
+     C                     Z-ADD1         FACBPA
+F3  C                     ENDIF
+     **
+     ****** MISE A JOUR DU DERNIER N° DS FAB20P
+     **
+     C                     TIME           HEUR14 140
+     C                     Z-ADDDT14      YATEDI
+     C                     Z-ADDHR14      YAHEDI
+     C                     Z-ADDFACBPA    FACB
+     C                     UPDATXFAB20
+F2  C                     ENDIF
+     **
+     ****** TEST SI N° ATTRIBUE EXISTE DÉJA DS FAB10P
+     **
+     C           KFAB10    CHAINXFAB10               99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE *ON       *IN44
+     C                     MOVE T3,1      ERREUR
+F2  C                     ENDIF
+    C**
+    C******  RECHERCHE DU DERNIER N° DE PALETTE EDITE
+    C**
+     C                     MOVE *BLANKS   FATRSP
+     C           *LIKE     DEFN FAOPAL    SAOPAL
+     C           *LIKE     DEFN FAQTFE    SAQTFE
+D2  C           ZAUSIN    IFEQ 2
+    C           ZAATEL    ANDEQ'51'
+     C           KFAB15    CHAINXFAB15               99
+D3  C           FATRSP    IFEQ 'GA'
+     C                     Z-ADD1001      FAOPAL
+X3  C                     ELSE
+     C                     Z-ADD1         FAOPAL
+F3  C                     END
+     C           KFA10A    CHAINXFA10A               99
+     * DEBUT DE FAB
+D3  C           *IN99     IFEQ *ON
+D4  C           FATRSP    IFEQ 'GA'
+     C                     Z-ADD1001      FAOPAL
+X4  C                     ELSE
+     C                     Z-ADD1         FAOPAL
+F4  C                     ENDIF
+X3  C                     ELSE
+     * RECHERCHE DU DERNIER NUMERO ORDRE
+     C                     Z-ADDFAOPAL    SAOPAL
+     C                     Z-ADDFAQTFE    SAQTFE
+     C           KFA10B    READEXFA10A                   99
+D4  C           FATRSP    IFEQ 'GA'
+D5  C           *IN99     DOWEQ'0'
+     C           KFA10B    READEXFA10A                   99
+F5  C  N99                END
+X4  C                     ELSE
+D5  C           *IN99     DOWEQ'0'
+D6  C           FAOPAL    IFLT 1000
+     C                     Z-ADDFAOPAL    SAOPAL
+X6  C                     ELSE
+     C                     Z-ADDSAOPAL    FAOPAL
+     C                     Z-ADDSAQTFE    FAQTFE
+     C                     SETON                     99
+F6  C                     END
+     C  N99      KFA10B    READEXFA10A                   99
+F5  C  N99                END
+F4  C                     ENDIF
+     C                     ADD  1         FAOPAL
+F3  C                     ENDIF
+     *
+X2  C                     ELSE
+     *
+     C                     Z-ADD9999      FAOPAL
+     C           KFA10A    SETGTXFA10A
+     C           KFA10B    REDPEXFA10A                   99
+D3  C           *IN99     IFEQ *ON
+     C                     Z-ADD1         FAOPAL
+X3  C                     ELSE
+     C                     ADD  1         FAOPAL
+F3  C                     ENDIF
+F2  C                     END
+    C**
+    C******  RECHERCHE DU DERNIER N° DE PALETTE EDITE DANS PRF05P
+    C**
+D2  C           FATENC    IFEQ 9
+    C           FLASH     ANDEQ'N'
+    C*
+     C                     Z-ADDFAUSIN    USINE
+     C                     Z-ADDFACONF    PFCONF
+     C                     Z-ADDFASEQ     PFSEQ
+     C                     Z-ADD9999999   PFNPA1
+     C           KPRF05    SETGTXPRF5A
+     C           KPRF5A    REDPEXPRF5A                   99
+D3  C           *IN,99    IFEQ *ON
+     C                     Z-ADD1         PFNPAL
+X3  C                     ELSE
+     C                     ADD  1         PFNPAL
+F3  C                     ENDIF
+    C**
+D3  C           PFNPAL    IFGT FAOPAL
+     C                     Z-ADDPFNPAL    FAOPAL
+F3  C                     ENDIF
+    C**
+F2  C                     ENDIF
+     **
+    C                     GOTO NEW
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*     LECTURE N° CODE BARRE PAR FLASHAGE DS FAB10P              *
+    C*---------------------------------------------------------------*
+     C                     Z-ADD0         NUMERO
+     C                     Z-ADD0         PPCTR
+     C           DEBUT     TAG
+     C                     EXFMTF01
+    C**
+D1  C           *IN12     IFEQ *ON
+     C                     UNLCKFAB10L03
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+     C           KFAB10    CHAINXFAB10               40
+    C           *IN40     CABEQ*ON       DEBUT
+    C**
+    C******  TEST SI PALETTE DEJA EN STOCK
+    C**
+    C           DATENT    CABGT0         DEBUT      41
+    C**
+    C******  TEST SI PALETTE APPARTIENT BIEN à L'OF EN COURS
+    C**
+    C           FACONF    CABNEZACONF    DEBUT      4242
+    C           FASEQ     CABNEZASEQ     DEBUT      4242
+    C           NOPRO     CABNEZNOPRO    DEBUT      4242
+    C           NOCLI     CABNEZNOCLI    DEBUT      4242
+    C           STE       CABNEZSTE      DEBUT      4242
+    C           FAATEL    CABNEZAATEL    DEBUT      4242
+    C           NOMAC     CABNEZNOMAC    DEBUT      4242
+    C           FAOPNU    CABNEZAOPNU    DEBUT      4242
+    C           FATENC    CABNEZATENC    DEBUT      4242
+    C**
+    C******  LECTURE TYPE D'ENCOURS
+    C**
+     C           KFAB20    CHAINXFAB20               99
+    C*---------------------------------------------------------------*
+    C*     LECTURE DONNEE FICHE PALETTE                              *
+    C*---------------------------------------------------------------*
+     C           NEW       TAG
+    C**
+    C******  LECTURE USINE FABRICATION
+    C**
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE FAUSIN    PXVALE
+     C                     MOVE *BLANKS   PXLIBE
+     C           KEYUSI    CHAINPARAMEF1             99
+     C                     MOVELPXLIBE    LIBUS1
+    C**
+    C******  LECTURE CLIENT
+    C**
+     C                     MOVE *BLANK    ABRCLI
+D1  C           STE       IFNE 0
+     C           KCLI01    CHAINCLIENTS1             99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' ABRCLI
+F2  C                     ENDIF
+     **
+     ******  LECTURE PRE-IMPRIME STOCKE SI STE=0
+     **
+X1  C                     ELSE
+     C                     CLEARLIBEL
+     C           KIMP2     CHAINPREIMP2              99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' ABRCLI
+X2  C                     ELSE
+     C                     MOVEL'STOCKE'  ABRCLI
+     C                     MOVELDPRIMP    BLOC1
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  LECTURE PRODUIT
+    C**
+D1  C           STE       IFNE 0
+     C                     CLEARLIBEL
+     C           KEYPRO    CHAINPRODAL8              99
+D2  C           *IN99     IFEQ *ON
+    C**
+     C           KIMP2     CHAINPRODSTF2             99
+D3  C           *IN99     IFEQ *ON
+     C                     MOVE *BLANK    LIB20
+     C                     MOVEL'INCONNU' LIB20
+F3  C                     ENDIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  USINE 2 OU 4 => TEST SI PRODUIT DE LUXE
+    C**
+     C                     MOVE *BLANK    LUXE
+D1  C           ZAUSIN    IFEQ 2
+    C           ZAUSIN    OREQ 4
+D2  C           CFINIT    IFEQ 'A'
+    C           CFINIT    OREQ 'B'
+    C           CFINIT    OREQ 'C'
+     C                     MOVE 'C'       LUXE
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  SI POSF2>0 ==> GESTION DES A-COTÉS
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDEQ'21'
+    C*****      ZAATEL    ANDGE'21'
+    C*****      ZAATEL    ANDLT'70'
+     C                     MOVE 'O'       GAUCHE
+     C                     MOVE 'O'       DROITE
+X1  C                     ELSE
+     C                     MOVE 'N'       GAUCHE
+     C                     MOVE 'N'       DROITE
+F1  C                     ENDIF
+    C**
+    C******  LECTURE TRAVAIL EN COURS SUR CETTE RESSOURCE
+    C**
+     C           LEC16     TAG
+     C           KFAB16    CHAINXFAB16               9785
+    C           *IN85     CABEQ*ON       LEC16
+D1  C           *IN97     IFEQ *ON
+     C                     Z-ADD0         CMATR
+F1  C                     ENDIF
+     C                     MOVE PPUNIT    FAUNIT
+    C**
+    C******  LECTURE MACHINE
+    C**
+     C           KMAC01    CHAINMACHIN               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVE *BLANK    TITETE
+     C                     MOVEL'INCONNU' TITETE
+F1  C                     ENDIF
+    C**
+    C******  LECTURE CONDUCTEUR MACHINE
+    C**
+     C                     MOVE *BLANK    NOMPR1
+     C           KFAB04    CHAINXFAB04               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' NOMPR1
+X1  C                     ELSE
+     C                     MOVE NOMPRE    NOMPR1
+F1  C                     ENDIF
+    C**
+    C******  AFFICHAGE ECRAN F02
+    C**
+     C                     MOVE ZAATEL    FAATEL
+     C                     MOVE ZNOMAC    NOMAC
+     C                     Z-ADDZAOPNU    FAOPNU
+     C                     Z-ADDZTEQ      DTEQ
+     **
+     ******  RECUP DATE SYSTEME
+     **
+     C                     MOVE *ZEROS    PASSYS  6
+     C                     CALL 'FAB000L'
+     C           PASSYS    PARM PASSYS    PASSYS
+     C                     MOVELPASSYS    SYSA    4
+     C                     MOVE PASSYS    SYSB    2
+     **
+     C                     MOVELSYSA      FAJENT
+     C                     MOVE SYSA      FAMENT
+     C                     MOVEL'20'      FAAENT
+     C                     MOVE SYSB      FAAENT
+     C                     TIME           HEURE   60
+     C                     MOVELHEURE     FAHENT
+    C**
+D1  C           FLASH     IFEQ 'N'
+    C**** ON NE REMET PAS À ZERO LA QUANTITÉ
+D2  C           USINE     IFNE 2
+    C           USINE     ANDNE5
+     C                     Z-ADD0         FAQTFE
+F2  C                     ENDIF
+     C                     Z-ADD0         FAQTGA
+     C                     Z-ADDDATENT    DATEDI
+     C                     Z-ADDHEURE     FAHEDI
+F1  C                     ENDIF
+    C**
+    C******  PRODUIT FINI => AFFICHAGE CONDITIONNEMENT
+    C**
+     C                     MOVE *BLANK    CTRGAM
+     C                     MOVE *OFF      *IN39
+    C**
+D1  C           FATENC    IFEQ 9
+    C**
+D2  C           ZAUSIN    IFEQ 3
+    C           ZAUSIN    OREQ 4
+    C           ZAUSIN    OREQ 5
+    C           ZAUSIN    OREQ 2
+    C           ZAUSIN    OREQ 7
+     C                     EXSR CONFIG
+     **
+D3  C           FAUNIT    IFNE 'FE'
+     C           PFNBT1    MULT PFNCO1    FAQTFE
+F3  C                     ENDIF
+     **
+D3  C           ZAUSIN    IFEQ 4
+    C           TS1       ANDEQ'M'
+    C           ZROBC1    ANDGE500000
+     ******  LECTURE PROCHAIN CODE BARRE DS FAB20P
+     **
+     C           KFAB20    CHAINXFAB20               9944
+     **
+     ****** ENREGISTREMENT VERROUILLE PAR UN AUTRE JOB
+     **
+D4  C           *IN44     IFEQ *ON
+     C                     MOVE T3,2      ERREUR
+X4  C                     ELSE
+     **
+     ****** CONTROLE SI LE PROCHAIN N° EXISTE DEJA DS FAB10P
+     **
+     C           FACB      ADD  1         FACBPA
+     **
+     ****** SI LA SERIE DE N° RECOMMENCE AU DEBUT ==> NUM = 1
+     **
+D5  C           FACBPA    IFEQ 0
+     C                     Z-ADD1         FACBPA
+F5  C                     ENDIF
+     **
+     ****** NEUVILLE : SI PF PROVENANCE ROBOT => SERIE 500000 RESERVEE
+     **
+D5  C           FATENC    IFEQ 9
+    C           FAUSIN    ANDEQ4
+    C           FACBPA    ANDEQ500000
+     C                     Z-ADD1         FACBPA
+F5  C                     ENDIF
+     **
+     ****** MISE A JOUR DU DERNIER N° DS FAB20P
+     **
+     C                     TIME           HEUR14 140
+     C                     Z-ADDDT14      YATEDI
+     C                     Z-ADDHR14      YAHEDI
+     C                     Z-ADDFACBPA    FACB
+     C                     UPDATXFAB20
+F4  C                     ENDIF
+     **
+     ****** TEST SI N° ATTRIBUE EXISTE DÉJA DS FAB10P
+     **
+     C           KFAB10    CHAINXFAB10               99
+D4  C           *IN99     IFEQ *OFF
+     C                     MOVE *ON       *IN44
+     C                     MOVE T3,1      ERREUR
+F4  C                     ENDIF
+F3  C                     ENDIF
+X2  C                     ELSE
+     C                     Z-ADD0         PFNCO1
+     C                     Z-ADD0         PFNCO2
+     C                     Z-ADD0         PFNBT1
+     C                     Z-ADD0         PFNBT2
+F2  C                     ENDIF
+    C**
+     C           PFNCO1    ADD  PFNCO2    TOTNBT  70
+D2  C           TOTNBT    IFEQ 1
+     C                     Z-ADD0         TOTNBT
+F2  C                     ENDIF
+    C**
+F1  C                     ENDIF
+    C**
+     C           VISU      TAG
+    C**
+    C******  AFFICHAGE ECRAN SPECIAL SI GESTION DES A COTES
+    C******         ET ATELIER>= ONDULEUSE
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+     C                     Z-ADD0         PPCTR
+     C                     Z-ADD0         FAQTGA
+     C                     EXFMTF05
+X1  C                     ELSE
+D2  C           TOTNBT    IFEQ 0
+D3  C           ZAUSIN    IFEQ 3
+     C                     EXFMTF02T
+X3  C                     ELSE
+     C                     EXFMTF02
+F3  C                     ENDIF
+X2  C                     ELSE
+     C   33                MOVE *BLANK    BLOC1
+     C   33                MOVE *BLANK    BLOC2
+     C                     EXFMTF12
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  F4=RECHERCHE CODE AUTO-CONTROLE
+    C**
+D1  C           *IN04     IFEQ *ON
+     C                     MOVE '10'      LIGNE
+     C                     MOVE *BLANKS   PASCO2
+     C                     MOVE *BLANKS   PXLIBE
+     C                     MOVE '1'       INDI1
+     C                     CALL 'FEN503£'              85
+     C           PASCO2    PARM PASCO2    PASCO2  2
+     C           INDI1     PARM INDI1     INDI1   1
+     C           LIGNE     PARM LIGNE     LIGNE   2
+     C           PXLIBE    PARM PXLIBE    PXLIBE
+    C**
+D2  C           PASCO2    IFNE *BLANKS
+     C                     MOVE PASCO2    FAACST
+F2  C                     ENDIF
+     **
+    C                     GOTO VISU
+F1  C                     ENDIF
+    C**
+    C******  F12=ABANDON => DEBLOCAGE DES FICHIERS FAB10/16/20P
+    C**
+D1  C           *IN12     IFEQ *ON
+     C                     UNLCKFAB10L03
+     C                     UNLCKFAB16L01
+     C                     UNLCKFAB20L01
+     C                     MOVE 'X'       FLASH2
+     C                     MOVE PAS1A     PAS1
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+    C           *IN44     CABEQ*ON       VISU
+    C**
+    C*****  CONTROLE QTE SAISIE : QTE PALETTE OU RELEVE COMPTEUR
+    C**
+D1  C           FAQTFE    IFEQ 0
+    C           PPCTR     ANDEQ0
+     C                     MOVE *ON       *IN40
+    C                     GOTO VISU
+F1  C                     ENDIF
+    C**
+D1  C           FAQTFE    IFGT 0
+    C           PPCTR     ANDGT0
+     C                     MOVE *ON       *IN42
+    C                     GOTO VISU
+F1  C                     ENDIF
+    C**
+D1  C           FATENC    IFLT 6
+    C           FAQTFE    CABGT20000     VISU       41
+X1  C                     ELSE
+    C           FAQTFE    CABGT500000    VISU       41
+F1  C                     ENDIF
+    C**
+    C*****  CONTROLE SI SAISIE DU COMPTEUR FABRIQUE
+    C**
+D1  C           PPCTR     IFGT 0
+    C           PPCTR     CABLEPPCTR2    VISU         4343
+     C           PPCTR     SUB  PPCTR2    FAQTFE
+D2  C           FATENC    IFLT 6
+    C           FAQTFE    CABGT20000     VISU       41
+X2  C                     ELSE
+    C           FAQTFE    CABGT500000    VISU       41
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C           FAQTGA    CABGTFAQTFE    VISU       45
+    C**
+    C*****  CONTROLE DES CODES DES A-COTES SI ATELIER >= ONDULEUSE
+    C**
+     C                     MOVE *OFF      *IN47
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+D2  C           GAUCHE    IFNE 'O'
+    C           GAUCHE    ANDNE'N'
+     C                     MOVE *ON       *IN47
+    C                     GOTO VISU
+F2  C                     ENDIF
+D2  C           DROITE    IFNE 'O'
+    C           DROITE    ANDNE'N'
+     C                     MOVE *ON       *IN47
+    C                     GOTO VISU
+F2  C                     ENDIF
+D2  C           GAUCHE    IFEQ 'N'
+    C           DROITE    ANDEQ'N'
+     C                     MOVE *ON       *IN47
+    C                     GOTO VISU
+F2  C                     ENDIF
+D2  C           ZAATEL    IFNE '21'
+    C           GAUCHE    ANDEQ'O'
+    C           DROITE    ANDEQ'O'
+     C                     MOVE *ON       *IN47
+    C                     GOTO VISU
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*      PRODUIT FINI : TESTS QTE ET CONDITIONNEMENT              *
+    C*---------------------------------------------------------------*
+D1  C           FATENC    IFEQ 9
+D2  C           ZAUSIN    IFEQ 3
+    C           TOTNBT    ANDGT0
+    C           ZAUSIN    OREQ 5
+    C           TOTNBT    ANDGT0
+    C           ZAUSIN    OREQ 2
+    C           TOTNBT    ANDGT0
+    C           ZAUSIN    OREQ 4
+    C           TOTNBT    ANDGT0
+    C           ZAUSIN    OREQ 7
+    C           TOTNBT    ANDGT0
+     C           PFNBT1    MULT PFNCO1    TOTCF1  60
+     C           PFNBT2    MULT PFNCO2    TOTCF2  60
+     C           TOTCF1    ADD  TOTCF2    TOTCF   60
+    C           FAQTFE    CABNETOTCF     VISU       4848
+    C**
+    C****** TOURY : QTE PAL.MODIFIABLE 2 FOIS=>GAMIN PALETTE OU CAISSE
+    C**
+D3  C           ZAUSIN    IFEQ 3
+    C           TOTNBT    ANDGT0
+D4  C           PF0102    IFEQ '2'
+    C           FAQTFE    CABNERFQTHE    VISU       5050
+F4  C                     ENDIF
+F3  C                     ENDIF
+    C**
+    C*****  CONTROLE CONDIT.SI QTE IMPERATIVE PAR CAISSE
+    C*****  SAUF TOURY/NEUVILLE
+    C**
+D3  C           RGRA1     IFEQ 'O'
+    C           RVER1     ANDEQ'O'
+    C           ZAUSIN    ANDNE3
+    C           ZAUSIN    ANDNE4
+    C           PFNBT1    CABNESVNBT1    VISU       4949
+F3  C                     ENDIF
+    C**
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C**
+    C*****  CONTROLE DU CODE AUTO-CONTRÔLE : OK,AA,BP OU CG
+    C**
+D1  C           FAACST    IFNE 'OK'
+    C           FAACST    ANDNE'AA'
+    C           FAACST    ANDNE'BP'
+    C           FAACST    ANDNE'CG'
+     C                     MOVE *ON       *IN46
+    C                     GOTO VISU
+F1  C                     ENDIF
+    C**
+D1  C           FAACST    IFEQ 'CG'
+D2  C           ZAUSIN    IFNE 2
+    C           ZAUSIN    ANDNE4
+     C                     MOVE *ON       *IN46
+    C                     GOTO VISU
+F2  C                     ENDIF
+    C           FATENC    CABNE9         VISU       4646
+    C           LUXE      CABNE'C'       VISU       4646
+F1  C                     ENDIF
+    C**
+    C*****  ROCHE/NEUVI : CONTROLE GAMME => UNIQUEMENT POUR PROD.FINI
+    C**
+D1  C           ZAUSIN    IFEQ 2
+    C           FATENC    ANDEQ9
+    C           LUXE      ANDEQ'C'
+    C           ZAUSIN    OREQ 4
+    C           FATENC    ANDEQ9
+    C           LUXE      ANDEQ'C'
+    C**
+D2  C           FAACST    IFNE 'CG'
+    C           FAACST    ANDNE'BP'
+     C                     MOVE *ON       *IN46
+    C                     GOTO VISU
+F2  C                     ENDIF
+    C**
+F1  C                     ENDIF
+    C**
+    C*****  PF NEUVI : PALETTE ISSUE DU ROBOT => PAS D'ECRAN DE CONFIRMATION
+    C**
+D1  C           ZAUSIN    IFEQ 4
+    C           FATENC    ANDEQ9
+    C           ZROBCB    ANDGT0
+    C                     GOTO SUIECH
+F1  C                     ENDIF
+    C**
+    C*****  PF FEGER : PALETTE PF => PAS D'ECRAN DE CONFIR            MATION
+    C**
+D1  C           ZAUSIN    IFEQ 7
+    C           FATENC    ANDEQ9
+    C                     GOTO SUIECH
+F1  C                     ENDIF
+    C**
+    C*****  AFFICHAGE ECRAN DE CONFIRMATION
+    C**
+     C           VISU2     TAG
+     C                     SUB  FAQTGA    FAQTFE
+     C                     EXFMTF03
+    C**
+D1  C           *IN12     IFEQ *ON
+     C                     ADD  FAQTGA    FAQTFE
+     C                     MOVE *BLANKS   OK
+    C                     GOTO VISU
+F1  C                     ENDIF
+    C*
+    C**************************************************************************
+    C* - TMAELE 03/01/2013 DEMANDE 915319 - TRACEABILITE DES PALETTES -
+    C*   POUR TOURY
+    C*   POUR ONDULATION, DECOUPAGE ET POST PRINT
+    C*   POUR CODE AUTOCONTROLE 'BP', ECRITURE DE 3 LIGNES DE TEXTE DANS PALQUA
+    C*   CES TEXTES SERONT AJOUTES SUR LE SPLF ETIQUETTE PALETTE
+     *   TMAELE 19/03/2013 915319 : ON FAIT PAREIL POUR LES PALETTES EN 'AA'
+     *
+D1  C           ZAUSIN    IFEQ 3
+D2  C           ZAATEL    IFEQ '21'
+    C           ZAATEL    OREQ '51'
+    C           ZAATEL    OREQ '41'
+     * TMAELE 22032013 ELARGI AUX ATELIERS 12 70 ET 82 - D. BOUNY - 915319B
+    C           ZAATEL    OREQ '12'                                TMAELE
+    C           ZAATEL    OREQ '70'                                TMAELE
+    C           ZAATEL    OREQ '82'                                TMAELE
+     * TMAELE 22032013 ELARGI AUX ATELIERS 12 70 ET 82 - D. BOUNY - 915319B
+     *
+D3  C           FAACST    IFEQ 'BP'
+    C           FAACST    OREQ 'AA'                                TMAELE
+     C                     MOVE PARM1     P533A  68
+     C                     MOVELNUMERO    P533B   8
+     C                     MOVE P533D     P533C  95
+     C                     CALL 'FAB533£'
+     C                     PARM           P533A
+     C                     PARM           P533B
+     C                     PARM           P533C
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     **************************************************************************
+     * DÉBUT PHILIPPE 11/06/2015 INC00116999
+     * - SI L'USINE EN COURS N'EST PAS TOURY MAIS QUE LES PALETTES SONT EN "BP"
+D1  C           ZAUSIN    IFEQ 2
+    C           ZAUSIN    OREQ 4
+    C           ZAUSIN    OREQ 7
+D2  C           FAACST    IFEQ 'BP'
+     C                     MOVE PARM1     P533A  68
+     C                     MOVELNUMERO    P533B   8
+     C                     MOVE P533D     P533C  95
+     C                     CALL 'FAB533£'
+     C                     PARM           P533A
+     C                     PARM           P533B
+     C                     PARM           P533C
+F2  C                     END
+F1  C                     END
+     * FIN   PHILIPPE 11/06/2015 INC00116999
+    C**************************************************************************
+    C**
+    C*****  AFFICHAGE ECRAN AVERTISSEMENT : QTE A PRODUIRE ATTEINTE
+    C*****  SAUF POUR TOURY => ECHANGEUR PALETTE : 5100
+    C**
+     C                     ADD  FAQTFE    TOTBON
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           ZAATEL    ANDEQ'51'
+    C           ZNOMAC    ANDEQ'00'
+    C                     GOTO SUIECH
+F1  C                     ENDIF
+    C**
+D1  C           TOTBON    IFGE TOT
+     C                     EXFMTF04
+F1  C                     ENDIF
+    C**
+     C           SUIECH    TAG
+    C**
+    C*****  RECUPERATION SUPOR DANS PREACOP : SINON LECTURE FAB15P
+    C**
+     C           KPREOP    CHAINPREACOPF             99
+D1  C           *IN99     IFEQ *ON
+    C******  MAJ FAUNIT SI NON TROUVE DANS PREACOP POUR TOURY
+    C******  ==>  TRES IMPORTANT POUR L'ENTREE EN STOCK PRODUITS FINIS
+D2  C           ZAUSIN    IFEQ 3
+    C           ZAATEL    ANDGE'70'
+    C           PPUNIT    ANDEQ'  '
+     C                     MOVE 'PF'      FAUNIT
+F2  C                     ENDIF
+     **
+     C           KFAB15    CHAINXFAB15               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVE 'E'       SUPOR
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  IMPRIME : APPEL PROG CONTROLE+MAJ DES DONNEES STOCK47£
+    C**
+D1  C           ZATENC    IFEQ 2
+     **
+     C                     Z-ADDZAUSIN    USINE
+     C                     Z-ADDZACONF    NCONF
+     C                     Z-ADDZASEQ     SEQFAB
+     C                     Z-ADDZSTE      NSTE
+     C                     Z-ADDZNOCLI    NOCLI
+     C                     Z-ADDZNOPRO    NOPRO
+     C                     MOVE ZAATEL    NATEL
+     C                     MOVE ZNOMAC    NNOMAC
+     **
+     ******  RECHERCHE SI L'IMPRESSION EST PARTIELLE
+     ******  SI LE NUMERO OP (FAOPNU) NE SE TERMINE PAS PAR 2
+     **
+     C                     MOVE *BLANK    XIMPAR
+     C                     MOVE ZAOPNU    ZAOPN2  10
+     **
+     C                     Z-ADDZAUSIN    WAUSIN
+     C                     Z-ADDZACONF    WACONF
+     C                     Z-ADDZASEQ     WASEQ
+     C                     Z-ADDZAISEQ    WAISEQ
+     C                     Z-ADDZNOPRO    WNOPRO
+     C                     Z-ADDZAOPNU    WAOPNU
+     C                     MOVE 'N'       TAGOK
+     C                     CALL 'FAB559£'              85
+     C           PAS2      PARM PAS2      PAS2
+     **
+D2  C           TAGOK     IFEQ 'O'
+     C                     MOVE 'X'       XIMPAR
+F2  C                     ENDIF
+     **
+     C                     Z-ADD2         TYPSTK
+    C*****  RAZ ZONES A NE PAS TRANSMETTRE (CALCULÉS DANS STOCK47£
+     C                     Z-ADD0         LAIZE
+     C                     Z-ADD0         FORH
+     C                     Z-ADD0         FORL
+     C                     Z-ADD0         MLBON
+    C*****
+     C                     Z-ADDFACBPA    NOBOB
+     **
+D2  C           FAATEL    IFEQ '12'
+     C                     Z-ADDFAQTFE    MLTOT
+     C                     Z-ADD0         NBF
+     C                     EXSR RECLAI
+     C                     Z-ADDLAIZE1    LAIZE
+X2  C                     ELSE
+     C                     Z-ADDFAQTFE    NBF
+     C                     Z-ADD0         MLTOT
+F2  C                     ENDIF
+    C**
+    C*****    POUR CHABANAIS SI MACHINE = 5402
+    C*****    FANJFA=1 ==>  CHANGEMENT DE LA MACHINE EN 4102
+    C*****    FANJFA>1 ==>  CHANGEMENT DE LA MACHINE EN 5102
+    C*****    FANJFA :  ZONE PROVENANT DU FAB05P
+    C*****    SI MACHINE = 5488 ==> CHANGEMENT DE LA MACHINE EN 4101
+    C*****    LES AUTRES "54" SONT DES "51"
+    C**
+D2  C           ZAUSIN    IFEQ 5
+    C           ZAATEL    ANDEQ'54'
+    C*
+D3  C                     SELEC
+    C* MACHINE = 5402
+     C           ZNOMAC    WHEQ '02'
+    C*
+     C           KFAB05    CHAINXFAB5B               99
+    C           *IN99     CABEQ*ON       SAUTR2
+    C*
+D4  C           FANJFA    IFEQ 1
+     C                     MOVE '41'      NATEL
+     C                     MOVE '02'      NNOMAC
+X4  C                     ELSE
+     C                     MOVE '51'      NATEL
+     C                     MOVE '02'      NNOMAC
+F4  C                     ENDIF
+    C* MACHINE = 5488
+     C           ZNOMAC    WHEQ '88'
+    C*
+     C                     MOVE '41'      NATEL
+     C                     MOVE '01'      NNOMAC
+    C* AUTRES MACHINES
+     C                     OTHER
+    C*
+     C                     MOVE '51'      NATEL
+    C*
+F3  C                     ENDSL
+    C*
+F2  C                     ENDIF
+    C*
+     C           SAUTR2    TAG
+     **
+     C                     MOVE SUPOR     SECSUP
+     C                     MOVE *BLANK    CODRR
+     C                     CALL 'STOCK47£'
+     C           ENR1      PARM ENR1      ENR1
+     **
+     ******  SI ERREUR DETECTEE ==> OK RENSEIGNE
+     **
+D2  C           OK        IFNE *BLANK
+     C                     MOVE *ON       *IN40
+     C                     MOVE 'SVF2'    PXARGU
+     C                     MOVE OK        PXVALE
+     C                     MOVE *BLANKS   PXLIBE
+     C           KEYUSI    CHAINPARAMEF1             99
+    C                     GOTO VISU2
+F2  C                     ENDIF
+     **
+F1  C                     ENDIF
+    C**
+    C******  MAJ DE L'ENTREE EN STOCK DS FAB10P
+    C**
+     C                     Z-ADD0         FFUSIN
+     C                     Z-ADD0         FFCONF
+     C                     Z-ADD0         FFSEQ
+     C                     Z-ADD0         FFSTE
+     C                     Z-ADD0         FFCLI
+     C                     Z-ADD0         FFPRO
+     C                     MOVE *BLANK    FFATEL
+     C                     MOVE *BLANK    FFMAC
+     C                     MOVE *BLANK    FA1001
+     C                     Z-ADD0         FFOPNU
+     C                     Z-ADD0         FFISEQ
+     C                     Z-ADD0         DTEQ2
+     C                     Z-ADD0         DATSOR
+     C                     Z-ADD0         FAHSOR
+    C**
+    C******            GESTION DES À-CÔTES
+    C******  CALCUL DU NOMBRE DE FORMATS DE FEUILLES
+    C******  POSLAI = NBRE DE FICHES PALETTES À EDITER
+    C******           POUR L'ONDULEUSE
+    C**
+     C                     Z-ADD0         POSLAI
+     C                     Z-ADDFAQTFE    QTEPIL
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDEQ'21'
+     C           LMINI     MULT 10        LMINIM  50
+     C           FACON     COMP 5                    99  99
+     C   99      FACON     COMP 8                      9999
+     C   99      LMINIM    DIV  ONDL      POSLAI  20
+     C  N99      LMINIM    DIV  DECL      POSLAI
+D2  C           ACOTE     IFNE 0
+    C           DROITE    ANDEQ'O'
+     C                     ADD  1         POSLAI
+     C           FAQTFE    DIV  POSLAI    QTEPIL
+F2  C                     END
+F1  C                     END
+    C**
+     C                     MOVE ' '       FA1001
+    C**
+    C******           GESTION DES A-COTÉS
+    C******  SI  L'OPERATEUR A REPONDU 'N  POUR LE COTÉ GAUCHE
+    C******        CAS QUI NE DEVRAIT PAS ARRIVER NORMALEMENT
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           GAUCHE    ANDEQ'N'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           GAUCHE    ANDEQ'N'
+     C                     Z-ADD1         POSLAI
+     C                     Z-ADDFAQTFE    QTEPIL
+    C                     GOTO SOTRR2
+F1  C                     ENDIF
+    C**
+    C******                CAS NORMAL
+    C******   OU       GESTION DES A-COTÉS
+    C******  SI  L'OPERATEUR A REPONDU 'O  POUR LE COTÉ GAUCHE
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+     C                     MOVE 'G'       FA1001
+     C                     Z-ADDQTEPIL    FAQTFE
+F1  C                     ENDIF
+    C**
+D1  C           FLASH     IFEQ 'N'
+     C                     Z-ADDFAUSIN    FALSTK
+     C                     MOVE *BLANK    FAHALL
+     C                     Z-ADD0         FAALLE
+     C                     MOVE *BLANK    FATYRE
+     C                     MOVE *BLANK    FAPQRE
+     C                     WRITEXFAB10
+X1  C                     ELSE
+     C                     UPDATXFAB10
+F1  C                     ENDIF
+    C**
+    C******  MAJ DU COMPTEUR MACHINE SUR LE TRAVAIL DS FAB16P
+    C******  + QTE TOTALE FABRIQUEE (PPQFEU) SI PF ROCHECHOUART
+    C**
+     C                     ADD  FAQTFE    PPCTR2
+     C                     ADD  FAQTGA    PPCTR2
+     C                     MOVE *OFF      *IN95
+    C**
+    C******  PF RT/FE : FLASHAGE D'UNE PALETTE APRES QUE LA FAB A ETE
+    C******  MISE EN 'TR' PAR L'OPERATEUR MACHINE => MAJ QTE TOT FAB
+    C**
+D1  C           USINE     IFEQ 2
+    C           FATENC    ANDEQ9
+    C           FA1601    ANDEQ'T'
+    C           USINE     OREQ 7
+    C           FATENC    ANDEQ9
+    C           FA1601    ANDEQ'T'
+     C                     ADD  FAQTFE    PPQFEU
+     C                     MOVE *ON       *IN95
+F1  C                     ENDIF
+    C**
+    C******  PF NEUVI : FLASHAGE D'UNE PALETTE APRES QUE LA FAB A ETE
+    C******  MISE EN 'TR' PAR L'OPERATEUR MACHINE => MAJ QTE TOT FAB
+    C******  UNIQUEMENT SI LA PALETTE PROVIENT DU ROBOT
+    C**
+D1  C           USINE     IFEQ 4
+    C           ZROBCB    ANDGT0
+    C           FATENC    ANDEQ9
+    C           FA1601    ANDEQ'T'
+     C                     ADD  FAQTFE    PPQFEU
+     C                     MOVE *ON       *IN95
+F1  C                     ENDIF
+    C**
+D1  C           *IN97     IFEQ *OFF
+     C                     EXCPTMAJ16
+F1  C                     ENDIF
+    C**
+    C******  MAJ DU DERNIER CODE BARRE EDITE DS FAB20P
+    C**
+D1  C           FLASH     IFNE 'N'
+     C                     UNLCKFAB20L01
+F1  C                     ENDIF
+    C**
+    C******  SI PRODUIT FINI => MAJ FICHIER PRF05P (PALETTE PF EDITEE)
+    C**
+D1  C           FATENC    IFEQ 9
+    C           FLASH     ANDEQ'N'
+     C                     Z-ADDZAUSIN    USINE
+     C                     Z-ADDZAUSIN    USIEXP
+     C                     Z-ADDZSTE      STE
+     C                     Z-ADDZACONF    PFCONF
+     C                     Z-ADDZASEQ     PFSEQ
+    C**********           Z-ADD0         PFORDA
+     C                     Z-ADDFAOPAL    PFNPAL
+    C**
+    C******  SI PRODUIT A PLUSIEURS ARTICLES => REPRISE N°ARTICLE
+    C**
+D2  C           USINE     IFEQ 7
+     C           KFAB05    CHAINXFAB5B               99
+D3  C           *IN99     IFEQ *OFF
+     C                     Z-ADDFAORDA    PFORDA
+F3  C                     ENDIF
+F2  C                     ENDIF
+    C*
+D2  C           POSF1     IFEQ 0
+     C                     Z-ADD1         POSF1
+F2  C                     ENDIF
+    C*
+D2  C           FAUNIT    IFEQ 'PF'
+    C           FAUNIT    OREQ 'DE'
+    C           FAUNIT    OREQ 'ML'
+    C           FAUNIT    OREQ 'KG'
+     C                     Z-ADDFAQTFE    PFQTHE
+X2  C                     ELSE
+     C           FAQTFE    MULT POSF1     PFQTHE
+F2  C                     ENDIF
+    C*
+     C                     TIME           DTHR
+     C                     Z-ADDSSYEAR    PFAEDI
+     C                     Z-ADDMONTH     PFMEDI
+     C                     Z-ADDDAY       PFJEDI
+     C                     Z-ADDHOUR      PFHEDI
+     C                     Z-ADDZAUSIN    PFLSTK
+     C                     Z-ADDFACBPA    PFCBPA
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*       CREATION DS PRF05P => SI LA QTE PALETTE > 99999 IL Y A  *
+    C*       DEPASSEMENT DE LA ZONE PFNBT1 D'OU ON MULTIPLIE PAR 10  *
+    C*       LE NBRE DE COLIS (PFNCO1) TOUT EN DIVISANT PAR 10 LE    *
+    C*       NBRE DE BOITE/COLIS (PFNBT1).                           *
+    C*       CES ZONES SERONT MISES A JOUR EN FONCTION DU PRODUIT    *
+    C*       JUSTE APRES DS LE PROGRAMME APPELE FABRP621             *
+    C*                                                               *
+    C*---------------------------------------------------------------*
+D2  C           FAUNIT    IFNE 'PF'
+    C           FAUNIT    ANDNE'DE'
+    C           FAUNIT    ANDNE'ML'
+    C           FAUNIT    ANDNE'KG'
+     C           FAQTFE    MULT POSF1     FAQTF2
+D3  C           FAQTF2    IFGT 99999
+     C                     Z-ADD10        PFNCO1
+     C                     DIV  10        FAQTF2
+     C                     Z-ADDFAQTF2    PFNBT1
+X3  C                     ELSE
+     C                     Z-ADD1         PFNCO1
+     C                     Z-ADDFAQTF2    PFNBT1
+F3  C                     ENDIF
+X2  C                     ELSE
+     C                     Z-ADDFAQTFE    FAQTF2
+D3  C           PFNCO1    IFEQ 0
+    C           PFNBT1    ANDEQ0
+     C                     Z-ADD1         PFNCO1
+     C                     Z-ADDFAQTFE    PFNBT1
+F3  C                     ENDIF
+D3  C           PFNCO1    IFEQ 1
+    C           PFNCO2    ANDEQ0
+     C                     Z-ADDFAQTFE    PFNBT1
+F3  C                     ENDIF
+F2  C                     ENDIF
+    C**
+D2  C           ZAUSIN    IFEQ 3
+    C           ZAUSIN    OREQ 4
+    C           ZAUSIN    OREQ 5
+    C           ZAUSIN    OREQ 2
+     C                     MOVE 'E'       PF0501
+X2  C                     ELSE
+     C                     MOVE *BLANK    PF0501
+F2  C                     ENDIF
+    C**
+    C******  NEUVILLE : SI NON FOURREAU OU ISSUE ROBOT => PF0501=' '
+    C**
+D2  C           ZAUSIN    IFEQ 4
+    C           TS1       ANDNE'F'
+    C           PFCBPA    ANDLT500000
+    C           TS1       ANDNE'M'
+     C                     MOVE *BLANK    PF0501
+F2  C                     ENDIF
+    C**
+    C******  FEGERSHEIM => PF0501=' '
+    C**
+D2  C           ZAUSIN    IFEQ 7
+     C                     MOVE *BLANK    PF0501
+F2  C                     ENDIF
+    C**
+     C                     MOVE *BLANK    PF0502
+     C                     MOVE *BLANK    PF0503
+     C                     WRITEXPRF05
+    C**
+D2  C           ZAUSIN    IFEQ 3
+    C           ZAUSIN    OREQ 4
+    C           ZAUSIN    OREQ 5
+    C           ZAUSIN    OREQ 2
+    C           ZAUSIN    OREQ 7
+     C                     EXSR CONFI2
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  APPEL PROGRAMME EDITION FICHE PALETTE ENCOUR
+    C**
+D1  C           FLASH     IFEQ 'N'
+     C                     EXSR AMALGA
+D2  C           OKAMA     IFEQ 'N'
+     C                     MOVELNUMERO    PASCOD 10
+     C                     MOVE NOBOU     PASCOD
+    C**
+    C******  APPEL PROGRAMME CHOIX IMPRIMANTE LASER
+    C**
+D3  C           FANPRT    IFEQ *BLANKS
+     C                     MOVE ZAUSIN    PASUS   1
+     C                     CALL 'FAB575£'
+     C           PASUS     PARM PASUS     PASUS
+     C           FANPRT    PARM FANPRT    FANPRT
+F3  C                     ENDIF
+     C                     MOVE FANPRT    PASPRT 10
+     C                     MOVE XIMPAR    PASPAS  1
+     C                     MOVE 'N'       PASREE  1
+     **
+     ******  USINE 7 : SI PF DEPUIS 8102 => IMPRIMER SUR QFEGERPF
+     **
+D3  C           ZAUSIN    IFEQ 7
+    C           ZATENC    ANDEQ9
+    C           ZRESS     ANDEQ'8102'
+     C                     MOVE *BLANK    PASPRT
+     C                     MOVEL'QFEGERPF'PASPRT
+F3  C                     ENDIF
+     **
+     ******  USINE 4 : PALETTE PF ISSUE DU ROBOT => PAS D'IMPRESSION
+     **
+D3  C           ZAUSIN    IFEQ 4
+    C           ZATENC    ANDEQ9
+    C           FACBPA    ANDGE500000
+    C           ZAUSIN    OREQ 4
+    C           ZATENC    ANDEQ9
+    C           TS1       ANDEQ'M'
+    C                     GOTO NONIMP
+F3  C                     ENDIF
+     **
+     *   SI TOURY, ENCOUR 9, RESSOURCE 2114, CLIENT 8928, TYPE PRODUIT N
+     *   => TRANSFO AUTO DE PF EN NEUTRE
+D3  C           ZAUSIN    IFEQ 3
+    C           ZATENC    ANDEQ9
+    C           ZRESS     ANDEQ'2114'
+    C           ZNOCLI    ANDEQ8928
+    C           TS1       ANDEQ'N'
+     **
+     *   SI ROCHECHOUART, N'IMPORTE QUELLE RESSOURCE,
+     *   ENCOUR 9, RESSOURCE 2114, CLIENT 8928, TYPE PRODUIT N
+     *   => TRANSFO AUTO DE PF EN NEUTRE
+D3  C           ZAUSIN    OREQ 2
+    C           ZATENC    ANDEQ9
+    C           ZNOCLI    ANDEQ8928
+    C           TS1       ANDEQ'N'
+     * N° PALETTE NEUTRE SUIVANT
+     C                     Z-ADDZAUSIN    PDN9US
+     C                     Z-ADD*ZEROS    PDN9NE
+     C                     CALL 'PDN009£'
+     C                     PARM           PPDN9
+     * TRANSFO AUTO DE PF EN NEUTRE
+     C                     Z-ADDZAUSIN    PDN1US
+     C                     Z-ADDPDN9NE    PDN1NE
+     C                     MOVE NUMERO    PDN1PF
+     C                     CALL 'PDN010£'
+     C                     PARM           PPDN10
+     * AJOUT DU PRODUIT DANS FAB25P POUR NOUVEAU MASQUE
+     C                     Z-ADDZAUSIN    XXUSI
+     C                     Z-ADDZSTE      XXSTE
+     C                     Z-ADDZNOCLI    XXCLI
+     C                     Z-ADDZNOPRO    XXPRO
+     C           KFAB25    SETLLFAB25L01                 99
+D4  C           *IN99     IFEQ '0'
+     C                     MOVEL'ETIQSTD' FAFDP
+     C                     MOVEL'ETIQSTD£'FAPROG
+     C                     MOVEL'ETAT98'  FAPRTF
+     C                     Z-ADD2         FANFIC
+     C                     Z-ADD10032     FAPCB1
+     C                     Z-ADD00000     FAPCB2
+     C                     Z-ADD00000     FAPCB3
+     C                     WRITEXFAB25
+F4  C                     END
+F3  C                     ENDIF
+     *
+     *
+     C                     CALL 'FAB527L'
+     C           PASCOD    PARM PASCOD    PASCOD
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           PASREE    PARM PASREE    PASREE
+     C           PASPAS    PARM PASPAS    PASPAS
+     **
+     C           NONIMP    TAG
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C*
+D2  C           ZAATEL    IFEQ '21'
+     C                     SUB  1         POSLAI
+X2  C                     ELSE
+     C                     Z-ADD1         POSLAI
+F2  C                     ENDIF
+    C*
+F1  C                     ENDIF
+    C**
+     C           SOTRR     TAG
+    C**
+    C******     ON CONTINUE À METTRE À JOUR LES FICHIERS
+    C******      TANT QUE POSLAI N'EST PAS EGAL À ZERO
+    C******      SAUF CAS NORMAL ==> SOTRR3
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C                     GOTO SOTRR2
+X1  C                     ELSE
+    C                     GOTO SOTRR3
+F1  C                     ENDIF
+    C**
+     C           SOTRR2    TAG
+    C**
+D1  C                     SELEC
+     C           POSLAI    WHEQ 0
+    C                     GOTO SOTRR3
+     C           POSLAI    WHEQ 1
+    C           DROITE    CABEQ'N'       SOTRR3
+     C                     MOVE 'P'       FA1001
+     C                     Z-ADDPOSF2     POSFX
+     C                     OTHER
+     C                     MOVE 'G'       FA1001
+     C                     Z-ADDPOSF1     POSFX
+F1  C                     ENDSL
+     **
+     ******  LECTURE PROCHAIN CODE BARRE DS FAB20P
+     **
+     C           RELEC     TAG
+     ******  SAUF SI L'OPERATEUR A REPONDU 'N' POUR GAUCHE
+     ******          DÉJÀ LU PLUS HAUT
+    C           GAUCHE    CABEQ'N'       SOTREL
+     **
+     C           KFAB20    CHAINXFAB20               9944
+     **
+     ****** ENREGISTREMENT VERROUILLE PAR UN AUTRE JOB
+     **
+D1  C           *IN44     IFEQ *ON
+    C                     GOTO RELEC
+X1  C                     ELSE
+     **
+     ****** CONTROLE SI LE PROCHAIN N° EXISTE DEJA DS FAB10P
+     **
+     C           FACB      ADD  1         FACBPA
+     **
+     ****** SI LA SERIE DE N° RECOMMENCE AU DEBUT ==> NUM = 1
+     **
+D2  C           FACBPA    IFEQ 0
+     C                     Z-ADD1         FACBPA
+F2  C                     ENDIF
+     **
+     ****** MISE A JOUR DU DERNIER N° DS FAB20P
+     **
+     C                     TIME           HEUR14 140
+     C                     Z-ADDDT14      YATEDI
+     C                     Z-ADDHR14      YAHEDI
+     C                     Z-ADDFACBPA    FACB
+     C                     UPDATXFAB20
+     **
+     C           SOTREL    TAG
+     **
+     C           KFAB10    CHAINXFAB10               99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE *ON       *IN44
+     C                     MOVE T3,1      ERREUR
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     Z-ADDFAUSIN    FALSTK
+     C                     MOVE *BLANK    FAHALL
+     C                     Z-ADD0         FAALLE
+     C                     MOVE *BLANK    FATYRE
+     C                     MOVE *BLANK    FAPQRE
+     C                     WRITEXFAB10
+    C**
+    C******  MAJ DU COMPTEUR MACHINE SUR LE TRAVAIL DS FAB16P
+    C******  SEULEMENT SI LE COTE GAUCHE N'EST PAS UTILISE
+    C**
+D1  C           GAUCHE    IFEQ 'N'
+     C                     ADD  FAQTFE    PPCTR2
+     C                     ADD  FAQTGA    PPCTR2
+    C**
+D2  C           *IN97     IFEQ *OFF
+     C                     EXCPTMAJ16
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  SI PRODUIT FINI => MAJ FICHIER PRF05P (PALETTE PF EDITEE)
+    C**
+D1  C           FATENC    IFEQ 9
+     C                     Z-ADDZAUSIN    USINE
+     C                     Z-ADDZAUSIN    USIEXP
+     C                     Z-ADDZSTE      STE
+     C                     Z-ADDZACONF    PFCONF
+     C                     Z-ADDZASEQ     PFSEQ
+    C*******              Z-ADD0         PFORDA
+     C                     Z-ADDFAOPAL    PFNPAL
+    C*
+D2  C           FAUNIT    IFEQ 'PF'
+    C           FAUNIT    OREQ 'DE'
+    C           FAUNIT    OREQ 'ML'
+    C           FAUNIT    OREQ 'KG'
+     C                     Z-ADDFAQTFE    PFQTHE
+X2  C                     ELSE
+     C           FAQTFE    MULT POSFX     PFQTHE
+F2  C                     ENDIF
+     C                     Z-ADD*YEAR     PFAEDI
+     C                     Z-ADD*MONTH    PFMEDI
+     C                     Z-ADD*DAY      PFJEDI
+     C                     TIME           PFHEDI
+     C                     Z-ADDZAUSIN    PFLSTK
+     C                     Z-ADDFACBPA    PFCBPA
+     C                     Z-ADD1         PFNCO1
+D2  C           FAUNIT    IFEQ 'PF'
+    C           FAUNIT    OREQ 'DE'
+    C           FAUNIT    OREQ 'ML'
+    C           FAUNIT    OREQ 'KG'
+     C                     Z-ADDFAQTFE    PFNBT1
+X2  C                     ELSE
+     C           FAQTFE    MULT POSFX     PFNBT1
+F2  C                     ENDIF
+     C                     Z-ADD0         PFNCO2
+     C                     Z-ADD0         PFNBT2
+     C                     MOVE *BLANK    PF0501
+     C                     MOVE *BLANK    PF0502
+     C                     MOVE *BLANK    PF0503
+     C                     WRITEXPRF05
+    C**
+    C******  MAJ PALETTE 'P' SI A-COTE DS PRF02P
+    C**
+D2  C           ZAUSIN    IFEQ 3
+     C                     Z-ADD0         TOTNBT
+     C                     Z-ADDPFQTHE    FAQTF2
+     C                     EXSR CONFI2
+F2  C                     ENDIF
+    C**
+F1  C                     ENDIF
+    C**
+    C******  APPEL PROGRAMME EDITION FICHE PALETTE ENCOUR
+    C**
+     C                     EXSR AMALGA
+D1  C           OKAMA     IFEQ 'N'
+     C                     MOVELNUMERO    PASCOD 10
+     C                     MOVE NOBOU     PASCOD
+D2  C           FANPRT    IFEQ *BLANKS
+     C                     MOVE ZAUSIN    PASUS   1
+     C                     CALL 'FAB575£'
+     C           PASUS     PARM PASUS     PASUS
+     C           FANPRT    PARM FANPRT    FANPRT
+F2  C                     ENDIF
+     C                     MOVE FANPRT    PASPRT 10
+     C                     MOVE XIMPAR    PASPAS  1
+     C                     MOVE 'N'       PASREE  1
+     **
+     ******  USINE 7 : SI PF DEPUIS 8102 => IMPRIMER SUR QFEGERPF
+     **
+D2  C           ZAUSIN    IFEQ 7
+    C           ZATENC    ANDEQ9
+    C           ZRESS     ANDEQ'8102'
+     C                     MOVE *BLANK    PASPRT
+     C                     MOVEL'QFEGERPF'PASPRT
+     C                     MOVE '  '      PASPRT
+F2  C                     ENDIF
+     **
+     ******  USINE 4 : PALETTE PF ISSUE DU ROBOT => PAS D'IMPRESSION
+     **
+D2  C           ZAUSIN    IFEQ 4
+    C           ZATENC    ANDEQ9
+    C           FACBPA    ANDGE500000
+    C           ZAUSIN    OREQ 4
+    C           ZATENC    ANDEQ9
+    C           TS1       ANDEQ'M'
+    C                     GOTO NONIM1
+F2  C                     ENDIF
+     **
+     C                     CALL 'FAB527L'
+     C           PASCOD    PARM PASCOD    PASCOD
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           PASREE    PARM PASREE    PASREE
+     C           PASPAS    PARM PASPAS    PASPAS
+     **
+     C           NONIM1    TAG
+F1  C                     ENDIF
+    C**
+     C                     SUB  1         POSLAI
+    C                     GOTO SOTRR2
+    C**
+     C           SOTRR3    TAG
+    C**
+    C******  MAJ DE HISTOFA2 => TRANSFERT DS ENR2 AU PROGRAMME REMI
+    C**
+     C                     CLEARENREG2
+D1  C           SECPAP    IFNE 'I'
+     C                     MOVE SECPAP    EBSUP
+X1  C                     ELSE
+     C                     MOVE SUPOR     EBSUP
+F1  C                     ENDIF
+    C**
+     C                     Z-ADDZAUSIN    EBUSIN
+     C                     Z-ADDZACONF    EBCONF
+     C                     Z-ADDZASEQ     EBSEQ
+     C                     MOVE ZSECT     EBSEC
+     C                     MOVE ZSSECT    EBSSEC
+     C                     MOVE ZNOMAC    EBMAC
+    C**
+    C*****    POUR CHABANAIS SI MACHINE = 5402
+    C*****    FANJFA=1 ==>  CHANGEMENT DE LA MACHINE EN 4102
+    C*****    FANJFA>1 ==>  CHANGEMENT DE LA MACHINE EN 5102
+    C*****    FANJFA :  ZONE PROVENANT DU FAB05P
+    C*****      POUR LES AUTRES "54" SONT DES "51"
+    C**
+D1  C           ZAUSIN    IFEQ 5
+    C           ZAATEL    ANDEQ'54'
+    C*
+D2  C           ZNOMAC    IFEQ '02'
+    C*
+     C           KFAB05    CHAINXFAB5B               99
+    C           *IN99     CABEQ*ON       SAUTR1
+    C*
+D3  C           FANJFA    IFEQ 1
+     C                     MOVE '4'       EBSEC
+     C                     MOVE '1'       EBSSEC
+     C                     MOVE '02'      EBMAC
+X3  C                     ELSE
+     C                     MOVE '5'       EBSEC
+     C                     MOVE '1'       EBSSEC
+     C                     MOVE '02'      EBMAC
+F3  C                     ENDIF
+    C*
+X2  C                     ELSE
+    C*
+     C                     MOVE '5'       EBSEC
+     C                     MOVE '1'       EBSSEC
+F2  C                     ENDIF
+    C*
+F1  C                     ENDIF
+    C*
+     C           SAUTR1    TAG
+    C**
+    C*****    SI MACHINE = 6799
+    C*****    RECHERCHE DANS PREACOP DE LA MACHINE
+    C**       A REMONTER DANS PROD79£
+    C**
+D1  C           ZAATEL    IFEQ '67'
+    C           ZNOMAC    ANDEQ'99'
+     C           KPREOP    CHAINPREACOPF             99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE XSECT     EBSEC
+     C                     MOVE XSSECT    EBSSEC
+     C                     MOVE XMAC      EBMAC
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*
+     C                     Z-ADDZSTE      EBSTE
+     C                     Z-ADDZNOCLI    EBCLI
+     C                     Z-ADDZNOPRO    EBPRO
+     C                     Z-ADDZPEQUI    EBEQU
+     C                     Z-ADDPPPAS     EBPAS
+     C                     Z-ADDZATEQ     EBDAT1
+     C                     Z-ADDDATENT    EBDAT2
+     C                     TIME           HEURE
+     C                     MOVELHEURE     EBHEUR
+D1  C           EBEQU     IFEQ 3
+    C           EBHEUR    ANDLT700
+     C                     ADD  2400      EBHEUR
+F1  C                     ENDIF
+     C                     Z-ADDZCMATR    EBCOND
+     C                     Z-ADD0,01      EBTCAL
+     C                     Z-ADD0         EBTROU
+     C                     Z-ADD0         EBTDIV
+     C                     Z-ADDPPEFFC    EBEFFC
+     C                     Z-ADDPPEFFR    EBEFFR
+     C                     MOVE 'ET'      EBETIQ
+     C                     Z-ADDFACBPA    EBCBPA
+     C                     Z-ADDFATENC    EBTENC
+     C                     Z-ADDPPNCCA    EBCOUL
+     C                     MOVE PPVERN    EBTVER
+     C                     MOVE *BLANK    EBCELI
+     C                     Z-ADD0         EBQELI
+     C                     Z-ADD0         EBNCAL
+    C**
+    C******  MAJ N° OP => SI OP RAJOUTEE DS SUIVI (TYPE 6) => ENVOYER
+    C******               SUR OP D'ORIGINE
+    C**
+     C                     Z-ADDZAOPNU    EBOPNU
+     **
+     C                     MOVE ZAOPNU    TYPOP   10
+D1  C           TYPOP     IFGE 6
+     C                     SUB  5         TYPOP
+     C                     MOVE TYPOP     EBOPNU
+F1  C                     ENDIF
+    C**
+     C                     MOVE 'EC'      EBOPST
+     C                     MOVE 'Z'       EBTAG
+    C**
+     C                     MOVE *BLANK    EBCAD
+     C                     Z-ADD0         EBTAD
+     C                     MOVE *BLANK    EBIAD
+     C                     Z-ADD0         EBEAD
+    C**
+     C                     EXSR CALFAB
+     C                     Z-ADDEBCBPA    FACBPA
+     C           TOTEQ     ADD  TOTEQ2    EBQTOT
+     C                     Z-ADDTOTEQ     EBQBON
+     C                     Z-ADD0         EBQRC
+     C           EBQTOT    SUB  EBQBON    EBQRR
+    C**
+    C*****   CONVERSION DES QTES BOITES EN FEUILLES SI DECORTICAGE
+    C*****    OU SI PRODUITS FINIS AVANT ECORTICAGE A TOURY
+    C**
+D1  C           POSF1     IFEQ 0
+D2  C           USINE     IFEQ 3
+    C           FAATEL    ANDEQ'21'
+    C**   CALCUL DE POSLAI
+     C                     Z-ADD0         POSLAI
+     C           LMINI     MULT 10        LMINIM  50
+     C           FACON     COMP 5                    99  99
+     C   99      FACON     COMP 8                      9999
+     C   99      LMINIM    DIV  ONDL      POSLAI  20
+     C  N99      LMINIM    DIV  DECL      POSLAI
+     C                     Z-ADDPOSLAI    POSF1
+X2  C                     ELSE
+     C                     Z-ADD1         POSF1
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+D1  C           FAATEL    IFEQ '70'
+    C           NOMAC     ANDNE'10'
+    C           NOMAC     ANDNE'03'
+    C           FAATEL    ORGT '12'
+    C           FAATEL    ANDLT'70'
+    C           USINE     ANDEQ3
+    C**
+D2  C           FAUNIT    IFEQ 'PF'
+    C           FAUNIT    OREQ 'DE'
+    C           FAUNIT    OREQ 'ML'
+    C           FAUNIT    OREQ 'KG'
+     C           EBQTOT    DIV  POSF1     EBQTOT    H
+     C           EBQBON    DIV  POSF1     EBQBON    H
+     C           EBQTOT    SUB  EBQBON    EBQRR
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C*****   GESTION DES A COTES : TOURY
+    C**
+     C                     Z-ADD0         EBPOS1
+     C                     Z-ADD0         EBPOS2
+     C                     Z-ADD0         EBQACO
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGE'21'
+    C           ZAATEL    ANDLT'70'
+D2  C           TOTEQG    IFGT 0
+     C                     Z-ADDPOSF1     EBPOS1
+F2  C                     ENDIF
+D2  C           TOTEQD    IFGT 0
+     C                     Z-ADDPOSF2     EBPOS2
+     C                     Z-ADDTOTEQD    EBQACO
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     MOVE FATRSP    EBTRSP
+    C**
+    C*****   SI OPERATION = MONTAGE CLICHERIE  (UTILISÉE À TOURY)
+    C*****    PAS DE MAJ DE HISTOFA2
+    C**
+    C           FAATEL    CABEQ'18'      SAUTRR
+    C**
+    C*****   SI LA ZONE OPLIB (DU PRECAOP) = FINITION
+    C*****        PAS DE MAJ DE HISTOFA2 ==> CONDITIONNEMENT
+    C**
+D1  C           ZAUSIN    IFEQ 4
+    C           OPLIB     CABEQLB,1      SAUTRR
+F1  C                     ENDIF
+    C**
+    C*****   SI OP FACONNAGE SE TERMINANT PAR 9 (OP TRANSFERT USINE)
+    C*****        PAS DE MAJ DE HISTOFA2
+    C**
+D1  C           ZAOPNU    IFGT 9000
+     C                     MOVE ZAOPNU    TYPOP2  10
+    C           TYPOP2    CABEQ9         SAUTRR
+F1  C                     ENDIF
+    C**
+    C*****   GESTION DES A COTES : TOURY
+    C*****   DOUBLE MAJ DE HISTOFA2 APRÉS ONDULEUSE
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGT'21'
+    C           ZAATEL    ANDLT'70'
+    C           ZAUSIN    OREQ 4
+    C           POSF2     ANDGT0
+    C           ZAATEL    ANDGT'21'
+    C           ZAATEL    ANDLT'70'
+D2  C           TOTEQG    IFGT 0
+     C                     Z-ADDTOTEQG    EBQTOT
+     C                     Z-ADDTOTEQG    EBQBON
+     C                     Z-ADDPOSF1     EBPOS1
+     C                     Z-ADD0         EBPOS2
+     C                     Z-ADD0         EBQACO
+    C*
+     C                     CALL 'PROD79£'
+     C           ENR2      PARM ENR2      ENR2
+    C*
+     C                     Z-ADDFAISEQ    EBISEQ
+     C                     MOVE 'C'       EBMODI
+     C                     WRITEXFAB21
+F2  C                     ENDIF
+    C**
+D2  C           TOTEQD    IFGT 0
+     C                     Z-ADDTOTEQD    EBQTOT
+     C                     Z-ADDTOTEQD    EBQBON
+     C                     Z-ADD0         EBPOS1
+     C                     Z-ADDPOSF2     EBPOS2
+     C                     Z-ADDTOTEQD    EBQACO
+    C*
+     C                     CALL 'PROD79£'
+     C           ENR2      PARM ENR2      ENR2
+    C*
+     C                     Z-ADDFAISEQ    EBISEQ
+     C                     MOVE 'C'       EBMODI
+     C                     WRITEXFAB21
+F2  C                     ENDIF
+    C******
+X1  C                     ELSE
+    C******  TOUS LES AUTRES CAS
+     C                     CALL 'PROD79£'
+     C           ENR2      PARM ENR2      ENR2
+    C**
+    C******  MAJ FAB21P => HISTORIQUE MVTS TRANSMIS A HISTOFA2
+    C**
+     C                     Z-ADDFAISEQ    EBISEQ
+     C                     MOVE 'C'       EBMODI
+     C                     WRITEXFAB21
+F1  C                     ENDIF
+    C**
+     C           SAUTRR    TAG
+    C*---------------------------------------------------------------*
+    C*           MAJ STOCK PRODUITS FINIS AUTOMATIQUEMENT            *
+    C*           POUR USINES : TOURY/ROCHECHOUART ET CHABANAIS       *
+    C*                         ET NEUVILLE POUR LES FOURREAUX        *
+    C*                                                               *
+    C*           NEUVILLE (PAS LES FOURREAUX) ET FEG => PAS DE MAJ PF*
+    C*           CAR LA MAJ SE FERA AU MOMENT DE LA MISE EN STOCK    *
+    C*---------------------------------------------------------------*
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           FATENC    ANDEQ9
+    C           ZAUSIN    OREQ 5
+    C           FATENC    ANDEQ9
+    C           ZAUSIN    OREQ 2
+    C           FATENC    ANDEQ9
+    C           ZAUSIN    OREQ 4
+    C           FATENC    ANDEQ9
+    C           TS1       ANDEQ'F'
+    C           ZAUSIN    OREQ 4
+    C           FATENC    ANDEQ9
+    C           TS1       ANDEQ'M'
+    C           ZAUSIN    OREQ 4
+    C           FATENC    ANDEQ9
+    C           PFCBPA    ANDGE500000
+    C           ZAUSIN    OREQ 4
+    C           FATENC    ANDEQ9
+    C           ZRESS     ANDEQ'3197'
+    C           ZNOCLI    ANDEQ8928
+     C                     Z-ADDZAUSIN    PFUSIN
+     C                     Z-ADDZACONF    PFCONF
+     C                     Z-ADDZASEQ     PFSEQ
+     C                     Z-ADDFACBPA    PFCBPA
+     C                     Z-ADDNOPRO     PFPRO
+     C                     Z-ADDZROBC1    RBCBPA
+     C                     CALL 'FAB621£A'
+     C           PARAM     PARM PARAM     PARAM
+     *
+     * TRANSFERT PUSTERLA LIEU NC SI RT ET MACHINE 98 ASSEMBLAGE
+D2  C           ZAUSIN    IFEQ 2
+D3  C           ZRESS     IFEQ '8298'
+    C           ZRESS     OREQ '8295'
+    C           ZRESS     OREQ '8296'
+     C                     Z-ADDZAUSIN    USIPUS
+     C                     Z-ADDFACBPA    PFCPUS
+     C                     CALL 'FAB621£C'
+     C           DSPUST    PARM DSPUST    DSPUST
+F3  C                     ENDIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     MOVE *ON       *IN12
+    C**
+     C           FIN       TAG
+     C                     MOVE '1'       *INLR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : CALCUL QTE FABRIQUEE SUR UN TRAVAIL EN COURS       *
+    C*                                                               *
+    C*****************************************************************
+    C           CALFAB    BEGSR
+    C**
+     C                     Z-ADD0         TOTEQ
+     C                     Z-ADD0         TOTEQ2
+     C                     Z-ADD0         TOTEQG
+     C                     Z-ADD0         TOTEQD
+    C**
+D1  C           ZAATEL    IFNE '13'
+    C           ZAATEL    ANDNE'15'
+    C           ZAATEL    ANDNE'22'
+    C**
+     C                     Z-ADD0         FACBPA
+     C                     Z-ADD0         NOBOU
+     C           KFA10C    SETLLYFAB10
+    C**
+     C           LEC10     TAG
+     C           KFAB16    READEYFAB10                   99
+D2  C           *IN99     IFEQ *OFF
+    C           NOBOU     CABNE0         LEC10
+     C                     ADD  FAQTFE    TOTEQ   70
+     C                     ADD  FAQTGA    TOTEQ2  70
+D3  C           FA1001    IFEQ 'G'
+     C                     ADD  FAQTFE    TOTEQG  70
+F3  C                     ENDIF
+D3  C           FA1001    IFEQ 'P'
+     C                     ADD  FAQTFE    TOTEQD  70
+F3  C                     ENDIF
+    C                     GOTO LEC10
+F2  C                     ENDIF
+    C**
+X1  C                     ELSE
+    C**
+    C******  CALCUL DE LA QUANTITÉ PAPIER PRODUITE
+    C**
+     C                     MOVE *BLANKS   PAPI
+     C                     Z-ADD0         GRAMM
+     C                     MOVE *BLANKS   REFOUR
+     C                     Z-ADD0         GRAREL
+     C                     MOVE *BLANKS   FOUB
+     C                     Z-ADD0         FACBPA
+     C           KFAB11    SETLLXFAB11
+     **
+     C           LEC11     TAG
+     C           KFAB16    READEXFAB11                   99
+D2  C           *IN99     IFEQ *OFF
+     C                     ADD  NBFE      TOTEQ
+     C                     SUB  FAQRES    TOTEQ
+    C                     GOTO LEC11
+F2  C                     ENDIF
+    C**
+F1  C                     ENDIF
+    C**
+    C                     ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : EN CAS DE FLEXO : RECUPERATION DE LA LAIZE         *
+    C*            DE LA BOBINE CONSOMMÉE.                            *
+    C*                                                               *
+    C*****************************************************************
+    C           RECLAI    BEGSR
+    C**
+    C******  SAUVEGARDE DES ZONES SI REPIQUAGE SUR IMPRIME STOCKE
+    C**
+     C                     MOVE PAPI      SVPAPI
+     C                     Z-ADDGRAMM     SVGRAM
+     C                     MOVE REFOUR    SVFOUR
+     C                     Z-ADDGRAREL    SVGRAR
+     C                     Z-ADDNCONF     SVCONF
+     C                     Z-ADDSEQFAB    SVSEQ
+     C                     Z-ADDNOPRO     SVPRO
+     C                     Z-ADDNOCLI     SVCLI
+     C                     Z-ADDNSTE      SVSTE
+     C                     Z-ADDUSINE     SVUSIN
+    C**
+     C                     MOVE 'ZZZ'     PAPI
+     C                     Z-ADD999       GRAMM
+     C                     MOVE 'ZZZZZZ'  REFOUR
+     C                     Z-ADD999       GRAREL
+     C                     Z-ADD999999    XACBPA
+     C                     Z-ADD99999999  DATES
+     C                     Z-ADD0         LAIZE1
+    C**
+     C           KFA11B    SETGTTFAB11
+    C**
+     C           KFA11C    REDPETFAB11                   91
+    C**
+D1  C           *IN91     IFEQ *OFF
+     C                     Z-ADDLAIZE     LAIZE1
+    C                     GOTO FINLAI
+F1  C                     ENDIF
+     **
+     C                     Z-ADD999999    XACBPA
+     C                     Z-ADD99999999  DATSOR
+    C**
+     C           KFA10D    SETGTTFAB10
+    C**
+     C           KFA10E    REDPETFAB10                   91
+    C**
+D1  C           *IN91     IFEQ *OFF
+     C           KIMP01    CHAINMVTIMPF1             99
+     C  N99                Z-ADDLAIZE     LAIZE1
+F1  C                     ENDIF
+    C**
+    C******  REMISE DES ZONES SI REPIQUAGE SUR IMPRIME STOCKE
+    C**
+     C                     MOVE SVPAPI    PAPI
+     C                     Z-ADDSVGRAM    GRAMM
+     C                     MOVE SVFOUR    REFOUR
+     C                     Z-ADDSVGRAR    GRAREL
+     C                     Z-ADDSVCONF    NCONF
+     C                     Z-ADDSVSEQ     SEQFAB
+     C                     Z-ADDSVPRO     NOPRO
+     C                     Z-ADDSVCLI     NOCLI
+     C                     Z-ADDSVSTE     NSTE
+     C                     Z-ADDSVUSIN    USINE
+    C           FINLAI    ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : PRODUIT FINI => RECHERCHE CONDITIONNEMENT          *
+    C*                                                               *
+    C*****************************************************************
+    C           CONFIG    BEGSR
+     C                     MOVE *OFF      *IN98
+     C                     Z-ADD0         PFNCO1
+     C                     Z-ADD0         PFNBT1
+     C                     Z-ADD0         PFNCO2
+     C                     Z-ADD0         PFNBT2
+    C**
+    C******  NEUVILLE : TEST SI PALETTE PF ISSUE DU ROBOT
+    C**
+D1  C           ZAUSIN    IFEQ 4
+D2  C           ZROBCB    IFEQ 0
+    C                     GOTO NONROB
+    C**
+X2  C                     ELSE
+     C                     Z-ADDZACONF    PFCONF
+     C                     Z-ADDZASEQ     PFSEQ
+     C                     Z-ADDZNOPRO    NOPRO
+     C           KPRF01    CHAINXPRF01              N99
+D3  C           *IN99     IFEQ *OFF
+     C                     MOVE *ON       *IN98
+F3  C                     ENDIF
+     C                     Z-ADDZROBCA    PFNCO1
+     C                     Z-ADDZROBBT    PFNBT1
+     C                     Z-ADD0         PFNCO2
+     C                     Z-ADD0         PFNBT2
+     C                     Z-ADDZROBQT    PFQTHE
+     C                     Z-ADDZROBQT    RFQTHE
+    C                     GOTO CONFIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  1ER CAS : LA CONFIG EST DEJA CREEE DS PRF01P
+    C**
+     C           NONROB    TAG
+     C                     Z-ADDZACONF    PFCONF
+     C                     Z-ADDZASEQ     PFSEQ
+     C                     Z-ADDZNOPRO    NOPRO
+     C           KPRF01    CHAINXPRF01              N99
+D1  C           *IN99     IFEQ *OFF
+     C                     Z-ADDPFNCOL    PFNCO1
+     C                     Z-ADDPFNBTE    PFNBT1
+     C                     Z-ADD0         PFNCO2
+     C                     Z-ADD0         PFNBT2
+     C                     Z-ADDPFQTHE    RFQTHE
+     C                     MOVE *ON       *IN98
+    C                     GOTO CONFIF
+F1  C                     ENDIF
+    C**
+    C******  TEST SI UNITE EN FEUILLE => CONFIG PALETTE = 1 X QTE PAL.
+    C**
+    C           FAUNIT    CABEQ'FE'      CONFIF
+    C**
+    C******  2EME CAS : LA CONFIG EST LUE DS LE FICHIER PALETT
+    C******  SI AMALGAME = EMBNO RENSEIGNE PAR ZONE SUIMP DE CODBAR
+    C**
+D1  C           EMBNO     IFEQ 0
+     C                     Z-ADD1         EMBNO
+F1  C                     ENDIF
+    C**
+     C           KEYPAL    CHAINPALETTF              99
+D1  C           *IN99     IFEQ *OFF
+D2  C           NBCAIP    IFNE 0
+D3  C           FACON     IFEQ 1
+    C           FACON     OREQ 2
+     C                     Z-ADDDECH      PFNBT1
+     C                     Z-ADDNBDECP    PFNCO1
+X3  C                     ELSE
+     C           NBDECP    DIV  NBCAIP    PFNBT1
+     C                     Z-ADDNBCAIP    PFNCO1
+F3  C                     END
+     C                     Z-ADDPFNBT1    PFNBTE
+     C                     Z-ADDPFNCO1    PFNCOL
+X2  C                     ELSE
+     C                     Z-ADD0         PFNBT1
+     C                     Z-ADD0         PFNBTE
+D3  C           FAATEL    IFEQ '70'
+    C           ZAUSIN    ANDEQ2
+     C                     Z-ADDNBDECP    PFNBT1
+     C                     Z-ADDNBDECP    PFNBTE
+F3  C                     END
+     C                     Z-ADD1         PFNCO1
+     C                     Z-ADD1         PFNCOL
+F2  C                     ENDIF
+     *
+X1  C                     ELSE
+     C                     Z-ADD0         PFNBTE
+     C                     Z-ADD0         PFNCOL
+F1  C                     ENDIF
+    C**
+    C******  CALUL QTE THEORIQUE DE LA PALETTE EN CAS DE 1ERE SAISIE
+    C**
+     C           PFNBT1    MULT PFNCO1    RFQTHE
+    C**
+     C           CONFIF    TAG
+    C**
+    C******  SAUVEGARDE QTE BOITE/CAISSE : SERT SI QTE IMPERATIVE
+    C**
+     C                     Z-ADDPFNBT1    SVNBT1
+    C**
+    C******  SI PRODUIT EN CONTROLE GAMME => MISE AUTO STATUS EN 'CG'
+    C******  ET MENTION 'CONTROLE GAMME'
+    C**
+D1  C           ZAUSIN    IFEQ 2
+    C           LUXE      ANDEQ'C'
+    C           ZAUSIN    OREQ 4
+    C           LUXE      ANDEQ'C'
+     C                     MOVE *ON       *IN39
+     C                     MOVEL'CONTROLE'CTRGAM
+     C                     MOVE ' GAMME'  CTRGAM
+     C                     MOVE 'CG'      FAACST
+F1  C                     ENDIF
+    C**
+    C                     ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : PRODUIT FINI => MAJ FICHIERS PRF01P/PRF02P/PRF05P  *
+    C*                                                               *
+    C*****************************************************************
+    C           CONFI2    BEGSR
+    C*
+    C*****  1ER PALETTE OF => CREATION PRF01P
+    C*
+D1  C           *IN98     IFEQ *OFF
+    C*
+     C                     MOVE *BLANK    PF0101
+     C                     MOVE *BLANK    PF0102
+     C                     MOVE *BLANK    PF0103
+    C*
+D2  C           FAUNIT    IFEQ 'FE'
+     C                     Z-ADDFAQTF2    PFQTHE
+     C                     Z-ADDFAQTF2    PFNBTE
+     C                     Z-ADD1         PFNCOL
+X2  C                     ELSE
+D3  C           TOTNBT    IFEQ 0
+     C                     Z-ADDFAQTFE    PFNBT1
+F3  C                     ENDIF
+     C           PFNBT1    MULT PFNCO1    PFQTHE
+     C                     Z-ADDPFNBT1    PFNBTE
+     C                     Z-ADDPFNCO1    PFNCOL
+F2  C                     ENDIF
+     C                     WRITEXPRF01
+    C*
+F1  C                     ENDIF
+    C**
+    C*****  USINE 7 => ON NE CREE PAS PRF02P
+    C**
+D1  C           ZAUSIN    IFEQ 7
+    C                     GOTO CONF2F
+F1  C                     ENDIF
+    C**
+    C*****  USINE 4 => ON NE CREE PAS PRF02P SI PAS FOURREAU
+    C**
+D1  C           ZAUSIN    IFEQ 4
+D2  C           TS1       IFNE 'F'
+    C           TS1       ANDNE'M'
+    C           PFCBPA    ANDLT500000
+D3  C           ZRESS     IFNE '3197'
+    C           ZNOCLI    ORNE 8928
+    C                     GOTO CONF2F
+F3  C                     ENDIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C*****  MAJ PRF02P => DETAIL PALETTE PF ENTREE
+    C**
+     C                     MOVE ' '       PF0201
+     C                     MOVE ' '       PF0202
+     C                     MOVE ' '       PF0203
+     **
+     ******  INIT ZONES LIEES AU STOCKAGE
+     **
+     C                     Z-ADDFAQTF2    PFQREL
+D1  C           TOTNBT    IFEQ 0
+     C                     Z-ADDFAQTF2    PFNBT1
+F1  C                     ENDIF
+     C                     Z-ADD0         PFALLE
+     C                     Z-ADDZAUSIN    PFLSTK
+     C                     MOVE *BLANK    PFHALL
+     C                     TIME           DTHR
+     C                     Z-ADDSSYEAR    PFAENT
+     C                     Z-ADDMONTH     PFMENT
+     C                     Z-ADDDAY       PFJENT
+     C                     Z-ADDHOUR      PFHENT
+     **  CORRECTION DE FACTEUR 10 POUR LES QTE > 99999
+D1  C           PFQREL    IFEQ PFNBT1
+    C           PFNCO1    ANDEQ10
+     C           PFNBT1    MULT PFNCO1    PFQREL
+F1  C                     ENDIF
+     **
+     ****** TOURY : 'AA' OU 'BP' => STOCK CONTROLE (LIEU =CO001)
+     **
+D1  C           ZAUSIN    IFEQ 3
+D2  C           FAACST    IFEQ 'AA'
+    C           FAACST    OREQ 'BP'
+     C                     MOVE 'CO'      PFHALL
+     C                     Z-ADD1         PFALLE
+X2  C                     ELSE
+D3  C           ZRESS     IFEQ '2148'
+     C                     MOVE 'SB'      PFHALL
+     C                     Z-ADD0         PFALLE
+F3  C                     ENDIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+     **
+     ****** RT/NB : 'AA' OU 'BP' => STOCK CONTROLE (LIEU =CO001)
+     ****** SI CONTROLE GAMME 'CG'=> STOCK CONTROLE (LIEU =CO002)
+     ****** SI CONTROLE GAMME 'BP'=> STOCK CONTROLE (LIEU =CO002)
+     **
+D1  C           ZAUSIN    IFEQ 2
+    C           ZAUSIN    OREQ 4
+    C           TS1       ANDNE'F'
+    C           TS1       ANDNE'M'
+D2  C           LUXE      IFEQ 'C'
+     C                     MOVE 'CO'      PFHALL
+     C                     Z-ADD2         PFALLE
+D3  C           FAACST    IFEQ 'BP'
+     C                     MOVE 'O'       PF0203
+F3  C                     ENDIF
+X2  C                     ELSE
+D3  C           FAACST    IFEQ 'AA'
+    C           FAACST    OREQ 'BP'
+     C                     MOVE 'CO'      PFHALL
+     C                     Z-ADD1         PFALLE
+F3  C                     ENDIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+     **
+     ******  TEST SI GAMIN : INVERSION CONDITIONNEMENT SI EN FEUILLE
+     **
+D1  C           FAUNIT    IFEQ 'FE'
+    C           PFNCO1    ANDEQ0
+    C           PFNCO2    ANDGT0
+     C                     Z-ADDPFNCO2    PFNCO1
+     C                     Z-ADDPFNBT2    PFNBT1
+     C                     Z-ADD0         PFNCO2
+     C                     Z-ADD0         PFNBT2
+F1  C                     ENDIF
+    C**
+    C******  TOURY : MAJ CODES VALIDATION QTE IMPERATIVE CAISSE/PALETTE
+    C**
+D1  C           ZAUSIN    IFEQ 3
+     C                     Z-ADDZAUSIN    ZXUSIN
+     C                     Z-ADDSTE       ZXSTE
+     C                     Z-ADDNOCLI     ZXCLI
+     C                     Z-ADDNOPRO     ZXPRO
+     C                     Z-ADDPFORDA    ZXORDA
+     C                     Z-ADDPFQREL    ZXPAL
+     C                     Z-ADDPFNBT1    ZXCAI
+     C                     CALL 'PRF591£'
+     C           PARM3     PARM PARM3     PARM3
+F1  C                     ENDIF
+    C**
+    C******  CREATION PALETTE PF DS FICHIER PRF02P
+    C**
+     C                     WRITEXPRF02
+    C**
+    C******  TOURY : MAJ NBRE CHGT QTE PALETTE MAXI DS PRF01P / 2 MAXI
+    C**
+D1  C           ZAUSIN    IFEQ 3
+    C           FAQTFE    ANDNERFQTHE
+     C           KPRF01    CHAINXPRF01               99
+D2  C           *IN99     IFEQ *OFF
+D3  C           PF0102    IFEQ ' '
+     C                     MOVE '1'       PF0102
+X3  C                     ELSE
+     C                     MOVE '2'       PF0102
+F3  C                     ENDIF
+     C                     EXCPTMAJ01
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C           CONF2F    ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*  SR : AFFICHAGE FENETRE CHOIX ARTICLE SUR PRODUIT EN AMALGAME *
+    C*                                                               *
+    C*****************************************************************
+    C           WINAMA    BEGSR
+    C**
+    C*****  RECHERCHE SI LE PRODUIT EST UN AMALGAME
+    C**
+     C                     MOVE *BLANKS   REFCO
+     C                     MOVE *BLANKS   CLICO
+     C                     Z-ADD0         PFORDA
+     C                     Z-ADD0         ORD
+     C           KEYAM1    CHAINCODBARF1             99
+    C           *IN99     CABEQ*ON       WINF
+    C*---------------------------------------------------------------*
+    C*      FEG => AMALGAME => LA COMPOSANTE EST CONNUE DS SVORD     *
+    C*             LECTURE N°OF CLIENT POUR AFFICHER DS FENETRE      *
+    C*             SAISIE PALETTE                                    *
+    C*---------------------------------------------------------------*
+D1  C           ZAUSIN    IFEQ 7
+    C           ZNOCLI    ANDEQ8928
+    C           SVORD     ANDNE0
+     C                     MOVE *BLANKS   REFCO
+     C                     MOVE *BLANKS   CLICO
+     C                     Z-ADDSVORD     PFORDA
+     C                     Z-ADDSVORD     ORD
+     C           KEYAMA    CHAINCODBARF1             99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE '1'       *IN33
+    C**
+     C                     Z-ADDZSTE      AMSTE
+     C                     Z-ADDZNOCLI    AMCLI
+     C                     Z-ADDZNOPRO    AMPRO
+     C                     Z-ADDZACONF    AMCONF
+     C                     Z-ADDZASEQ     AMSEQ
+     C           KPR11A    CHAINYPRF11               99
+     C                     MOVE *BLANKS   CLICO
+     C                     MOVE *BLANKS   ZLIC1  12
+     C                     MOVE *BLANKS   ZLIC2   8
+     C                     MOVEL'OF CLIEN'ZLIC1
+     C                     MOVE 'T : '    ZLIC1
+     C                     MOVELZLIC1     CLICO
+     C                     MOVELUFCONF    ZLIC2
+     C                     MOVE UFSEQ     ZLIC2
+     C                     MOVE ZLIC2     CLICO
+    C**
+    C                     GOTO WINF
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C**
+     C                     MOVE *BLANK    REFCO
+     C                     MOVE *BLANK    CLICO
+     C                     Z-ADD0         ORD
+     C           RAZ       TAG
+     C                     Z-ADD0         AF1
+     C                     MOVE *BLANK    AF2
+     C                     MOVE *BLANK    AF3
+     C                     Z-ADD0         AF4
+     C                     Z-ADD0         PAG
+     C                     Z-ADD0         I
+     C                     MOVE *OFF      *IN88
+     C                     Z-ADD1         SEIT
+    C**
+    C******  LECTURE DU FICHIER CODBAR
+    C**
+     C           RELECA    TAG
+     C                     Z-ADD0         I       20
+     C                     Z-ADD0         AF1
+     C                     MOVE *BLANK    AF2
+     C                     MOVE *BLANK    AF3
+     C                     Z-ADD0         AF4
+    C**
+     C           KEYAMA    SETLLCODBARF1
+    C**
+D1  C                     DO   9         I
+     C           LEC       TAG
+     C           KEYAM1    READECODBARF1               8588
+    C**
+D2  C           *IN88     IFEQ *ON
+     C                     LEAVE
+F2  C                     ENDIF
+    C**
+D2  C           I         IFEQ 1
+     C                     Z-ADDSEIT      Q       20
+     C                     Z-ADDORD       PAG,Q
+F2  C                     ENDIF
+     C                     Z-ADDORD       AF1,I
+     C                     MOVELREFCO     AF2,I
+     C                     MOVE CLICO     AF2,I
+     C                     MOVELREFCO     AF3,I
+     C                     MOVE CLICO     AF3,I
+     C                     Z-ADDSUIMP     AF4,I
+F1  C                     ENDDO
+    C**
+    C******  AFFICHAGE D'UNE PAGE
+    C**
+     C           AFF       TAG
+     C                     EXFMTF22
+D1  C           *IN12     IFEQ *ON
+     C                     Z-ADD0         ORD
+     C                     MOVE *BLANK    REFCO
+     C                     MOVE *BLANK    CLICO
+     C                     MOVE 'X'       FLASH2
+     C                     MOVE PAS1A     PAS1
+    C                     GOTO WINF
+F1  C                     ENDIF
+    C**
+    C******  ENTREE : CHOIX DE L'ARTICLE DS L'AMALGAME
+    C**
+D1  C           *IN25     IFEQ *OFF
+    C           *IN26     ANDEQ*OFF
+     C                     Z-ADD1         Z       20
+     C           POS2      LOKUPZO,Z                     99
+    C           *IN99     CABEQ*OFF      AFF
+    C           AF1,Z     CABEQ0         AFF
+     C                     Z-ADDAF1,Z     PFORDA
+     C                     MOVELAF3,Z     REFCO
+     C                     MOVE AF3,Z     CLICO
+     C                     Z-ADDAF4,Z     EMBNO
+     C                     MOVE '1'       *IN33
+    C                     GOTO WINF
+F1  C                     ENDIF
+    C**
+    C******  PAGE AVANT
+    C**
+D1  C           *IN26     IFEQ *ON
+     C                     ADD  1         SEIT
+     C           KEYAMA    SETGTCODBARF1
+     C           KEYAM1    READECODBARF1               8588
+D2  C           *IN88     IFEQ *ON
+     C                     SUB  1         SEIT
+    C                     GOTO AFF
+F2  C                     ENDIF
+    C                     GOTO RELECA
+F1  C                     ENDIF
+    C**
+    C******  PAGE ARRIERE
+    C**
+D1  C           *IN25     IFEQ *ON
+     C                     SUB  1         SEIT
+D2  C           SEIT      IFLT 1
+     C                     ADD  1         SEIT
+    C                     GOTO AFF
+F2  C                     ENDIF
+     C                     Z-ADDSEIT      Q
+     C                     MOVE PAG,Q     ORD
+    C                     GOTO RELECA
+F1  C                     ENDIF
+    C**
+    C******  RETOUR A L'AFFICHAGE
+    C**
+    C                     GOTO AFF
+    C           WINF      ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*  SR : PRODUIT FINI : SI OF EN AMALGAME => PAS D'EDITION SUR   *
+    C*       CET OF => LA FICHE SERA EDITEE SUR L'OF CLIENT DS LE    *
+    C*       PROGRAMME PRFIP565.                                     *
+    C*                                                               *
+    C*       UNIQUEMENT SUR ROCHECHOUART/NB/FEG                      *
+    C*                                                               *
+    C*****************************************************************
+    C           AMALGA    BEGSR
+     C                     MOVE 'N'       OKAMA   1
+D1  C           ZATENC    IFEQ 9
+    C           ZAUSIN    ANDEQ2
+    C           ZATENC    OREQ 9
+    C           ZAUSIN    ANDEQ4
+    C           ZATENC    OREQ 9
+    C           ZAUSIN    ANDEQ7
+     C                     Z-ADDZSTE      AMSTE
+     C                     Z-ADDZNOCLI    AMCLI
+     C                     Z-ADDZNOPRO    AMPRO
+     C                     Z-ADDZACONF    AMCONF
+     C                     Z-ADDZASEQ     AMSEQ
+     C           KPRF11    CHAINXPRF11               99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE 'O'       OKAMA
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C                     ENDSR
+    C*===============================================================*
+    C*                                                               *
+    C*                     SORTIES FICHIERS                          *
+    C*                                                               *
+    C*===============================================================*
+     OXFAB16  E                MAJ16
+     O                         PPCTR2
+     O                 95      PPQFEU
+     OXPRF01  E                MAJ01
+     O                         PF0102
+**
+Le 1er Code Barre à éditer éxiste déjà=>Prévenir le service INFO
+Impossible d'attribuer un N°Code Barre ==> Réessayez plus tard
+**
+FINITION
+**
+LIB001
+LIB002
+LIB003
+LIB004
+LIB005
+LIB006
+LIB007
+LIB008
+LIB009

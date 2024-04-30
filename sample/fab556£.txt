@@ -1,0 +1,3569 @@
+      *%CSTD===========================================================*
+      ** Application. : EMAGE      Logiciel métier DS Smith            *
+      ** Composant. . : FAB556£                       Type: RPG        *
+      **===============================================================*
+      ** Sous-système :                                                *
+      ** Fonction . . :                                                *
+      ** Sous-fonction:                                                *
+      **%S=============================================================*
+      ** Description des fonctionnalités:                              *
+      **                                                               *
+      **                                                               *
+      **                                                               *
+      **%E=============================================================*
+      ** AUTEUR:                          00:00                        *
+      ** MODIFS: 02 NOUZIERES  17/07/2023 15:21  90.91.11 FM 23/  111  *
+      **           gestion de la doreuse B23                           *
+      **         01 NOUZIERES  06/03/2019 16:51  01.00.83 FM 19/   29  *
+      **           spécifique pour PF-> Neutre                         *
+      *%ECSTD==========================================================*
+    H*****************************************************************
+    H*                                                               *
+    H*  SUIVI DE FABRICATION : MODIFICATION DES ENTRÉES /            *
+    H*                         CONSOMMATIONS DES ENCOURS             *
+    H*                                                               *
+    H*****************************************************************
+     FPRODAL8 IF  E           K        DISK
+     FPRODUL10IF  E           K        DISK
+     F            PRODUIF1                          KRENAMEYPRODUI
+     FCLIENTS1IF  E           K        DISK
+     FPREIMP2 IF  E           K        DISK
+     FPRODST3 IF  E           K        DISK
+     FPARAME  IF  E           K        DISK
+     FFAB04L01IF  E           K        DISK
+     FFAB05L03IF  E           K        DISK
+     FFAB08L01IF  E           K        DISK
+     FFAB10L05IF  E           K        DISK
+     FFAB10L06IF  E           K        DISK
+     F            XFAB10                            KRENAMEYFAB10
+     FFAB10L07IF  E           K        DISK
+     F            XFAB10                            KRENAMEZFAB10
+     FFAB10L08IF  E           K        DISK
+     F            XFAB10                            KRENAMETFAB10
+     FFAB11L03IF  E           K        DISK
+     FFAB11L05IF  E           K        DISK
+     F            XFAB11                            KRENAMEZFAB11
+     FPAPMUL3 IF  E           K        DISK
+     FSORMCXL3IF  E           K        DISK
+     FFAB13L01IF  E           K        DISK
+    FFAB16L01UF  E           K        DISK
+    FFAB22L01UF  E           K        DISK
+     FFAB20L01IF  E           K        DISK
+     FPRF02L07IF  E           K        DISK
+     FPRF11L01IF  E           K        DISK
+     FPRF11L02IF  E           K        DISK
+     F            XPRF11                            KRENAMEYPRF11
+     FCAROFL3 IF  E           K        DISK
+     FMACHIN  IF  E           K        DISK
+     FPREACOP3IF  E           K        DISK
+     FCOMPREL1IF  E           K        DISK
+     FPRF02L41IF  E           K        DISK
+     F            XPRF02                            KRENAMEYPRF02
+     FFAB556D CF  E                    WORKSTN
+     F                                        RCD   KSFILE F02
+     F                                        RCX   KSFILE F05
+     F                                        RCZ   KSFILE F15
+     E                    TYE         8  1 0                              PA010
+     E                    LIE         8 30                                PA010
+     E                    EQ      1   3 10                                PA010
+     E                    LIB     1   2  7                                PA010
+     E                    ZO      1   8 10
+     E                    LIBF    1   1 22                                PA010
+     E                    TX      1   4 65                                PA010
+    **
+     IMVTPAPF1    21                                                      LAN040
+     I              NOBOB                           FACBPA
+     *
+     ISORTMUF1    22                                                      LAN040
+     I              NOBOB                           FACBPA
+     *
+     IMVTCXHF1    31                                                      LAN040
+     I              NOBOB                           FACBPA
+     *
+     ISORCXHF1    32                                                      LAN040
+     I              NOBOB                           FACBPA
+     *
+     IYPRODUI
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IPRODUIF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IRECAPTF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IPRODARF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IPRODSTF2
+     I              MAIME1                          XAIME1
+     I              MAIME2                          XAIME2
+     I              MAIME3                          XAIME3
+     I              MAIME4                          XAIME4
+     I              MAIME5                          XAIME5
+     I              MIMRE1                          XIMRE1
+     I              MIMRE2                          XIMRE2
+     I              MIMRE3                          XIMRE3
+     I              MIMRE4                          XIMRE4
+     I              MIMRE5                          XIMRE5
+     I              RMIME1                          XMIME1
+     I              RMIME2                          XMIME2
+     I              RMIME3                          XMIME3
+     I              RMIME4                          XMIME4
+     I              RMIME5                          XMIME5
+     I              RMIRE1                          XMIRE1
+     I              RMIRE2                          XMIRE2
+     I              RMIRE3                          XMIRE3
+     I              RMIRE4                          XMIRE4
+     I              RMIRE5                          XMIRE5
+     I              MAGAU1                          XAGAU1
+     I              MAGAU2                          XAGAU2
+     I              DMACP1                          XMACP1
+     I              DMACP2                          XMACP2
+     I              DMACP3                          XMACP3
+     I              DMACP4                          XMACP4
+     ICAROFF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              NOPRO                           XNOPRO
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              ABRCLI                          XABRCL
+     I              BLOC1                           XBLOC1
+     I              BLOC2                           XBLOC2
+     I              PAPI                            XPAPI
+     I              GRAMM                           XGRAMM
+     I              REFOUR                          XREFOU
+     I              GRAREL                          XGRARE
+     I              FOUB                            XFOUB
+     I              LAIZE                           XLAIZE
+     I              FORL                            XFORL
+     I              FORH                            XFORH
+     IMACHINF1
+     I              USINE                           XUSINE
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     IXFAB05
+     I              FAUNIT                          XUNIT
+     IXFAB10
+     I              FAUSIN                          XAUSIN
+     I              FATENC                          XATENC
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IYFAB10
+     I              FAUSIN                          XAUSIN
+     I              FATENC                          XATENC
+     I              FACONF                          XACONF
+     I              FASEQ                           XASEQ
+     I              FAISEQ                          XAISEQ
+     I              NOPRO                           XNOPRO
+     I              NOCLI                           XNOCLI
+     I              STE                             XSTE
+     I              FAOPNU                          XAOPNU
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IZFAB10
+     I              FAUSIN                          XAUSIN
+     I              FATENC                          XATENC
+     I              FACONF                          XACONF
+     I              FASEQ                           XASEQ
+     I              FAISEQ                          XAISEQ
+     I              NOPRO                           XNOPRO
+     I              NOCLI                           XNOCLI
+     I              STE                             XSTE
+     I              FAOPNU                          XAOPNU
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     ITFAB10
+     I              FAUSIN                          XAUSIN
+     I              FATENC                          XATENC
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IXFAB11
+     I              FAUSIN                          XAUSIN
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IZFAB11
+     I              FAUSIN                          XAUSIN
+     I              SECT                            XSECT
+     I              SSECT                           XSSECT
+     I              NOMAC                           XNOMAC
+     I              PPAA                            XPAA
+     I              PPMM                            XPMM
+     I              PPJJ                            XPJJ
+     I              PPEQUI                          XPEQUI
+     IXFAB13
+     I              USINE                           XAUSIN
+     I              FATENC                          XATENC
+     IXFAB20
+     I              FAUSIN                          XAUSIN
+     I              FATENC                          XATENC
+     IXPRF02
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NOCLI                           XNOCLI
+     I              NOPRO                           XNOPRO
+     IXPRF11
+     I              STE                             XSTE
+     I              PFCONF                          XFCONF
+     I              PFSEQ                           XFSEQ
+     ICOMPREF1
+     I              STE                             XSTE
+     I              NOCLI                           XNOCLI
+     I              NOPRO                           XNOPRO
+     I              GARNT                           XGARN
+     IYPRF02
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NOCLI                           XNOCLI
+     I              NOPRO                           XNOPRO
+     I           IDS
+     I                                        1  35 PARM1
+     I                                        1  68 PARM4
+     I                                        1   10FAUSIN
+     I                                        2   2 SECT
+     I                                        3   3 SSECT
+     I                                        2   3 FAATEL
+     I                                        4   5 NOMAC
+     I                                        1   5 REFMAC
+     I                                        6  100FACONF
+     I                                       11  120FASEQ
+     I                                       13  130FAISEQ
+     I                                       14  140STE
+     I                                       15  180NOCLI
+     I                                       19  220NOPRO
+     I                                       23  260FAOPNU
+     I                                       23  240PRIOR
+     I                                       27  280PPJJ
+     I                                       29  300PPMM
+     I                                       31  340PPAA
+     I                                       35  350PPEQUI
+     I                                       27  340DATEQ                 CCS013
+     I                                       27  350DTEQ                  CCS013
+     I                                       36  360FATENC                CCS013
+     I                                       37  430CMATR                 CCS013
+     I                                       44  44 FLASH                 CCS013
+     I                                       45  54 FANPRT                CCS013
+     I                                       55  610FAQTE                 CCS013
+     I                                       62  680TOTBON                CCS013
+     I           IDS
+     I                                        1  68 PAS4A
+     I                                       44  44 FLASH2                CCS013
+     I           IDS
+     I                                        1  180CDE
+     I                                        1   10ZZUSIN                CCS013
+     I                                        2   60ZZCONF                CCS013
+     I                                        7   80ZZSEQ                 CCS013
+     I                                        9   90ZZISEQ                CCS013
+     I                                       10  130ZZPRO                 CCS013
+     I                                       14  140ZZSTE                 CCS013
+     I                                       15  180ZZCLI                 CCS013
+     I           IDS
+     I                                        1  120PARM5
+     I                                        1   50VVCONF                CCS013
+     I                                        6   70VVSEQ                 CCS013
+     I                                        8   80VVISEQ                CCS013
+     I                                        9  120VVPRO                 CCS013
+     I           IDS
+     I                                        1  21 PARM6
+     I                                        1   10YYUSIN                CCS013
+     I                                        2   2 YYSECT
+     I                                        3   3 YYSSEC
+     I                                        4   5 YYMAC
+     I                                        6  100YYCONF                CCS013
+     I                                       11  120YYSEQ                 CCS013
+     I                                       13  130YYISEQ                CCS013
+     I                                       14  170YYPRO                 CCS013
+     I                                       18  210YYOPNU
+     I           IDS
+     I                                        1  39 PARM7
+     I                                        1   70INIBON
+     I                                        8  140TOTELI
+     I                                       15  192TOTCAL
+     I                                       20  242TOTROU
+     I                                       25  292TOTARR
+     I                                       30  342TOTPAN                CCS013
+     I                                       35  392TOTADI                CCS013
+     I           IDS
+     I                                        1  10 PARM8
+     I                                        1   10TZUSIN
+     I                                        2   20TZTENC
+     I                                        3   80TZCBPA
+     I                                        9  100TZBOU
+     I           IDS
+     I                                        1   80DATEQ2                CCS013
+     I                                        1   20XPJJ                  CCS013
+     I                                        3   40XPMM                  CCS013
+     I                                        5   80XPAA                  CCS013
+     I                                        9   90XPEQUI                CCS013
+     I                                        1   90DTEQ2                 CCS013
+     I           IDS
+     I                                        1   80DATEQ3                CCS013
+     I                                        1   20FFJJ                  CCS013
+     I                                        3   40FFMM                  CCS013
+     I                                        5   80FFAA                  CCS013
+     I                                        9   90FFEQUI                CCS013
+     I                                        1   90DTEQ3                 CCS013
+     I           IDS
+     I                                        1   2 XAATEL
+     I                                        1   1 XSECT                 CCS013
+     I                                        2   2 XSSECT                CCS013
+     I                                        3   4 XNOMAC                CCS013
+     I                                        1   4 XMAC                  CCS013
+     I           IDS
+     I                                        1   2 FFATEL
+     I                                        1   1 FFSEC                 CCS013
+     I                                        2   2 FFSSEC                CCS013
+     I                                        3   4 FFMAC                 CCS013
+     I                                        1   4 FMAC                  CCS013
+     I           IDS
+     I                                        1   80DPFENT                CCS013
+     I                                        1   20PFJENT                CCS013
+     I                                        3   40PFMENT                CCS013
+     I                                        5   80PFAENT                CCS013
+     I           IDS
+     I                                        1   80DATENT                CCS013
+     I                                        1   20FAJENT                CCS013
+     I                                        3   40FAMENT                CCS013
+     I                                        5   80FAAENT                CCS013
+     I           IDS
+     I                                        1   80DATSOR                CCS013
+     I                                        1   20FAJSOR                CCS013
+     I                                        3   40FAMSOR                CCS013
+     I                                        5   80FAASOR                CCS013
+     I           IDS
+     I                                        1   80DATES                 CCS013
+     I                                        1   20FAJES                 CCS013
+     I                                        3   40FAMES                 CCS013
+     I                                        5   80FAAES                 CCS013
+     I            DS
+     I                                        1   80DATSO                 CCS013
+     I                                        1   20JSO                   CCS013
+     I                                        3   40MSO                   CCS013
+     I                                        5   60SSO                   CCS013
+     I                                        7   80ASO                   CCS013
+     I           IDS
+     I                                        1  10 PAS2                  CCS013
+     I                                        1   10TTUSIN                CCS013
+     I                                        2   20TTTENC                CCS013
+     I                                        3   80TTCB                  CCS013
+     I                                        9  100TTBOU                 CCS013
+     I           IDS
+     I                                        1  10 PAS6
+     I                                        1   9 PAS5
+     I                                        1   10WWUSIN
+     I                                        2   70WWCB
+     I           IDS
+     I                                        1  18 PAS3
+     I                                        1   10UUUSIN
+     I                                        2   60UUCONF
+     I                                        7   80UUSEQ
+     I                                        9   90UUISEQ
+     I                                       10  130UUPRO
+     I                                       14  170UUOPNU
+     I                                       18  18 TAGOK
+     I           IDS
+     I                                        1  18 QUALIT                CCS013
+     I                                        1   3 PAPI                  CCS013
+     I                                        4   4 BLAN1                 CCS013
+     I                                        5   70GRAMM                 CCS013
+     I                                        8   8 BLAN2                 CCS013
+     I                                        9  14 REFOUR                CCS013
+     I                                       15  15 BLAN3                 CCS013
+     I                                       16  18 GRALFA                CCS013
+     I            DS
+     I                                        1   80TYE
+     I                                        1   10TYPEN1
+     I                                        2   20TYPEN2
+     I                                        3   30TYPEN3
+     I                                        4   40TYPEN4
+     I                                        5   50TYPEN5
+     I                                        6   60TYPEN6
+     I                                        7   70TYPEN7
+     I                                        8   80TYPEN8
+     I            DS
+     I                                        1 240 LIE
+     I                                        1  30 LIBE1
+     I                                       31  60 LIBE2
+     I                                       61  90 LIBE3
+     I                                       91 120 LIBE4
+     I                                      121 150 LIBE5
+     I                                      151 180 LIBE6
+     I                                      181 210 LIBE7
+     I                                      211 240 LIBE8
+     ILIBEL      IDS
+     I                                        1  40 BLOC1
+     I                                        1  20 LIB20
+     I                                       41  80 BLOC2
+     I                                       81 120 BLOC4
+     I           IDS
+     I                                        1   80DATLUE                CCS013
+     I                                        1   20CALJJ                 CCS013
+     I                                        3   40CALMM                 CCS013
+     I                                        5   60CALSS                 CCS013
+     I                                        7   80CALAA                 CCS013
+     I           IDS
+     I                                        1  16 TITET2                CCS013
+     I                                        1  13 TITET4                CCS013
+     I           IDS
+     I                                        1  110PARMOF
+     I                                        1   50AMCONF                PROD13
+     I                                        6   70AMSEQ                 PROD13
+     I                                        8  110AMPRO                 PROD13
+     IDSCOMM      DS
+     I                                        1   10YSTE
+     I                                        2   50YCLI
+     I                                       16  190DSPRO
+     I                                       22  22 ZONE95
+     I                                       24  24 MODIFE
+     I                                       40  41 DSGAR
+     I                                       42  460DSCNF
+     I                                       47  51 DSFOR
+     I                                      100 100 Z100
+     I                                      101 101 Z101
+     I                                      102 102 Z102
+     I                                      103 110 ZMDP
+     *
+     IPARMA       DS                             23
+     I I            0                         1   10WSTE                  CCS013
+     I I            0                         2   50WNOCLI
+     I I            0                         6   90WOPRO                 CCS013
+     I I            0                        10  140WFACON                CCS013
+     I I            0                        15  160WFASEQ                CCS013
+     I                                       17  17 WSECT                 CCS013
+     I                                       18  18 WSSECT                CCS013
+     I                                       19  20 WNOMAC                CCS013
+     I I            0                        21  210WEQUIP                CCS013
+     I I            0                        22  220WSTOND
+     I                                       23  23 CODGOF
+     *
+     IDSPARA      DS                             47
+     I I            0                         1   50NCF92
+     I I            0                         6   90NOP92
+     I I            0                        10  160SURF
+     I I            0                        17  203SF
+     I I            0                        21  270MINI
+     I I            0                        28  340MAXI
+     I                                       35  35 EXP
+     I I            0                        36  420SURFF
+     I I            0                        44  470NOC92
+    C**
+    C******  DEFINITION DES CLES
+    C**
+     C           KEYUSI    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+     C           KCLI01    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C           KIMP2     KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KEYPRO    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KMAC01    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C           KMAC02    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           XSECT
+     C                     KFLD           XSSECT
+     C                     KFLD           XNOMAC
+     C           KMAC03    KLIST
+     C                     KFLD           FFUSIN
+     C                     KFLD           FFSEC
+     C                     KFLD           FFSSEC
+     C                     KFLD           FFMAC
+     C           KCAL01    KLIST
+     C                     KFLD           CALJJ
+     C                     KFLD           CALMM
+     C                     KFLD           CALSS
+     C                     KFLD           CALAA
+     C           KCAL02    KLIST
+     C                     KFLD           CALSS
+     C                     KFLD           CALAA
+     C                     KFLD           CALMM
+     C                     KFLD           CALJJ
+     C           KCAROF    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           PRIORI
+     C           KFAB04    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C                     KFLD           CMATR
+     C           KFAB05    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C           KFAB16    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           PPAA
+     C                     KFLD           PPMM
+     C                     KFLD           PPJJ
+     C                     KFLD           PPEQUI
+     C           KFA16B    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C                     KFLD           PPAA
+     C                     KFLD           PPMM
+     C                     KFLD           PPJJ
+     C                     KFLD           PPEQUI
+     C           KFA16C    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C           KFAB10    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           XATENC
+     C                     KFLD           XPAA
+     C                     KFLD           XPMM
+     C                     KFLD           XPJJ
+     C                     KFLD           XPEQUI
+     C                     KFLD           FAOPAL
+     C           KFA10A    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C           KFA10B    KLIST
+     C                     KFLD           FFUSIN
+     C                     KFLD           FFCONF
+     C                     KFLD           FFSEQ
+     C                     KFLD           FFISEQ
+     C                     KFLD           FFPRO
+     C                     KFLD           FFOPNU
+     C                     KFLD           XATENC
+     C                     KFLD           FFAA
+     C                     KFLD           FFMM
+     C                     KFLD           FFJJ
+     C                     KFLD           FFEQUI
+     C                     KFLD           FAOPAL
+     C                     KFLD           FACBPA
+     C                     KFLD           NOBOU
+     C           KFA10C    KLIST
+     C                     KFLD           FFUSIN
+     C                     KFLD           FFCONF
+     C                     KFLD           FFSEQ
+     C                     KFLD           FFISEQ
+     C                     KFLD           FFPRO
+     C                     KFLD           FFOPNU
+     C           KFA10D    KLIST
+     C                     KFLD           FFUSIN
+     C                     KFLD           FFCONF
+     C                     KFLD           FFSEQ
+     C                     KFLD           FFISEQ
+     C                     KFLD           FFPRO
+     C                     KFLD           FFOPNU
+     C                     KFLD           XATENC
+     C                     KFLD           FFAA
+     C                     KFLD           FFMM
+     C                     KFLD           FFJJ
+     C                     KFLD           FFEQUI
+     C                     KFLD           FAASOR
+     C                     KFLD           FAMSOR
+     C                     KFLD           FAJSOR
+     C                     KFLD           FAHSOR
+     C                     KFLD           FACBPA
+     C                     KFLD           NOBOU
+     C           KFA10E    KLIST
+     C                     KFLD           FFUSIN
+     C                     KFLD           FFCONF
+     C                     KFLD           FFSEQ
+     C                     KFLD           FFISEQ
+     C                     KFLD           FFPRO
+     C                     KFLD           FFOPNU
+     C                     KFLD           XATENC
+     C                     KFLD           FFAA
+     C                     KFLD           FFMM
+     C                     KFLD           FFJJ
+     C                     KFLD           FFEQUI
+     C           KFA10F    KLIST
+     C                     KFLD           FFUSIN
+     C                     KFLD           FFCONF
+     C                     KFLD           FFSEQ
+     C                     KFLD           FFISEQ
+     C                     KFLD           FFPRO
+     C                     KFLD           FFOPNU
+     C                     KFLD           XATENC
+     C           KFA10G    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           XATENC
+     C                     KFLD           XPAA
+     C                     KFLD           XPMM
+     C                     KFLD           XPJJ
+     C                     KFLD           XPEQUI
+     C                     KFLD           FAAENT
+     C                     KFLD           FAMENT
+     C                     KFLD           FAJENT
+     C                     KFLD           FAHENT
+     C                     KFLD           FACBPA
+     C           KFA10H    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           XATENC
+     C                     KFLD           XPAA
+     C                     KFLD           XPMM
+     C                     KFLD           XPJJ
+     C                     KFLD           XPEQUI
+     C           KFA10I    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           XATENC
+     C           KFAB11    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           XPAA
+     C                     KFLD           XPMM
+     C                     KFLD           XPJJ
+     C                     KFLD           XPEQUI
+     C           KFA11A    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C           KFA11B    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           XPAA
+     C                     KFLD           XPMM
+     C                     KFLD           XPJJ
+     C                     KFLD           XPEQUI
+     C                     KFLD           FAAES
+     C                     KFLD           FAMES
+     C                     KFLD           FAJES
+     C                     KFLD           FAHES
+     C                     KFLD           FACBPA
+     C           KFA11C    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           XPAA
+     C                     KFLD           XPMM
+     C                     KFLD           XPJJ
+     C                     KFLD           XPEQUI
+     C           KFA11D    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           FAISEQ
+     C                     KFLD           NOPRO
+     C                     KFLD           FAOPNU
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C           KFAB13    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C                     KFLD           FAEFC
+     C                     KFLD           XATENC
+     C           KFAB20    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           XATENC
+     C           KPRF02    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           PFCBPA
+     C                     KFLD           PFNBOU
+     C           KPRF2A    KLIST
+     C                     KFLD           XAUSIN
+     C                     KFLD           PFCBPA
+     C           KPRF11    KLIST
+     C                     KFLD           AMSTE
+     C                     KFLD           AMCLI
+     C                     KFLD           AMPRO
+     C                     KFLD           AMCONF
+     C                     KFLD           AMSEQ
+     C           KPR11A    KLIST
+     C                     KFLD           STE
+     C                     KFLD           PFCLI
+     C                     KFLD           PFPRO
+     C                     KFLD           PFCONF
+     C                     KFLD           PFSEQ
+     C           KMUL3     KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C           KMUL3B    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           FACONF
+     C                     KFLD           FASEQ
+     C                     KFLD           SECT
+     C                     KFLD           SSECT
+     C                     KFLD           NOMAC
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C           KPRF41    KLIST
+     C                     KFLD           FFCONF
+     C                     KFLD           FFSEQ
+     C                     KFLD           FFORDA  20
+     C                     KFLD           NOPGAR
+    C**
+    C******  DEFINITION DES ZONES TRAVAIL
+    C**
+     C           *LIKE     DEFN RCD       SAVRCD
+     C           *LIKE     DEFN DTEQ2     RUP2
+     C           *LIKE     DEFN TITETE    SVTETE
+     C           *LIKE     DEFN DATLUE    DATMIN
+     C           *LIKE     DEFN DATLUE    DATMAX
+     C           *LIKE     DEFN QTFAIT    TOTLIG
+     C           *LIKE     DEFN QTENC     QTENCB
+     C           *LIKE     DEFN QTENC     XXBOIT
+     C           *LIKE     DEFN QTENC     YYBOIT
+     C           *LIKE     DEFN TOTBON    TOTBO2
+     C           *LIKE     DEFN GARNT     SVGARN
+     C           *LIKE     DEFN PASPRT    SAVPRT
+    C**
+    C******  RECEPTION DES PARAMETRES
+    C**
+     C           *ENTRY    PLIST
+     C           PAS1      PARM PAS1      PAS1   35
+     C                     MOVE PAS1      PARM1
+    C**
+     C                     EXSR GESFEN
+    C**
+D1  C           PAS1      IFEQ *BLANK
+     C                     MOVE *ON       *IN03
+     C                     EXSR GESFEN
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+    C******  SI COUPEUSE 1303 : DERTERMINATION DU PRODUIT A FABRIQUER
+    C******     SELON QUE PCLI SOIT A BLANC (PAPIER : 98 OFF)
+    C******        OU QUE PCLI SOIT NON BLANC (IMPRIME : 98 OFN)
+    C**
+D1  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+     C                     MOVE *BLANKS   PCLI
+     C                     MOVELFAOPNU    ZON2    20
+     C                     Z-ADDZON2      PRIORI
+     C           KCAROF    CHAINCAROFF1              99
+     C           PCLI      COMP *BLANKS              9898
+F1  C                     ENDIF
+    C**
+     C           AGAIN     TAG
+    C**
+    C*---------------------------------------------------------------*
+    C*  AFFICHAGE ECRAN GESTION DES ENCOURS SUR LE TRAVAIL TROUVE    *
+    C*---------------------------------------------------------------*
+     C                     Z-ADDPPEQUI    P       10
+     C                     MOVE EQ,P      LIBEQU
+    C**
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE FAUSIN    PXVALE
+     C                     MOVE *BLANKS   PXLIBE
+     C           KEYUSI    CHAINPARAMEF1             99
+     C                     MOVELPXLIBE    LIBUSI 40
+    C**
+    C******  LECTURE ETAT OP DS FAB05P
+    C**
+     C           KFAB05    CHAINXFAB05               99
+D1  C           *IN99     IFEQ *OFF
+     C           FAOPST    CHAINXFAB08               99
+F1  C                     ENDIF
+    C**
+    C******  LECTURE CLIENT
+    C**
+     C                     MOVE *BLANK    ABRCLI
+D1  C           STE       IFNE 0
+     C           KCLI01    CHAINCLIENTS1             99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' ABRCLI
+F2  C                     ENDIF
+     **
+     ******  LECTURE PRE-IMPRIME STOCKE SI STE=0
+     **
+X1  C                     ELSE
+     C                     CLEARLIBEL
+     C           KIMP2     CHAINPREIMP2              99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' ABRCLI
+X2  C                     ELSE
+     C                     MOVEL'STOCKE'  ABRCLI
+     C                     MOVELDPRIMP    BLOC1
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  LECTURE PRODUIT DS FICHIER PRODUIT => GARNITURE PRESENTOIR
+    C**
+D1  C           STE       IFNE 0
+     C           KEYPRO    CHAINYPRODUI              99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVE *BLANK    SVGARN
+X2  C                     ELSE
+     C                     MOVE GARNT     SVGARN
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  LECTURE PRODUIT
+    C**
+D1  C           STE       IFNE 0
+     C                     CLEARLIBEL
+     C           KEYPRO    CHAINPRODAL8              99
+D2  C           *IN99     IFEQ *ON
+    C**
+     C           KIMP2     CHAINPRODSTF2             99
+D3  C           *IN99     IFEQ *ON
+     C                     MOVE *BLANK    LIB20
+     C                     MOVEL'INCONNU' LIB20
+F3  C                     ENDIF
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+D1  C           USINE     IFEQ 3
+    C           POSF2     ANDGT0
+    C           FAATEL    ANDGE'21'
+    C           FAATEL    ANDLT'70'
+     C                     MOVE 'A côté :'LIBPO2
+X1  C                     ELSE
+     C                     MOVE *BLANKS   LIBPO2
+F1  C                     ENDIF
+    C**
+    C******  LECTURE TRAVAIL
+    C**
+     C           KFAB16    CHAINXFAB16              N99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVE *ON       *IN03
+     C                     EXSR GESFEN
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+     C           KFAB16    CHAINXFAB22              N99
+    C**
+    C******  SI SAISIE DES ENCOURS TERMINE ==> *IN39 ON
+    C**
+D1  C           FA2202    IFEQ 'T'
+     C                     MOVE *ON       *IN39
+     C                     MOVE LIBF,1    LIBFIN
+X1  C                     ELSE
+     C                     MOVE *OFF      *IN39
+     C                     MOVE *BLANK    LIBFIN
+F1  C                     ENDIF
+    C**
+    C******  LECTURE MACHINE
+    C**
+     C           KMAC01    CHAINMACHIN               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVE *BLANK    TITETE
+     C                     MOVEL'INCONNU' TITETE
+F1  C                     ENDIF
+    C**
+    C******  LECTURE CONDUCTEUR MACHINE
+    C**
+     C                     MOVE *BLANK    NOMPRE
+     C           KFAB04    CHAINXFAB04               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' NOMPRE
+F1  C                     ENDIF
+    C**
+    C****** APPEL PROGRAMME CALCUL DU BILAN D'UNE OP => QTE ET TPS
+    C******          POUR L'ATELIER DU COLLAGE
+    C**
+D1  C           FAATEL    IFEQ '82'
+    C           FAATEL    OREQ '70'
+D2  C           FAUSIN    IFEQ 4
+    C           FAUSIN    OREQ 7
+    C           FAUSIN    OREQ 2
+     C                     Z-ADDFAUSIN    YYUSIN
+     C                     MOVE SECT      YYSECT
+     C                     MOVE SSECT     YYSSEC
+     C                     MOVE NOMAC     YYMAC
+     C                     Z-ADDFACONF    YYCONF
+     C                     Z-ADDFASEQ     YYSEQ
+     C                     Z-ADDFAISEQ    YYISEQ
+     C                     Z-ADDFAOPNU    YYOPNU
+     C                     Z-ADDNOPRO     YYPRO
+     C                     CLEARPARM7
+     C                     CALL 'FAB541£'
+     C           PARM6     PARM PARM6     PARM6
+     C           PARM7     PARM PARM7     PARM7
+    C**** PLUS NECESSAIRE D'AJOUTER PPQFEU CAR
+    C**** LES MODIFICATIONS SE FONT SANS DEPOINTER
+    C****                 ADD  PPQFEU    INIBON
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*
+    C*---------------------------------------------------------------*
+    C*       AFFICHAGE PAPIERS PRODUITS SUR CETTE OP                 *
+    C*---------------------------------------------------------------*
+    C*
+     C           SSFIC     TAG
+     C                     SETOF                     80
+     C                     MOVEA'100'     *IN,60
+     C                     WRITEF03
+     C                     Z-ADD0         RCD
+     C                     SETOF                     60
+    C**
+    C****** RAZ QTE ET NOMBRE PALETTES
+    C**
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+    C**
+     C                     Z-ADD0         TOTBO2
+     C                     Z-ADD0         TOTBON
+     C                     Z-ADD0         TOTENC
+    C**
+     C                     MOVE *BLANK    LIBENC
+     C                     MOVE *BLANK    RUP4
+     C                     Z-ADD0         RUP2
+     C                     Z-ADD0         RUP1
+     C                     MOVE *BLANK    RUP3
+     C                     MOVE LIB,1     LIBES
+    C**
+     C                     Z-ADD0         ENR     60
+     C                     Z-ADD0         DATEQ2
+     C                     Z-ADD0         XPEQUI
+     C                     Z-ADDFAUSIN    XAUSIN
+     C                     MOVE *BLANK    PAPI
+     C                     MOVE *BLANK    REFOUR
+     C                     Z-ADD0         GRAMM
+     C                     Z-ADD0         GRAREL
+     C                     MOVE *BLANKS   GRALFA
+    C**
+    C******  ZONE INDIQUANT SI SAUT DE LIGNE DS SS-FICHIER
+    C**
+     C                     Z-ADD0         SAUT    10
+    C**
+     C           KFAB11    SETLLXFAB11
+    C**
+    C****** REMPLISSAGE DU SOUS-FICHIER => LECTURE DES ENTREES ENCOURS
+    C**
+     C           LAB       TAG
+     C           KFA11A    READEXFAB11                 8580
+    C**
+D1  C           *IN80     IFEQ *ON
+     C                     EXSR TOTAL
+     **
+D2  C           TOTLIG    IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+F2  C                     ENDIF
+     **
+    C                     GOTO PROD1
+F1  C                     ENDIF
+     **
+D1  C           GRAREL    IFEQ 0
+     C                     MOVE *BLANKS   GRALFA
+X1  C                     ELSE
+     C                     MOVE GRAREL    GRALFA
+F1  C                     ENDIF
+    C**
+    C****** 1ERE LECTURE
+    C**
+D1  C           ENR       IFEQ 0
+     C                     MOVE QUALIT    LIBENC
+     C                     MOVE FOUB      RUP4
+     **
+     C                     MOVE XMAC      RUP3
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+     C                     ADD  1         ENR
+    C**
+    C****** RUPTURE SUR TYPE D'ENCOURS
+    C**
+D1  C           QUALIT    IFNE LIBENC
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+     **
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+     C                     MOVE QUALIT    LIBENC
+     C                     MOVE FOUB      RUP4
+     C                     MOVE XMAC      RUP3
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+D1  C           DTEQ2     IFNE DTEQ
+     C                     ADD  NBFE      QTFAIT
+     C                     SUB  FAQRES    QTFAIT
+     C                     ADD  NBFE      TOTBO2
+     C                     SUB  FAQRES    TOTBO2
+     C                     ADD  NBFE      TOTBON
+     C                     SUB  FAQRES    TOTBON
+     C                     ADD  1         NBFAIT
+X1  C                     ELSE
+     C                     ADD  NBFE      QTENC
+     C                     SUB  FAQRES    QTENC
+     C                     ADD  NBFE      TOTENC
+     C                     SUB  FAQRES    TOTENC
+     C                     ADD  NBFE      TOTBON
+     C                     SUB  FAQRES    TOTBON
+     C                     ADD  1         NBENC
+F1  C                     ENDIF
+    C                     GOTO LAB
+    C*
+    C*---------------------------------------------------------------*
+    C*       AFFICHAGE ENCOURS PRODUITS SUR CETTE OP                 *
+    C*---------------------------------------------------------------*
+    C*
+     C           PROD1     TAG
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER
+    C**
+D1  C           RCD       IFGT 0
+    C           SAUT      ANDEQ1
+     C           RCD       DIV  5         RES01   20
+     C                     MVR            RESTE   10
+D2  C           RESTE     IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         SAUT
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+    C**
+     C                     Z-ADD0         RUP1
+     C                     Z-ADD0         RUP2
+     C                     MOVE *BLANK    RUP3
+     C                     MOVE *BLANK    RUP4
+     C                     MOVE LIB,1     LIBES
+    C**
+     C                     Z-ADD0         ENR
+     C                     Z-ADD0         DATEQ2
+     C                     Z-ADD0         XPEQUI
+     C                     Z-ADD0         XATENC
+     C                     Z-ADDFAUSIN    XAUSIN
+     C                     Z-ADD0         FAOPAL
+    C**
+     C           KFAB10    SETLLXFAB10
+    C**
+    C****** REMPLISSAGE DU SOUS-FICHIER => LECTURE DES ENTREES ENCOURS
+    C**
+     C           LABA      TAG
+     C           KFA10A    READEXFAB10                 8580
+    C**
+D1  C           *IN80     IFEQ *ON
+     C                     EXSR TOTAL
+    C**
+D2  C           FAATEL    IFEQ '82'
+    C           TOTBON    ANDEQ0
+    C           FAATEL    OREQ '70'
+    C           TOTBON    ANDEQ0
+    C*
+D3  C           FAUSIN    IFEQ 4
+    C           FAUSIN    OREQ 7
+    C           FAUSIN    OREQ 2
+     C                     ADD  INIBON    TOTBON
+F3  C                     ENDIF
+F2  C                     ENDIF
+     **
+D2  C           TOTENC    IFEQ 0
+     C                     Z-ADDPPQFEU    TOTENC
+F2  C                     ENDIF
+     **
+D2  C           TOTLIG    IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+F2  C                     ENDIF
+     **
+D2  C           SVGARN    IFEQ 'PP'
+    C                     GOTO CONSO2
+X2  C                     ELSE
+    C                     GOTO CONSO
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C****** 1ERE LECTURE
+    C**
+D1  C           ENR       IFEQ 0
+     C                     MOVE *BLANK    LIBENC
+     C                     MOVE *BLANK    RUP4
+     C           KFAB20    CHAINXFAB20               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' LIBENC
+X2  C                     ELSE
+     C                     MOVELFALEN2    LIBENC
+F2  C                     ENDIF
+     C                     Z-ADDXATENC    RUP1
+     **
+     C                     MOVE XMAC      RUP3
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+     C                     ADD  1         ENR
+    C**
+    C****** RUPTURE SUR TYPE D'ENCOURS
+    C**
+D1  C           XATENC    IFNE RUP1
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+     **
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+     C                     Z-ADDXATENC    RUP1
+     C                     MOVE XMAC      RUP3
+     **
+     C                     MOVE *BLANK    LIBENC
+     C           KFAB20    CHAINXFAB20               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' LIBENC
+X2  C                     ELSE
+     C                     MOVELFALEN2    LIBENC
+F2  C                     ENDIF
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+D1  C           DTEQ2     IFNE DTEQ
+     C                     ADD  FAQTFE    QTFAIT
+     C                     ADD  FAQTFE    TOTBO2
+     C                     ADD  FAQTFE    TOTBON
+     C                     ADD  1         NBFAIT
+X1  C                     ELSE
+     C                     ADD  FAQTFE    QTENC
+     C                     ADD  FAQTFE    TOTENC
+     C                     ADD  FAQTFE    TOTBON
+     C                     ADD  1         NBENC
+F1  C                     ENDIF
+    C                     GOTO LABA
+    C*
+    C*---------------------------------------------------------------*
+    C*       AFFICHAGE PAPIERS CONSOMMES SUR CETTE OP                *
+    C*---------------------------------------------------------------*
+    C*
+     C           CONSO     TAG
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER
+    C**
+     C                     MOVE '0'       *IN23
+     C                     MOVE '0'       *IN88
+     C                     MOVE REFMAC    SAVMAC  5
+     C           KMUL3     SETLLPAPMUL3                  80
+     C  N80      KMUL3     SETLLSORMCXL3                 80
+D1  C           *IN80     IFEQ '0'
+    C           FAUSIN    ANDEQ4
+    C           SECT      ANDEQ'3'
+    C           SSECT     ANDEQ'1'
+    C           NOMAC     ANDEQ'06'
+     C                     MOVE '2'       SECT
+F1  C                     END
+D1  C           *IN80     IFEQ '0'
+    C           FAUSIN    ANDEQ2
+    C           SECT      ANDEQ'1'
+    C           SSECT     ANDEQ'3'
+    C           NOMAC     ANDEQ'03'
+     C                     MOVE '2'       SECT
+     C                     MOVE '2'       SSECT
+     C                     MOVE '06'      NOMAC
+     C                     SETON                     88
+F1  C                     END
+     C           LECNEU    TAG
+     *          ------    ---
+D1  C           RCD       IFGT 0
+    C           SAUT      ANDEQ1
+     C           RCD       DIV  5         RES01
+     C                     MVR            RESTE
+D2  C           RESTE     IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         SAUT
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+    C**
+     C                     Z-ADD0         RUP1
+     C                     MOVE *BLANK    LIBENC
+     C                     MOVE *BLANK    RUP4
+     C                     Z-ADD0         RUP2
+     C                     MOVE *BLANK    RUP3
+     C                     MOVE LIB,2     LIBES
+    C**
+     C                     Z-ADD0         ENR
+     C                     Z-ADD0         DATEQ2
+     C                     Z-ADD0         XPEQUI
+     C                     Z-ADDFAUSIN    XAUSIN
+     C                     Z-ADD0         FAOPAL
+     C                     MOVE *BLANK    PAPI
+     C                     MOVE *BLANK    REFOUR
+     C                     Z-ADD0         GRAMM
+     C                     Z-ADD0         GRAREL
+     C                     MOVE *BLANKS   GRALFA
+    C**
+     C  N23      KMUL3     SETLLPAPMUL3                  80
+     C   23      KMUL3     SETLLSORMCXL3                 80
+    C**
+    C****** REMPLISSAGE DU SOUS-FICHIER => LECTURE DES ENTREES ENCOURS
+    C**
+     C           XAB       TAG
+     C                     SETOF                       2122
+     C                     SETOF                       3132
+D1  C           *IN23     IFEQ '0'
+     C           KMUL3     READEPAPMUL3                8580
+X1  C                     ELSE
+     C           KMUL3     READESORMCXL3               8580
+F1  C                     END
+    C**
+D1  C           *IN80     IFEQ *ON
+     C                     EXSR TOTAL
+     **
+D2  C           TOTLIG    IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+F2  C                     ENDIF
+     **
+D2  C           *IN23     IFEQ '0'
+     C                     MOVE '1'       *IN23
+    C                     GOTO LECNEU
+F2  C                     END
+D2  C           FAUSIN    IFEQ 4
+    C           SECT      ANDEQ'2'
+    C           SSECT     ANDEQ'1'
+    C           NOMAC     ANDEQ'06'
+     C                     MOVE '3'       SECT
+F2  C                     END
+D2  C           FAUSIN    IFEQ 2
+    C           SECT      ANDEQ'2'
+    C           SSECT     ANDEQ'2'
+    C           NOMAC     ANDEQ'06'
+    C           *IN88     ANDEQ'1'
+     C                     MOVE SAVMAC    REFMAC
+F2  C                     END
+    C                     GOTO CONSO1
+F1  C                     ENDIF
+     **
+D1  C           PRIOR     IFEQ 21
+    C           PRIOR     OREQ 71
+    C           SUIMP     CABLT4         XAB
+F1  C                     END
+D1  C           PRIOR     IFEQ 52
+    C           PRIOR     OREQ 72
+    C           SUIMP     CABGT3         XAB
+F1  C                     END
+     **
+D1  C           GRAREL    IFEQ 0
+     C                     MOVE *BLANKS   GRALFA
+X1  C                     ELSE
+     C                     MOVE GRAREL    GRALFA
+F1  C                     ENDIF
+    C**
+    C**
+    C****** 1ERE LECTURE
+    C**
+D1  C           ENR       IFEQ 0
+     C                     MOVE QUALIT    LIBENC
+     C                     MOVE FOUB      RUP4
+     **
+     C                     MOVE XMAC      RUP3
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+     C                     ADD  1         ENR
+    C**
+    C****** RUPTURE SUR LA QUALITE PAPIER
+    C**
+D1  C           QUALIT    IFNE LIBENC
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+     **
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+     C                     MOVE QUALIT    LIBENC
+     C                     MOVE FOUB      RUP4
+     C                     MOVE XMAC      RUP3
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+D1  C           FOUB      IFEQ 'F'
+D2  C           *IN21     IFEQ '1'
+    C           *IN31     OREQ '1'
+     C                     ADD  NBFE      QTENC
+     C                     SUB  FEUBOU    QTENC
+X2  C                     ELSE
+     C                     ADD  CONSOF    QTENC
+F2  C                     END
+     C                     ADD  1         NBENC
+X1  C                     ELSE
+D2  C           *IN21     IFEQ '1'
+    C           *IN31     OREQ '1'
+     C                     ADD  PDSBOB    QTENC
+     C                     SUB  PDSBOU    QTENC
+X2  C                     ELSE
+     C                     ADD  CONSOB    QTENC
+F2  C                     END
+     C                     ADD  1         NBENC
+F1  C                     ENDIF
+    C                     GOTO XAB
+    C*
+    C*---------------------------------------------------------------*
+    C*       AFFICHAGE ENCOURS CONSOMMES SUR CETTE OP                *
+    C*---------------------------------------------------------------*
+    C*
+     C           CONSO1    TAG
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER
+    C**
+D1  C           RCD       IFGT 0
+    C           SAUT      ANDEQ1
+     C           RCD       DIV  5         RES01
+     C                     MVR            RESTE
+D2  C           RESTE     IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         SAUT
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         QTENCB
+     C                     Z-ADD0         NBENC
+    C**
+     C                     Z-ADD0         RUP1
+     C                     Z-ADD0         RUP2
+     C                     MOVE *BLANK    RUP3
+     C                     MOVE *BLANK    RUP4
+     C                     MOVE LIB,2     LIBES
+    C**
+     C                     Z-ADD0         ENR
+     C                     Z-ADD0         DATEQ3
+     C                     Z-ADD0         FFEQUI
+     C                     Z-ADD0         XATENC
+     C                     Z-ADDFAUSIN    XAUSIN
+     C                     Z-ADD0         FAOPAL
+     C                     Z-ADD0         FACBPA
+     C                     Z-ADD0         NOBOU
+    C**
+     C                     Z-ADDFAUSIN    FFUSIN
+     C                     Z-ADDFACONF    FFCONF
+     C                     Z-ADDFASEQ     FFSEQ
+     C                     Z-ADDFAISEQ    FFISEQ
+     C                     Z-ADDNOPRO     FFPRO
+     C                     Z-ADDFAOPNU    FFOPNU
+    C**
+     C           KFA10B    SETLLYFAB10
+    C**
+    C****** REMPLISSAGE DU SOUS-FICHIER => LECTURE DES SORTIES ENCOURS
+    C**
+     C           XABA      TAG
+     C           KFA10C    READEYFAB10                 8580
+    C**
+D1  C           *IN80     IFEQ *ON
+     C                     EXSR TOTAL
+     **
+D2  C           TOTLIG    IFNE 0
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+F2  C                     ENDIF
+     **
+D2  C           RCD       IFGT 0
+     C                     Z-ADDRCD       RCDSAV  20
+     C                     Z-ADD1         RCD
+F2  C                     ENDIF
+    C                     GOTO CONSO2
+F1  C                     ENDIF
+    C**
+    C****** ON NE TIENT PAS COMPTE DES PALETTES CONSOMMÉES
+    C****** AUTOMATIQUEMENT : FOURREAUX POUR NEUVILLE
+    C******    LE POINTEUR FA1001 EST EGAL À "A"
+    C**
+    C           FA1001    CABEQ'A'       XABA
+    C**
+    C****** ON NE TIENT PAS COMPTE POUR TOURY / CHABANAIS / FEG
+    C****** DES PALETTES CONSOMMÉES DE PRODUITS FINIS
+    C****** QUI SE FAIT AUTOMATIQUEMENT LORS DE LA CRÉATION
+    C****** EXCEPTION : PRESENTOIRS
+    C**
+D1  C           FAUSIN    IFEQ 3
+    C           FAUSIN    OREQ 5
+    C           FAUSIN    OREQ 7
+    C           XATENC    CABEQ9         XABA
+F1  C                     ENDIF
+    C**
+    C****** PRESENTOIRS => AFFICHAGE DES COMPOSANTS SORTIS SLT
+    C**
+D1  C           FAUSIN    IFEQ 2
+    C           XATENC    ANDEQ9
+D2  C           SVGARN    IFEQ 'PP'
+    C           XNOPRO    CABEQFFPRO     XABA
+X2  C                     ELSE
+    C                     GOTO XABA
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  NEUVILLE => AFFICHER SEULEMENT LES FOURREAUX CONSOMMES
+    C**
+D1  C           FAUSIN    IFEQ 4
+    C           XATENC    ANDEQ9
+    C           XNOPRO    CABEQFFPRO     XABA
+F1  C                     ENDIF
+    C**
+    C****** 1ERE LECTURE
+    C**
+D1  C           ENR       IFEQ 0
+     C                     MOVE *BLANK    LIBENC
+     C                     MOVE *BLANK    RUP4
+     C           KFAB20    CHAINXFAB20               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' LIBENC
+X2  C                     ELSE
+     C                     MOVELFALEN2    LIBENC
+F2  C                     ENDIF
+     **
+     C                     Z-ADDXATENC    RUP1
+     **
+     C                     MOVE FMAC      RUP3
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC03    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+     C                     ADD  1         ENR
+    C**
+    C****** RUPTURE SUR TYPE D'ENCOURS
+    C**
+D1  C           XATENC    IFNE RUP1
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+     **
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         QTENCB
+     C                     Z-ADD0         NBENC
+     C                     Z-ADDXATENC    RUP1
+     C                     MOVE FMAC      RUP3
+     **
+     C                     MOVE *BLANK    LIBENC
+     C                     MOVE *BLANK    RUP4
+     C           KFAB20    CHAINXFAB20               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' LIBENC
+X2  C                     ELSE
+     C                     MOVELFALEN2    LIBENC
+F2  C                     ENDIF
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC03    CHAINMACHIN               99
+D2  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X2  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F2  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+F1  C                     ENDIF
+    C**
+D1  C           DTEQ3     IFNE DTEQ
+     C                     ADD  FAQTFE    QTFAIT
+     C                     SUB  FAQTFR    QTFAIT
+     C                     ADD  1         NBFAIT
+X1  C                     ELSE
+     C                     ADD  FAQTFE    QTENC
+     C                     SUB  FAQTFR    QTENC
+    C**
+    C*****   TOUTES LES PALETTES SONT GÉRÉES EN FEUILLES
+    C*****    SAUF CELLES PROVENANT DE LA CELLOPHANEUSE
+    C*****    QUI SONT GÉRÉES EN BOITES
+    C**
+D2  C           RUP1      IFNE 6
+     C           FAQTFE    MULT POSF1     XXBOIT
+     C           FAQTFR    MULT POSF1     YYBOIT
+X2  C                     ELSE
+     C                     Z-ADDFAQTFE    XXBOIT
+     C                     Z-ADDFAQTFR    YYBOIT
+F2  C                     ENDIF
+    C**
+D2  C           RUP1      IFNE 9
+     C                     ADD  XXBOIT    QTENCB
+     C                     SUB  YYBOIT    QTENCB
+F2  C                     ENDIF
+     C                     ADD  1         NBENC
+F1  C                     ENDIF
+    C                     GOTO XABA
+    C*
+    C*---------------------------------------------------------------*
+    C*       AFFICHAGE PRODUITS FINIS CONSOMMÉS                      *
+    C*---------------------------------------------------------------*
+    C*
+     C           CONSO2    TAG
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER
+    C**
+D1  C           SVGARN    IFEQ 'PP'
+D2  C           RCDSAV    IFNE 0
+     C                     Z-ADDRCDSAV    RCD
+F2  C                     END
+    C**
+     C           KIMP2     CHAINCOMPREL1             80
+D2  C           *IN80     DOWEQ'0'
+     C                     Z-ADD0         QTFAIT
+     C                     Z-ADD0         NBFAIT
+     C                     Z-ADD0         QTENC
+     C                     Z-ADD0         NBENC
+    C**
+     C                     MOVE LIB,2     LIBES
+    C**
+     C                     Z-ADD0         ENR
+     C                     Z-ADD0         DATEQ3
+     C                     Z-ADD0         FFEQUI
+     C                     Z-ADD0         XATENC
+     C                     Z-ADDFAUSIN    XAUSIN
+     C                     Z-ADD0         FAOPAL
+     C                     Z-ADD0         NOBOU
+    C**
+     C                     Z-ADDFAUSIN    FFUSIN
+     C                     Z-ADDFACONF    FFCONF
+     C                     Z-ADDFASEQ     FFSEQ
+     C                     Z-ADDFAISEQ    FFISEQ
+     C                     Z-ADDNOPRO     FFPRO
+     C                     Z-ADDFAOPNU    FFOPNU
+     C           KPRF41    SETLLYPRF02
+    C**
+    C****** REMPLISSAGE DU SOUS-FICHIER => LECTURE DES SORTIES ENCOURS
+    C**
+     C           XABB      TAG
+     C           KPRF41    READEYPRF02                 8581
+    C**
+D3  C           *IN81     IFEQ *ON
+     C                     EXSR TOTAL
+     **
+D4  C           TOTLIG    IFNE 0
+     C                     Z-ADD9         RUP1
+     C                     ADD  1         RCD
+     C                     Z-ADD0         CHOIX
+     C                     WRITEF02
+     C                     Z-ADD1         SAUT
+F4  C                     ENDIF
+     **
+    C                     GOTO SUIGAR
+F3  C                     ENDIF
+    C**
+    C****** PRESENTOIRS => AFFICHAGE DES COMPOSANTS SORTIS SLT
+    C**
+    C**
+    C****** 1ERE LECTURE
+    C**
+     C                     MOVE *BLANKS   LIBENC
+     C                     MOVEL'COMPOSAN'LIBENC
+     C                     MOVE NOPGAR    LIBENC
+    C**
+     C                     ADD  1         ENR
+    C**
+D3  C           DTEQ3     IFNE DTEQ
+     C                     ADD  PFQREL    QTFAIT
+     C                     ADD  1         NBFAIT
+X3  C                     ELSE
+     C                     ADD  PFQREL    QTENC
+    C**
+     C                     Z-ADDPFQREL    XXBOIT
+F3  C                     ENDIF
+    C                     GOTO XABB
+     C           SUIGAR    TAG
+     C           KIMP2     READECOMPREL1                 80
+F2  C  N80                END
+F1  C                     END
+    C**
+    C****** AFFICHAGE DU FORMAT DE CONTROLE F03
+    C**
+     C           SUITE     TAG
+    C**
+    C****** RECHERCHE NATURE DE CDE CLIENT ET CODE DE GESTION DE L'OF
+    C**
+     C                     MOVE *BLANK    NATCDE
+     C                     MOVEL*BLANKS   LNATCD
+     C                     MOVE '0'       *IN24
+     C                     Z-ADDSTE       WSTE
+     C                     Z-ADDNOCLI     WNOCLI
+     C                     Z-ADDNOPRO     WOPRO
+     C                     Z-ADDFACONF    WFACON
+     C                     Z-ADDFASEQ     WFASEQ
+     C                     MOVE SECT      WSECT
+     C                     MOVE SSECT     WSSECT
+     C                     MOVE NOMAC     WNOMAC
+     C                     Z-ADDPPEQUI    WEQUIP
+     C                     Z-ADD0         WSTOND
+     C                     MOVE *BLANK    CODGOF
+     C                     MOVE *BLANKS   LCODGO
+     C                     CALL 'FAB015£'
+     C                     PARM           PARMA
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE WSTOND    PXVALE    P
+     C           KEYUSI    CHAINPARAME               99
+D1  C           *IN99     IFEQ '0'
+     C                     MOVE PXVALE    NATCDE
+     C                     MOVELPXLIBE    LNATCD
+X1  C                     ELSE
+     C                     MOVE '1'       *IN24
+F1  C                     ENDIF
+     *
+D1  C           CODGOF    IFNE *BLANK
+     C                     MOVE 'CGES'    PXARGU
+     C                     MOVE CODGOF    PXVALE    P
+     C           KEYUSI    CHAINPARAMEF1             99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVELPXLIBE    LCODGO
+F2  C                     ENDIF
+F1  C                     ENDIF
+     *
+     C                     MOVE '0'       *IN25
+D1  C           CODGOF    IFNE 'D'
+     C                     MOVE '1'       *IN25
+F1  C                     ENDIF
+    C**
+    C******  RECHERCHE MINI MAXI
+    C**
+     C                     EXSR MINMAX
+    C**
+     C                     WRITEF01
+     C                     SETON                     62
+     C           RCD       COMP 0                    61
+     C                     EXFMTF03
+    C**
+    C*****   SI F12 ==> ON SIMULE F3
+    C**
+D1  C           *IN03     IFEQ *ON
+    C           *IN12     OREQ *ON
+D2  C           *IN12     IFEQ *ON
+     C                     MOVE *ON       *IN03
+F2  C                     ENDIF
+     C                     EXSR GESFEN
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+     C           TCHE      TAG
+    C**
+    C******  F1=PRODUCTION ENCOURS
+    C**
+D1  C           *IN01     IFEQ *ON
+    C**
+    C******  TEST SI MASSICOT, COMPLEXEUSE
+    C******  SI COUPEUSE 1303 DOIT FABRIQUER DU NEUTRE (98=OFF)
+    C******             F1 INTERDIT
+    C**
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+    C           *IN98     ANDEQ*OFF
+    C                     GOTO SUITE
+F2  C                     ENDIF
+    C**
+    C           FAATEL    CABEQ'15'      SUITE
+    C           FAATEL    CABEQ'22'      SUITE
+     **
+D2  C           RCD       IFEQ 0
+     C                     EXSR SELENC
+    C           *IN12     CABEQ*ON       SUITE
+X2  C                     ELSE
+     C           1         CHAINF02                  99
+D3  C           *IN99     IFEQ *ON
+    C           LIBES     ORNE 'FABRIQ.'
+     C                     EXSR SELENC
+    C           *IN12     CABEQ*ON       SUITE
+X3  C                     ELSE
+     C                     Z-ADDRUP1      FATENC
+F3  C                     ENDIF
+F2  C                     ENDIF
+     **
+     C                     WRITEF03
+     C                     MOVE 'N'       FLASH
+     C                     MOVE PARM4     PAS4   68
+     C                     MOVE *ZEROS    PARM20
+     C                     CALL 'FAB526£'
+     C           PAS4      PARM PAS4      PAS4
+     C           INDIC1    PARM INDIC1    INDIC1
+     C           PARM20    PARM PARM20    PARM20
+     **
+     ******  RECUP ZONE FLASH2 : FLASH2=X => PALETTE ANNULEE PAR F12
+     **
+     C                     MOVE PAS4      PAS4A
+     **
+     ******  ROCHECHOUART => PRODUIT FINI
+     ******  ET NEUVILLE  => PRODUIT FINI
+     ******  OF EN AMALGAME => GENERATION PALETTE SUR OF CLIENT+MVTS
+     **
+D2  C           FAUSIN    IFEQ 2
+    C           FATENC    ANDEQ9
+    C           FLASH2    ANDNE'X'
+    C           FAUSIN    OREQ 4
+    C           FATENC    ANDEQ9
+    C           FLASH2    ANDNE'X'
+    C           TS1       ANDEQ'M'
+     C                     Z-ADDSTE       AMSTE
+     C                     Z-ADDNOCLI     AMCLI
+     C                     Z-ADDNOPRO     AMPRO
+     C                     Z-ADDFACONF    AMCONF
+     C                     Z-ADDFASEQ     AMSEQ
+     C           KPRF11    CHAINXPRF11               99
+    C           *IN99     CABEQ*ON       SSFIC
+     **
+     C                     MOVE FAUSIN    PASUS
+     C                     MOVE PARMOF    PASOF  11
+     C                     MOVE *BLANK    PASOK   1
+     C                     MOVE FANPRT    PASPRT
+     C                     CALL 'PRF565£'
+     C           PASUS     PARM PASUS     PASUS
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           PASOF     PARM PASOF     PASOF
+     C           PASOK     PARM PASOK     PASOK
+    C**
+    C******  PALETTE NON GENEREE SUR OF CLIENT => ECRAN ERREUR
+    C**
+D3  C           PASOK     IFEQ 'N'
+     C                     EXFMTF96
+F3  C                     ENDIF
+F2  C                     ENDIF
+    C**
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F2=CONSOMMATION ENCOURS
+    C**
+D1  C           *IN02     IFEQ *ON
+    C**
+    C******  SI COUPEUSE 1303 DOIT CONSOMMER DU NEUTRE 98=OFF
+    C******             F2 INTERDIT
+    C**
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+    C           *IN98     ANDEQ*OFF
+    C                     GOTO SUITE
+F2  C                     ENDIF
+    C**
+     C                     MOVE PARM1     PAS1A
+     C                     CALL 'FAB525£'
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC     PARM INDIC     INDIC
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F6=ENTREE ENCOURS PAR FLASHAGE CODE BARRE
+    C**
+D1  C           *IN06     IFEQ *ON
+     C                     WRITEF03
+     C                     MOVE 'O'       FLASH
+     C                     MOVE PARM4     PAS4
+     C                     MOVE *ZEROS    PARM20
+     C                     CALL 'FAB526£'
+     C           PAS4      PARM PAS4      PAS4
+     C           INDIC1    PARM INDIC1    INDIC1
+     C           PARM20    PARM PARM20    PARM20
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F7=CLOTURE DES ENCOURS
+    C**
+D1  C           *IN07     IFEQ *ON
+     C                     EXFMTF08
+    C           *IN12     CABEQ*ON       SUITE
+     **
+     C           KFAB16    CHAINXFAB16               9985
+D2  C           *IN85     IFEQ *ON
+     C                     CALL 'FAB609£'
+    C                     GOTO SSFIC
+F2  C                     ENDIF
+    C**
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE 'T'       FA1602
+     C                     EXCPTMAJ16
+F2  C                     ENDIF
+     **
+     C           KFAB16    CHAINXFAB22               99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE 'T'       FA2202
+     C                     EXCPTMAJ22
+F2  C                     ENDIF
+     C                     MOVE *ON       *IN39
+     C                     MOVE LIBF,1    LIBFIN
+     C                     MOVE *ON       *IN03
+     C                     EXSR GESFEN
+    C                     GOTO FIN
+F1  C                     ENDIF
+    C**
+    C******  F8=RETOUR BOUCHON PAPIER NEUTRE
+    C**
+D1  C           *IN08     IFEQ *ON
+     C                     WRITEF03
+     C                     MOVE PARM1     PAS1A
+     C                     CALL 'FAB530£'
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC4    PARM INDIC4    INDIC4
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F10=PAPIER PRODUIT (ENTREE EN STOCK PAPIER)
+    C**
+D1  C           *IN10     IFEQ *ON
+    C**
+    C******  SI COUPEUSE 1303 DOIT FABRIQUER IMPRIME (98=ON)
+    C******        ==>  F10 INTERDIT
+    C******  EXCEPTION SI CLIENT 8928 ET FABRICATION CGPSOF => F10 OK
+    C**
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+     **
+D3  C           *IN98     IFEQ *ON
+    C           NOCLI     ANDNE8928
+    C                     GOTO SUITE
+F3  C                     ENDIF
+F2  C                     ENDIF
+     **
+     ******  TEST SI FABRIC. PAPIER AUTORISE SUR CETTE MACHINE
+     **
+     C                     MOVE 'F'       FAEFC
+     C                     Z-ADD1         XATENC
+     C           KFAB13    CHAINXFAB13               99
+D2  C           *IN99     IFEQ *ON
+     C                     EXFMTF97
+    C                     GOTO SUITE
+F2  C                     ENDIF
+     **
+     C                     WRITEF03
+     C                     MOVE PARM4     PAS4   68
+     C                     MOVE FANPRT    PASPRT
+     C                     CALL 'FAB529L'
+     C           PAS4      PARM PAS4      PAS4
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           INDIC3    PARM INDIC3    INDIC3
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F11=PAPIER CONSOMME (SORTIE DE STOCK PAPIER)
+    C**
+D1  C           *IN11     IFEQ *ON
+    C**
+    C******  SI COUPEUSE 1303 DOIT CONSOMMER IMPRIME (98=ON)
+    C******             F11 INTERDIT
+    C**
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+    C           *IN98     ANDEQ*ON
+    C                     GOTO SUITE
+F2  C                     ENDIF
+     **
+     ******  TEST SI SORTIE PAPIER AUTORISEE SUR CETTE MACHINE
+     **
+     C                     MOVE 'C'       FAEFC
+     C                     Z-ADD1         XATENC
+     C           KFAB13    CHAINXFAB13               99
+D2  C           *IN99     IFEQ *ON
+     C                     EXFMTF97
+    C                     GOTO SUITE
+F2  C                     ENDIF
+     **
+     C                     WRITEF03
+     C                     MOVE PARM1     PAS1A
+     C                     CALL 'FAB528£'
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC2    PARM INDIC2    INDIC2
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F13=VISUALISATION DES ENCOURS PRODUIT
+    C**
+D1  C           *IN13     IFEQ *ON
+     C                     WRITEF03
+     C                     Z-ADDFACONF    VVCONF
+     C                     Z-ADDFASEQ     VVSEQ
+     C                     Z-ADDFAISEQ    VVISEQ
+     C                     Z-ADDNOPRO     VVPRO
+     C                     MOVE FAUSIN    VVUSI   1
+     C                     CALL 'FAB542£'
+     C           VVUSI     PARM VVUSI     VVUSI
+     C           PARM5     PARM PARM5     PARM5
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C******  F18=RETOUR BOUCHON ENCOURS
+    C**
+D1  C           *IN18     IFEQ *ON
+     C                     WRITEF03
+     C                     MOVE PARM1     PAS1A
+     C                     CALL 'FAB554£'
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC5    PARM INDIC5    INDIC5
+    C                     GOTO SSFIC
+F1  C                     ENDIF
+    C**
+    C****** LECTURE DU SOUS-FICHIER F02
+    C**
+     C                     MOVE *OFF      *IN36
+     C           NEXT      TAG
+     C                     READCF02                    8981
+    C**
+D1  C           *IN89     IFEQ *ON
+    C           RCD       CABNE0         SUITE
+F1  C                     ENDIF
+    C**
+    C******  ENTREE SANS OPTION => AFFICHAGE FENETRE TOUCHE FONCTION
+    C**
+D1  C           *IN81     IFEQ *ON
+    C           RCD       OREQ 0
+     **
+D2  C           *IN38     IFEQ *ON
+    C           *IN39     OREQ *ON
+    C                     GOTO SUITE
+F2  C                     ENDIF
+     **
+    C           *IN36     CABEQ*ON       SUITE
+     **
+     C                     EXFMTF09
+     **
+D2  C           *IN01     IFEQ *OFF
+    C           *IN02     ANDEQ*OFF
+    C           *IN06     ANDEQ*OFF
+    C           *IN10     ANDEQ*OFF
+    C           *IN11     ANDEQ*OFF
+    C           *IN07     ANDEQ*OFF
+    C           *IN08     ANDEQ*OFF
+    C           *IN13     ANDEQ*OFF
+    C           *IN18     ANDEQ*OFF
+    C                     GOTO SUITE
+F2  C                     ENDIF
+    C                     GOTO TCHE
+F1  C                     ENDIF
+    C**
+    C******  OPTION 1=DETAIL PALETTES PRODUITES OU CONSOMMEES
+    C**
+D1  C           CHOIX     IFEQ 1
+     C                     Z-ADD0         CHOIX
+     C                     UPDATF02
+     C                     MOVE *ON       *IN36
+     **
+D2  C           RUP1      IFEQ 0
+     C                     EXSR ESPAP
+X2  C                     ELSE
+D3  C           LIBES     IFEQ 'FABRIQ.'
+     C                     EXSR ENTREE
+X3  C                     ELSE
+     C                     EXSR SORTIE
+F3  C                     ENDIF
+F2  C                     ENDIF
+    C                     GOTO AGAIN
+F1  C                     ENDIF
+    C**
+    C                     GOTO NEXT
+    C**
+     C           FIN       TAG
+     C                     MOVE '1'       *INLR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : DETAIL ENCOURS PRODUIT                             *
+    C*                                                               *
+    C*****************************************************************
+    C           ENTREE    BEGSR
+    C**
+     C           DEBENT    TAG
+    C**
+     C                     MOVELTX,1      TXT1
+     C                     Z-ADDRUP1      XATENC
+     C                     Z-ADDPPEQUI    XPEQUI
+     C                     Z-ADDDATEQ     DATEQ2
+     C                     Z-ADDFAUSIN    XAUSIN
+    C**
+     C                     Z-ADD999999    FACBPA
+     C                     Z-ADD99999999  DATENT
+    C*---------------------------------------------------------------*
+    C*       LECTURE ENTREES D'ENCOURS SUR L'EQUIPE SELECTIONNEE     *
+    C*---------------------------------------------------------------*
+     C                     SETOF                     90
+     C                     MOVEA'100'     *IN,70
+     C                     WRITEF06
+     C                     Z-ADD0         RCX
+     C                     SETOF                     70
+    C**
+     C           KFA10G    SETGTTFAB10
+     C           ENT1      TAG
+     C           KFA10H    REDPETFAB10                   90
+    C**
+D1  C           *IN90     IFEQ *ON
+    C                     GOTO ENT2
+F1  C                     ENDIF
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+     C                     MOVEL'INCONNU' TITET3
+X1  C                     ELSE
+     C                     MOVELTITETE    TITET2
+     C                     MOVELTITETE    TITET3
+F1  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+    C**
+     C                     ADD  1         RCX
+     C                     Z-ADD0         CHOIX2
+     C                     Z-ADDXPEQUI    XXEQUI
+     C                     MOVE FAUNIT    UNIT
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**  AUTOR=1 AUTORISE À MODIFIER, SUPPRIMER
+     C                     Z-ADD1         AUTOR
+    C**
+     C                     WRITEF05
+    C                     GOTO ENT1
+    C*---------------------------------------------------------------*
+    C*       LECTURE ENTREES D'ENCOURS SUR LES AUTRES EQUIPES        *
+    C*---------------------------------------------------------------*
+     C           ENT2      TAG
+     C                     Z-ADD0         XPEQUI
+     C                     Z-ADD99999999  DATEQ2
+    C**
+     C                     Z-ADD999999    FACBPA
+     C                     Z-ADD99999999  DATENT
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER F05
+    C**
+D1  C           RCX       IFNE 0
+     C                     ADD  1         RCX
+F1  C                     ENDIF
+    C**
+     C           KFA10G    SETGTTFAB10
+     C           ENT11     TAG
+     C           KFA10I    REDPETFAB10                   90
+    C**
+D1  C           *IN90     IFEQ *ON
+D2  C           RCX       IFGT 0
+     C                     Z-ADD1         RCX
+F2  C                     ENDIF
+    C                     GOTO YUITE
+F1  C                     ENDIF
+    C**
+    C******  EXCLUSION PALETTES PRODUITES SUR L'EQUIPE EN COURS
+    C**
+    C           DTEQ2     CABEQDTEQ      ENT11
+    C**
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+     C                     MOVEL'INCONNU' TITET3
+X1  C                     ELSE
+     C                     MOVELTITETE    TITET2
+     C                     MOVELTITETE    TITET3
+F1  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+    C**
+     C                     ADD  1         RCX
+     C                     Z-ADD0         CHOIX2
+     C                     Z-ADDXPEQUI    XXEQUI
+     C                     MOVE FAUNIT    UNIT
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**  AUTOR=0 NON AUTORISE À MODIFIER, SUPPRIMER
+     C                     Z-ADD0         AUTOR
+    C**
+     C                     WRITEF05
+    C                     GOTO ENT11
+    C**
+    C****** AFFICHAGE DU FORMAT DE CONTROLE F06
+    C**
+     C           YUITE     TAG
+    C**
+    C****** RECHERCHE NATURE DE CDE CLIENT ET CODE DE GESTION DE L'OF
+    C**
+     C                     MOVE *BLANK    NATCDE
+     C                     MOVEL*BLANKS   LNATCD
+     C                     MOVE '0'       *IN24
+     C                     Z-ADDSTE       WSTE
+     C                     Z-ADDNOCLI     WNOCLI
+     C                     Z-ADDNOPRO     WOPRO
+     C                     Z-ADDFACONF    WFACON
+     C                     Z-ADDFASEQ     WFASEQ
+     C                     MOVE SECT      WSECT
+     C                     MOVE SSECT     WSSECT
+     C                     MOVE NOMAC     WNOMAC
+     C                     Z-ADDPPEQUI    WEQUIP
+     C                     Z-ADD0         WSTOND
+     C                     MOVE *BLANK    CODGOF
+     C                     MOVE *BLANKS   LCODGO
+     C                     CALL 'FAB015£'
+     C                     PARM           PARMA
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE WSTOND    PXVALE    P
+     C           KEYUSI    CHAINPARAME               99
+D1  C           *IN99     IFEQ '0'
+     C                     MOVE PXVALE    NATCDE
+     C                     MOVELPXLIBE    LNATCD
+X1  C                     ELSE
+     C                     MOVE '1'       *IN24
+F1  C                     ENDIF
+     *
+D1  C           CODGOF    IFNE *BLANK
+     C                     MOVE 'CGES'    PXARGU
+     C                     MOVE CODGOF    PXVALE    P
+     C           KEYUSI    CHAINPARAMEF1             99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVELPXLIBE    LCODGO
+F2  C                     ENDIF
+F1  C                     ENDIF
+     *
+     C                     MOVE '0'       *IN25
+D1  C           CODGOF    IFNE 'D'
+     C                     MOVE '1'       *IN25
+F1  C                     ENDIF
+    C**
+    C******  RECHERCHE MINI MAXI
+    C**
+     C                     EXSR MINMAX
+    C**
+     C                     WRITEF04
+     C                     SETON                     72
+     C           RCX       COMP 0                    71
+     C                     EXFMTF06
+    C**
+    C           *IN12     CABEQ*ON       ENTF
+    C**
+    C****** LECTURE DU SOUS-FICHIER F05
+    C**
+     C           YEXT      TAG
+     C                     READCF05                    8981
+    C           *IN89     CABEQ*ON       YUITE
+    C           *IN81     CABEQ*ON       YUITE
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*       OPTION 1=DETAIL PALETTE                                 *
+    C*                                                               *
+    C*---------------------------------------------------------------*
+D1  C           CHOIX2    IFEQ 1
+     C                     Z-ADD0         CHOIX2
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**
+     C                     UPDATF05
+D2  C           XATENC    IFEQ 2
+     C                     Z-ADDXAUSIN    WWUSIN
+     C                     Z-ADDFACBPA    WWCB
+     C                     CALL 'STOC15£'
+     C           PAS6      PARM PAS6      PAS6
+X2  C                     ELSE
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     CALL 'FAB524£'
+     C           PAS2      PARM PAS2      PAS2
+F2  C                     ENDIF
+    C                     GOTO YEXT
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*       OPTION 2= MODIFICATION DE LA QUANTITÉ D'UNE PALETTE     *
+    C*                                                               *
+    C*---------------------------------------------------------------*
+    C**
+D1  C           CHOIX2    IFEQ 2
+    C           AUTOR     CABEQ0         YUITE          44
+    C**
+    C******  PRODUIT FINI : RT/TY/FE => IMPOSSIBLE MODIFIER STK CONTRO
+    C******  IDEM POUR NB SAUF POUR LES FOURREAUX
+    C**
+D2  C           XAUSIN    IFEQ 2
+    C           XATENC    ANDEQ9
+    C           XAUSIN    OREQ 3
+    C           XATENC    ANDEQ9
+    C           XAUSIN    OREQ 4
+    C           XATENC    ANDEQ9
+    C           TS1       ANDNE'F'
+    C           FAASOR    ANDNE0
+    C           XAUSIN    OREQ 7
+    C           XATENC    ANDEQ9
+    C           FAACST    CABEQ'AA'      YUITE          45
+    C           FAACST    CABEQ'BP'      YUITE          45
+    C           FAACST    CABEQ'CG'      YUITE          45
+    C           FAUDES    CABGT0         YUITE      48
+     **
+     ******  OF EN AMALGAME => PAS DE MODIFICATION POSSIBLE ICI
+     **
+D3  C           XAUSIN    IFEQ 4
+     C                     Z-ADDNOCLI     PFCLI
+     C                     Z-ADDNOPRO     PFPRO
+     C           KPR11A    CHAINYPRF11               99
+    C           *IN99     CABEQ*OFF      YUITE          35
+F3  C                     ENDIF
+     **
+D3  C           XAUSIN    IFNE 4
+     C                     Z-ADDSTE       AMSTE
+     C                     Z-ADDNOCLI     AMCLI
+     C                     Z-ADDNOPRO     AMPRO
+     C                     Z-ADDFACONF    AMCONF
+     C                     Z-ADDFASEQ     AMSEQ
+     C           KPRF11    CHAINXPRF11               99
+    C           *IN99     CABEQ*OFF      YUITE          35
+F3  C                     ENDIF
+     **
+     ******  PALETTE NON EN STOCK MAIS EN ENCOURS / FEG ET NB
+     **
+D3  C           XAUSIN    IFEQ 4
+    C           XAUSIN    OREQ 7
+    C           FAASOR    CABEQ0         APP568
+F3  C                     ENDIF
+     **
+     ******  MODIF INTERDITE SI LA PALETTE A ETE SORTIE DU STOCK PF
+     **
+     C                     Z-ADD0         PFNBOU
+     C                     Z-ADDFACBPA    PFCBPA
+     C           KPRF02    CHAINXPRF02               99
+    C           PF0202    CABEQ'S'       YUITE          34
+     **
+     ******  IMPOSSIBLE MODIFIER SI LA PALETTE A DEJA UN N°BOUCHON >0
+     ******  DS LE STOCK PF PRF02P.
+     **
+     C                     Z-ADD99        PFNBOU
+     C                     Z-ADDFACBPA    PFCBPA
+     C           KPRF02    SETGTXPRF02
+     C           KPRF2A    REDPEXPRF02                   99
+    C           PFNBOU    CABNE0         YUITE      4949
+     **
+     ******  TEST SI PALETTE MISE EN CONTROLE PAR QUALITE
+     ******  C-A-D : MAJ EMPLACEMENT CO-001 => SUIVI NON MIS AJOUR
+     ******  MODIF QTE OU STATUS IMPOSSIBLE ICI
+     **
+D3  C           PFHALL    IFEQ 'CO'
+    C           FAACST    ANDEQ'OK'
+     C                     MOVE *ON       *IN37
+    C                     GOTO YUITE
+F3  C                     ENDIF
+     **
+D3  C           PF0203    IFEQ 'R'
+    C           FAACST    ANDEQ'OK'
+     C                     MOVE *ON       *IN37
+    C                     GOTO YUITE
+F3  C                     ENDIF
+     **
+F2  C                     ENDIF
+    C**
+    C******  SI PRODUIT FINI : TOURY => IMPOSSIBLE MODIFIER STK CONTRO
+    C******  SI PRODUIT FINI : NEUVILLE : IDEM POUR FOURREAUX
+    C******  SI PRODUIT FINI TRANSFERE A AUTRE USINE => MODIF IMPOSSIBLE
+    C**
+D2  C           XAUSIN    IFEQ 3
+    C           XATENC    ANDEQ9
+    C           XAUSIN    OREQ 4
+    C           XATENC    ANDEQ9
+    C           FAACST    CABEQ'DS'      YUITE          46
+F2  C                     ENDIF
+    C**
+     C           APP568    TAG
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     MOVE *ZEROS    PASQTE  7
+     C                     MOVE *BLANK    PASAC   2
+     C                     CALL 'FAB568£'
+     C           PAS2      PARM PAS2      PAS2
+     C           PASQTE    PARM PASQTE    PASQTE
+     C           PASAC     PARM PASAC     PASAC
+D2  C           PASQTE    IFNE *ZEROS
+     C                     MOVE PASQTE    FAQTFE
+F2  C                     ENDIF
+D2  C           PASAC     IFNE *BLANK
+     C                     MOVE PASAC     FAACST
+F2  C                     ENDIF
+     C                     Z-ADD0         CHOIX2
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**
+     C                     UPDATF05
+    C                     GOTO YEXT
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*       OPTION 3=AUTO-CONTROLE => MISE EN PLACE STATUS          *
+    C*                                                               *
+    C*---------------------------------------------------------------*
+D1  C           CHOIX2    IFEQ 3
+    C**
+    C******  USINE = 2 NON AUTORISE => RELEVE DE LA QUALITÉ
+    C**
+    C           XAUSIN    CABEQ2         YUITE
+    C           XAUSIN    CABEQ3         YUITE
+    C**
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     MOVE *BLANK    PASAC   2
+     C                     CALL 'FAB540£'
+     C           PAS2      PARM PAS2      PAS2
+     C           PASAC     PARM PASAC     PASAC
+    C**
+D2  C           PASAC     IFNE *BLANKS
+     C                     MOVE PASAC     FAACST
+F2  C                     ENDIF
+    C**
+     C                     Z-ADD0         CHOIX2
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**
+     C                     UPDATF05
+    C                     GOTO YEXT
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*       OPTION 4= SUPPRESSION D'UNE PALETTE                     *
+    C*                                                               *
+    C*---------------------------------------------------------------*
+D1  C           CHOIX2    IFEQ 4
+    C           AUTOR     CABEQ0         YUITE          44
+     **
+     ******  SI PRODUIT FINI => IMPOSS. SUPPRIMER STK CONTRO
+     **
+D2  C           XAUSIN    IFEQ 2
+    C           XATENC    ANDEQ9
+    C           XAUSIN    OREQ 3
+    C           XATENC    ANDEQ9
+    C           XAUSIN    OREQ 4
+    C           XATENC    ANDEQ9
+    C           TS1       ANDNE'F'
+    C           FAASOR    ANDNE0
+    C           XAUSIN    OREQ 7
+    C           XATENC    ANDEQ9
+    C           FAACST    CABEQ'AA'      YUITE          47
+    C           FAACST    CABEQ'BP'      YUITE          47
+    C           FAACST    CABEQ'CG'      YUITE          47
+    C           FAUDES    CABGT0         YUITE      48
+     **
+     ******  OF EN AMALGAME => PAS DE SUPPRESSION POSSIBLE SUR NB
+     **
+D3  C           XAUSIN    IFEQ 4
+     C                     Z-ADDNOCLI     PFCLI
+     C                     Z-ADDNOPRO     PFPRO
+     C           KPR11A    CHAINYPRF11               99
+    C           *IN99     CABEQ*OFF      YUITE          35
+F3  C                     ENDIF
+     **
+     ******  OF EN AMALGAME => SUPPR.POSSIBLE SI PALETTE NON ENTREE
+     ******  EN PF POUR FEG / IMPOSSIBLE POUR RT ET TY
+     **
+D3  C           XAUSIN    IFNE 4
+     C                     Z-ADDSTE       AMSTE
+     C                     Z-ADDNOCLI     AMCLI
+     C                     Z-ADDNOPRO     AMPRO
+     C                     Z-ADDFACONF    AMCONF
+     C                     Z-ADDFASEQ     AMSEQ
+     C           KPRF11    CHAINXPRF11               99
+     **
+D4  C           *IN99     IFEQ *OFF
+    C           XAUSIN    CABEQ2         YUITE          35
+    C           XAUSIN    CABEQ3         YUITE          35
+     **
+D5  C           XAUSIN    IFEQ 7
+    C           FAASOR    CABGT0         YUITE      35
+     C                     Z-ADDXAUSIN    TZUSIN
+     C                     Z-ADDXATENC    TZTENC
+     C                     Z-ADDFACBPA    TZCBPA
+     C                     Z-ADDNOBOU     TZBOU
+     C                     CALL 'FAB573£A'
+     C           PARM8     PARM PARM8     PARM8
+    C                     GOTO DEBENT
+F5  C                     ENDIF
+F4  C                     ENDIF
+     **
+F3  C                     ENDIF
+     **
+     ******  PALETTE NON EN STOCK MAIS EN ENCOURS / FEG ET NB
+     **
+D3  C           XAUSIN    IFEQ 4
+    C           XAUSIN    OREQ 7
+    C           FAASOR    CABEQ0         APP573
+F3  C                     ENDIF
+     **
+     ******  MODIF INTERDITE SI LA PALETTE A ETE SORTIE DU STOCK PF
+     **
+     C                     Z-ADD0         PFNBOU
+     C                     Z-ADDFACBPA    PFCBPA
+     C           KPRF02    CHAINXPRF02               99
+    C           PF0202    CABEQ'S'       YUITE          34
+     **
+     ******  IMPOSSIBLE SUPPRIMER SI LA PALETTE A DEJA UN N°BOUCHON>0
+     ******  DS LE STOCK PF PRF02P.
+     **
+     C                     Z-ADD99        PFNBOU
+     C                     Z-ADDFACBPA    PFCBPA
+     C           KPRF02    SETGTXPRF02
+     C           KPRF2A    REDPEXPRF02                   99
+D3  C           PFNBOU    IFNE 99
+    C           PFNBOU    CABNE0         YUITE      4949
+F3  C                     END
+     **
+     ******  TEST SI PALETTE MISE EN CONTROLE PAR QUALITE
+     ******  C-A-D : MAJ EMPLACEMENT CO-001 => SUIVI NON MIS AJOUR
+     ******  MODIF QTE OU STATUS IMPOSSIBLE ICI
+     **
+D3  C           PFHALL    IFEQ 'CO'
+    C           FAACST    ANDEQ'OK'
+     C                     MOVE *ON       *IN37
+    C                     GOTO YUITE
+F3  C                     ENDIF
+     **
+D3  C           PF0203    IFEQ 'R'
+    C           FAACST    ANDEQ'OK'
+     C                     MOVE *ON       *IN37
+    C                     GOTO YUITE
+F3  C                     ENDIF
+     **
+F2  C                     ENDIF
+     **
+     C           APP573    TAG
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     CALL 'FAB573£'
+     C           PAS2      PARM PAS2      PAS2
+    C                     GOTO DEBENT
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*       OPTION 6=APPEL PROGRAMME REEDITION FICHE PALETTE ENCOURS*
+    C*                                                               *
+    C*---------------------------------------------------------------*
+D1  C           CHOIX2    IFEQ 6
+     C                     Z-ADD0         CHOIX2
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**
+     C                     UPDATF05
+     **
+     ******  RECHERCHE SI PALETTE 1ER PASSAGE
+     **
+     C                     MOVE *BLANK    XIMPAR
+     C                     MOVE FAOPNU    FAOPN2  10
+D2  C           FAOPN2    IFNE 2
+     C                     Z-ADDXAUSIN    UUUSIN
+     C                     Z-ADDFACONF    UUCONF
+     C                     Z-ADDFASEQ     UUSEQ
+     C                     Z-ADDFAISEQ    UUISEQ
+     C                     Z-ADDNOPRO     UUPRO
+     C                     Z-ADDFAOPNU    UUOPNU
+     C                     MOVE 'N'       TAGOK
+     C                     CALL 'FAB559£'              85
+     C           PAS3      PARM PAS3      PAS3
+     **
+D3  C           TAGOK     IFEQ 'O'
+     C                     MOVE 'X'       XIMPAR  1
+F3  C                     ENDIF
+F2  C                     ENDIF
+     **
+     ******  1ERE REEDITION : APPEL PROGRAMME CHOIX IMPRIMANTE LASER
+     **
+D2  C           SAVPRT    IFEQ *BLANK
+     C                     MOVE XAUSIN    PASUS   1
+     C                     MOVE *BLANK    PASPRT 10
+     C                     CALL 'FAB575£'
+     C           PASUS     PARM PASUS     PASUS
+     C           PASPRT    PARM PASPRT    PASPRT
+     ** PAS DE CHOIX D'IMPRIMANTES
+    C           PASPRT    CABEQ*BLANKS   YEXT
+     C                     MOVE PASPRT    SAVPRT
+F2  C                     ENDIF
+     **
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     MOVE 'O'       PASREE  1
+     C                     MOVE XIMPAR    PASPAS  1
+     C                     CALL 'FAB527L'
+     C           PAS2      PARM PAS2      PAS2
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           PASREE    PARM PASREE    PASREE
+     C           PASPAS    PARM PASPAS    PASPAS
+    C                     GOTO YEXT
+F1  C                     ENDIF
+    C**
+    C                     GOTO YEXT
+    C           ENTF      ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : DETAIL ENCOURS CONSOMME                            *
+    C*                                                               *
+    C*****************************************************************
+    C           SORTIE    BEGSR
+    C**
+     C           DEBSOR    TAG
+D1  C           SVGARN    IFEQ 'PP'
+    C*---------------------------------------------------------------*
+    C*       LECTURE DES CONSO ENCOURS SUR L'EQUIPE SELECTIONNEE     *
+    C*---------------------------------------------------------------*
+     C                     SETOF                     90
+     C                     MOVEA'100'     *IN,70
+     C                     WRITEF06
+     C                     Z-ADD0         RCX
+     C                     SETOF                     70
+     C                     MOVE LIBENC    NOPGAR
+    C**
+     C           KPRF41    SETLLYPRF02
+     C           SORG      TAG
+     C           KPRF41    READEYPRF02                   90
+    C**
+D2  C           *IN90     IFEQ *ON
+    C                     GOTO XUIGAR
+F2  C                     ENDIF
+    C**
+     C                     ADD  1         RCX
+     C                     Z-ADD0         CHOIX2
+     C                     MOVE 'PF'      UNIT
+     C                     Z-ADDPFQREL    FAQTFE
+     C                     Z-ADDPFCBPA    FACBPA
+     C                     Z-ADDPFCBPA    DATENT
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           PFNBOU    COMP 0                    29
+    C**
+     C                     WRITEF05
+    C                     GOTO SORG
+    C**
+     C           XUIGAR    TAG
+     C                     WRITEF04
+     C                     SETON                     72
+     C           RCX       COMP 0                    71
+     C                     EXFMTF06
+    C**
+    C**
+    C                     GOTO SORF
+F1  C                     END
+    C**
+    C**
+     C                     MOVELTX,2      TXT1
+     C                     Z-ADDRUP1      XATENC
+     C                     Z-ADDFAUSIN    FFUSIN
+     C                     Z-ADDFACONF    FFCONF
+     C                     Z-ADDFASEQ     FFSEQ
+     C                     Z-ADDFAISEQ    FFISEQ
+     C                     Z-ADDNOPRO     FFPRO
+     C                     Z-ADDPPEQUI    FFEQUI
+     C                     Z-ADDDATEQ     DATEQ3
+     C                     Z-ADDFAOPNU    FFOPNU
+    C**
+     C                     Z-ADD99        NOBOU
+     C                     Z-ADD999999    FACBPA
+     C                     Z-ADD99999999  DATSOR
+    C*---------------------------------------------------------------*
+    C*       LECTURE DES CONSO ENCOURS SUR L'EQUIPE SELECTIONNEE     *
+    C*---------------------------------------------------------------*
+     C                     SETOF                     90
+     C                     MOVEA'100'     *IN,70
+     C                     WRITEF06
+     C                     Z-ADD0         RCX
+     C                     SETOF                     70
+    C**
+     C           KFA10D    SETGTZFAB10
+     C           SOR1      TAG
+     C           KFA10E    REDPEZFAB10                   90
+    C**
+D1  C           *IN90     IFEQ *ON
+    C                     GOTO SOR2
+F1  C                     ENDIF
+    C**
+    C****** PRESENTOIRS => AFFICHAGE DES COMPOSANTS SORTIS SLT
+    C**
+D1  C           FAUSIN    IFEQ 2
+    C           XATENC    ANDEQ9
+D2  C           SVGARN    IFEQ 'PP'
+    C           XNOPRO    CABEQFFPRO     SOR1
+X2  C                     ELSE
+    C                     GOTO SOR1
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  NEUVILLE => AFFICHER SEULEMENT LES FOURREAUX CONSOMMES
+    C**
+D1  C           FAUSIN    IFEQ 4
+    C           XATENC    ANDEQ9
+    C           XNOPRO    CABEQFFPRO     SOR1
+F1  C                     ENDIF
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X1  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F1  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+    C**
+     C                     ADD  1         RCX
+     C                     Z-ADD0         CHOIX2
+     C                     Z-ADDFFEQUI    XXEQUI
+     C                     MOVE FAUNIT    UNIT
+     C                     SUB  FAQTFR    FAQTFE
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**  AUTOR=1 AUTORISE À MODIFIER, SUPPRIMER
+     C                     Z-ADD1         AUTOR
+    C**
+     C                     WRITEF05
+    C                     GOTO SOR1
+    C*---------------------------------------------------------------*
+    C*       LECTURE DES CONSO ENCOURS SUR LES AUTRES EQUIPES        *
+    C*---------------------------------------------------------------*
+     C           SOR2      TAG
+     C                     Z-ADD0         FFEQUI
+     C                     Z-ADD99999999  DATEQ3
+    C**
+     C                     Z-ADD999999    FACBPA
+     C                     Z-ADD99        NOBOU
+     C                     Z-ADD99999999  DATSOR
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER F05
+    C**
+D1  C           RCX       IFNE 0
+     C                     ADD  1         RCX
+F1  C                     ENDIF
+    C**
+     C           KFA10D    SETGTZFAB10
+     C           SOR11     TAG
+     C           KFA10F    REDPEZFAB10                   90
+    C**
+D1  C           *IN90     IFEQ *ON
+D2  C           RCX       IFGT 0
+     C                     Z-ADD1         RCX
+F2  C                     ENDIF
+    C                     GOTO XUITE
+F1  C                     ENDIF
+    C**
+    C******  EXCLUSION PALETTES CONSOMMEES DUR L'EQUIPE EN COURS
+    C**
+    C           DTEQ3     CABEQDTEQ      SOR11
+    C**
+    C****** PRESENTOIRS => AFFICHAGE DES COMPOSANTS SORTIS SLT
+    C**
+D1  C           FAUSIN    IFEQ 2
+    C           XATENC    ANDEQ9
+D2  C           SVGARN    IFEQ 'PP'
+    C           XNOPRO    CABEQFFPRO     SOR11
+X2  C                     ELSE
+    C                     GOTO SOR11
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+    C******  NEUVILLE => AFFICHER SEULEMENT LES FOURREAUX CONSOMMES
+    C**
+D1  C           FAUSIN    IFEQ 4
+    C           XATENC    ANDEQ9
+    C           XNOPRO    CABEQFFPRO     SOR11
+F1  C                     ENDIF
+    C**
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+     C           KMAC02    CHAINMACHIN               99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X1  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F1  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+    C**
+     C                     ADD  1         RCX
+     C                     Z-ADD0         CHOIX2
+     C                     Z-ADDFFEQUI    XXEQUI
+     C                     MOVE FAUNIT    UNIT
+     C                     SUB  FAQTFR    FAQTFE
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**  AUTOR=0 NON AUTORISE À MODIFIER, SUPPRIMER
+     C                     Z-ADD0         AUTOR
+    C**
+     C                     WRITEF05
+    C                     GOTO SOR11
+    C**
+    C****** AFFICHAGE DU FORMAT DE CONTROLE F06
+    C**
+     C           XUITE     TAG
+     C                     WRITEF04
+     C                     SETON                     72
+     C           RCX       COMP 0                    71
+     C                     EXFMTF06
+    C**
+    C           *IN12     CABEQ*ON       SORF
+    C**
+    C****** LECTURE DU SOUS-FICHIER F05
+    C**
+     C           XEXT      TAG
+     C                     READCF05                    8981
+    C           *IN89     CABEQ*ON       XUITE
+    C           *IN81     CABEQ*ON       XUITE
+    C**
+    C******  OPTION 2=AUTOCONTROLE IMPOSSIBLE SUR UNE CONSO
+    C**
+    C           CHOIX2    CABEQ2         XUITE          40
+    C**
+    C******  OPTION 1=DETAIL PALETTE
+    C**
+D1  C           CHOIX2    IFEQ 1
+     C                     Z-ADD0         CHOIX2
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**
+     C                     UPDATF05
+D2  C           XATENC    IFEQ 2
+     C                     Z-ADDXAUSIN    WWUSIN
+     C                     Z-ADDFACBPA    WWCB
+     C                     CALL 'STOC15£'
+     C           PAS6      PARM PAS6      PAS6
+X2  C                     ELSE
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADDNOBOU     TTBOU
+     C                     CALL 'FAB524£'
+     C           PAS2      PARM PAS2      PAS2
+F2  C                     ENDIF
+    C                     GOTO XEXT
+F1  C                     ENDIF
+    C**
+    C******  OPTION=4 REINTEGRATION ENCOUR EN STOCK => APPEL STOC43£1
+    C**
+D1  C           CHOIX2    IFEQ 4
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADDNOBOU     TTBOU
+     C                     CALL 'FAB605£'
+     C           PAS2      PARM PAS2      PAS2
+    C                     GOTO DEBSOR
+F1  C                     ENDIF
+    C**
+    C******  OPTION 9= SUPPRESSION D'UN BOUCHON
+    C**
+D1  C           CHOIX2    IFEQ 9
+    C           AUTOR     CABEQ0         XUITE          44
+    C           FAQTFR    CABEQ0         XUITE
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADDXATENC    TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C           NOBOU     ADD  1         TTBOU
+     C                     MOVE 'N'       OK632   1
+     C                     CALL 'FAB632£'
+     C           PAS2      PARM PAS2      PAS2
+     C           OK632     PARM OK632     OK632
+     C                     Z-ADD0         CHOIX2
+    C**  OK='O'  ==> SUPPRESSION NON EFFECTUEE
+D2  C           OK632     IFEQ 'O'
+     C                     Z-ADD0         FAQTFR
+F2  C                     ENDIF
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQTFR    COMP 0                    29
+    C**
+     C                     UPDATF05
+    C                     GOTO XEXT
+F1  C                     ENDIF
+    C**
+    C                     GOTO XEXT
+    C           SORF      ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : DETAIL PAPIER PRODUIT OU CONSOMME                  *
+    C*                                                               *
+    C*****************************************************************
+    C           ESPAP     BEGSR
+    C**
+     C           DEBPAP    TAG
+    C**
+D1  C           LIBES     IFEQ LIB,1
+     C                     MOVELTX,3      TXT2
+X1  C                     ELSE
+     C                     MOVELTX,4      TXT2
+F1  C                     ENDIF
+     C                     Z-ADDPPEQUI    XPEQUI
+     C                     Z-ADDDATEQ     DATEQ2
+     C                     MOVE LIBENC    QUALIT
+    C**
+D1  C           GRALFA    IFEQ *BLANKS
+     C                     Z-ADD0         GRAREL
+X1  C                     ELSE
+     C                     MOVE GRALFA    GRAREL
+F1  C                     ENDIF
+    C**
+     C                     Z-ADD999999    FACBPA
+     C                     Z-ADD99999999  DATES
+    C*---------------------------------------------------------------*
+    C*    LECTURE ENTREES/SORTIES PAPIERS SUR L'EQUIPE SELECTIONNEE  *
+    C*---------------------------------------------------------------*
+     C                     SETOF                     91
+     C                     MOVE '0'       *IN23
+     C                     MOVE '0'       *IN88
+     C                     MOVEA'100'     *IN,75
+     C                     WRITEF16
+     C                     Z-ADD0         RCZ
+     C                     SETOF                     75
+    C**
+     C                     MOVE RUP4      FOUB
+     C                     Z-ADDFAUSIN    XAUSIN
+     C                     MOVE REFMAC    SAVMAC
+     C           KMUL3B    SETLLPAPMUL3                  80
+     C  N80      KMUL3B    SETLLSORMCXL3                 80
+D1  C           *IN80     IFEQ '0'
+    C           FAUSIN    ANDEQ4
+    C           SECT      ANDEQ'3'
+    C           SSECT     ANDEQ'1'
+    C           NOMAC     ANDEQ'06'
+     C                     MOVE '2'       SECT
+F1  C                     END
+D1  C           *IN80     IFEQ '0'
+    C           FAUSIN    ANDEQ2
+    C           SECT      ANDEQ'1'
+    C           SSECT     ANDEQ'3'
+    C           NOMAC     ANDEQ'03'
+     C                     MOVE '2'       SECT
+     C                     MOVE '2'       SSECT
+     C                     MOVE '06'      NOMAC
+     C                     SETON                     88
+F1  C                     END
+    C**
+     C           LECNEB    TAG
+     *          ------    ---
+D1  C           LIBES     IFEQ LIB,1
+     C           KFA11B    SETGTZFAB11
+X1  C                     ELSE
+     * CONSO
+     C  N23      KMUL3B    SETLLPAPMUL3
+     C   23      KMUL3B    SETLLSORMCXL3
+F1  C                     ENDIF
+    C**
+     C           PAP1      TAG
+D1  C           LIBES     IFEQ LIB,1
+     C           KFA11C    REDPEZFAB11                   91
+X1  C                     ELSE
+     C                     SETOF                       2122
+     C                     SETOF                       3132
+D2  C           *IN23     IFEQ '0'
+     C           KMUL3B    READEPAPMUL3                  91
+X2  C                     ELSE
+     C           KMUL3B    READESORMCXL3                 91
+F2  C                     END
+     C                     Z-ADDDATSO     DATES
+     C           HSO       DIV  100       FAHES
+F1  C                     ENDIF
+    C**
+D1  C           *IN91     IFEQ *ON
+D2  C           LIBES     IFNE LIB,1
+D3  C           *IN23     IFEQ '0'
+     C                     MOVE '1'       *IN23
+    C                     GOTO LECNEB
+X3  C                     ELSE
+D4  C           FAUSIN    IFEQ 4
+    C           SECT      ANDEQ'2'
+    C           SSECT     ANDEQ'1'
+    C           NOMAC     ANDEQ'06'
+     C                     MOVE '3'       SECT
+F4  C                     END
+D4  C           FAUSIN    IFEQ 2
+    C           SECT      ANDEQ'2'
+    C           SSECT     ANDEQ'2'
+    C           NOMAC     ANDEQ'06'
+    C           *IN88     ANDEQ'1'
+     C                     MOVE SAVMAC    REFMAC
+F4  C                     END
+    C                     GOTO ZUITE
+F3  C                     END
+F2  C                     END
+    C                     GOTO PAP2
+F1  C                     ENDIF
+     **
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+D1  C           LIBES     IFEQ LIB,1
+     C           KMAC02    CHAINMACHIN               99
+X1  C                     ELSE
+     C           KMAC01    CHAINMACHIN               99
+F1  C                     END
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X1  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F1  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+    C**
+    C******  TEST SI FORMAT OU BOBINE
+    C**
+D1  C           FOUB      IFEQ 'F'
+     C                     MOVE 'FE'      UNIT
+D2  C           LIBES     IFEQ LIB,1
+     C           NBFE      SUB  FAQRES    FAQTFE
+X2  C                     ELSE
+D3  C           *IN21     IFEQ '1'
+    C           *IN31     OREQ '1'
+     C           NBFE      SUB  FEUBOU    FAQTFE
+     C                     Z-ADDFEUBOU    FAQRES
+X3  C                     ELSE
+     C                     Z-ADDCONSOF    FAQTFE
+F3  C                     END
+F2  C                     ENDIF
+X1  C                     ELSE
+D2  C           LIBES     IFEQ LIB,1
+     C           NBFE      SUB  FAQRES    FAQTFE
+     C                     MOVE 'ML'      UNIT
+X2  C                     ELSE
+D3  C           *IN21     IFEQ '1'
+    C           *IN31     OREQ '1'
+     C           PDSBOB    SUB  PDSBOU    FAQTFE
+     C                     Z-ADDPDSBOU    FAQRES
+X3  C                     ELSE
+     C                     Z-ADDCONSOB    FAQTFE
+F3  C                     END
+     C                     MOVE 'KG'      UNIT
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     ADD  1         RCZ
+     C                     Z-ADD0         CHOIX3
+     C                     Z-ADDXPEQUI    XXEQUI
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQRES    COMP 0                    29
+    C**  AUTOR=1 AUTORISE À MODIFIER, SUPPRIMER
+     C                     Z-ADD1         AUTOR
+    C**
+     C                     WRITEF15
+    C                     GOTO PAP1
+    C*---------------------------------------------------------------*
+    C*    LECTURE ENTREES/SORTIES PAPIERS SUR LES AUTRES EQUIPES     *
+    C*---------------------------------------------------------------*
+     C           PAP2      TAG
+     C                     Z-ADD0         XPEQUI
+     C                     Z-ADD99999999  DATEQ2
+    C**
+     C                     Z-ADD999999    FACBPA
+     C                     Z-ADD99999999  DATES
+    C**
+    C******  SAUT D'UNE LIGNE DS LE SOUS-FICHIER F15
+    C**
+D1  C           RCZ       IFNE 0
+     C                     ADD  1         RCZ
+F1  C                     ENDIF
+    C**
+D1  C           LIBES     IFEQ LIB,1
+     C           KFA11B    SETGTZFAB11
+F1  C                     ENDIF
+    C**
+     C           PAP11     TAG
+D1  C           LIBES     IFEQ LIB,1
+     C           KFA11D    REDPEZFAB11                   91
+F1  C                     ENDIF
+    C**
+D1  C           *IN91     IFEQ *ON
+D2  C           RCZ       IFGT 0
+     C                     Z-ADD1         RCZ
+F2  C                     ENDIF
+    C                     GOTO ZUITE
+F1  C                     ENDIF
+    C**
+    C******  EXCLUSION PALETTES PRODUITES SUR L'EQUIPE EN COURS
+    C**
+    C           DTEQ2     CABEQDTEQ      PAP11
+    C**
+     C                     MOVE TITETE    SVTETE
+     C                     MOVE *BLANK    TITET2
+D1  C           LIBES     IFEQ LIB,1
+     C           KMAC02    CHAINMACHIN               99
+X1  C                     ELSE
+     C           KMAC01    CHAINMACHIN               99
+F1  C                     END
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' TITET2
+X1  C                     ELSE
+     C                     MOVE TITETE    TITET2
+F1  C                     ENDIF
+     **
+     C                     MOVE SVTETE    TITETE
+    C**
+    C******  TEST SI FORMAT OU BOBINE
+    C**
+D1  C           FOUB      IFEQ 'F'
+     C           NBFE      SUB  FAQRES    FAQTFE
+     C                     MOVE 'FE'      UNIT
+X1  C                     ELSE
+D2  C           LIBES     IFEQ LIB,1
+     C           NBFE      SUB  FAQRES    FAQTFE
+     C                     MOVE 'ML'      UNIT
+X2  C                     ELSE
+     C           PDSBOB    SUB  FAQRES    FAQTFE
+     C                     MOVE 'KG'      UNIT
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     ADD  1         RCZ
+     C                     Z-ADD0         CHOIX3
+     C                     Z-ADDXPEQUI    XXEQUI
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQRES    COMP 0                    29
+    C**  AUTOR=0 NON AUTORISE À MODIFIER, SUPPRIMER
+     C                     Z-ADD0         AUTOR
+    C**
+     C                     WRITEF15
+    C                     GOTO PAP11
+    C**
+    C****** AFFICHAGE DU FORMAT DE CONTROLE F16
+    C**
+     C           ZUITE     TAG
+     C                     WRITEF14
+     C                     SETON                     77
+     C           RCZ       COMP 0                    76
+     C                     EXFMTF16
+    C**
+    C           *IN12     CABEQ*ON       PAPF
+    C**
+    C****** LECTURE DU SOUS-FICHIER F15
+    C**
+     C           ZEXT      TAG
+     C                     READCF15                    8981
+    C           *IN89     CABEQ*ON       ZUITE
+    C           *IN81     CABEQ*ON       ZUITE
+    C**
+    C******  OPTION 1=DETAIL PALETTE
+    C**
+D1  C           CHOIX3    IFEQ 1
+     C                     Z-ADD0         CHOIX3
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQRES    COMP 0                    29
+    C**
+     C                     UPDATF15
+     C                     Z-ADDXAUSIN    WWUSIN
+     C                     Z-ADDFACBPA    WWCB
+     C                     CALL 'STOK15£'
+     C           PAS5      PARM PAS5      PAS5
+    C                     GOTO ZEXT
+F1  C                     ENDIF
+    C**
+    C******  OPTION 2= MODIFICATION DE LA QUANTITÉ D'UNE PALETTE
+    C**
+D1  C           CHOIX3    IFEQ 2
+    C           LIBES     ANDEQLIB,1
+    C           AUTOR     CABEQ0         ZUITE          44
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADD1         TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     MOVE *ZEROS    PASQTE  7
+     C                     CALL 'FAB590£'
+     C           PAS2      PARM PAS2      PAS2
+     C           PASQTE    PARM PASQTE    PASQTE
+D2  C           PASQTE    IFNE *ZEROS
+     C                     MOVE PASQTE    FAQTFE
+F2  C                     ENDIF
+     C                     Z-ADD0         CHOIX3
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQRES    COMP 0                    29
+    C**
+     C                     UPDATF15
+    C                     GOTO ZEXT
+F1  C                     ENDIF
+    C**
+    C******  OPTION=4 REINTEGRATION PAPIER EN STOCK ==> APPEL STOC43£1
+    C******  OU       SUPPRESSION PALETTE PAPIER PRODUITE ==> FABRP608
+    C**
+D1  C           CHOIX3    IFEQ 4
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADD1         TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADDBOUCH2    TTBOU
+D2  C           LIBES     IFEQ LIB,1
+    C           AUTOR     CABEQ0         ZUITE          44
+     C                     CALL 'FAB608£'
+     C           PAS2      PARM PAS2      PAS2
+X2  C                     ELSE
+     C                     CALL 'FAB589£'
+     C           PAS2      PARM PAS2      PAS2
+F2  C                     ENDIF
+    C                     GOTO DEBPAP
+F1  C                     ENDIF
+    C**
+    C******  OPTION 6=APPEL PROGRAMME REEDITION FICHE PALETTE PAPIER
+    C**
+D1  C           CHOIX3    IFEQ 6
+    C           LIBES     ANDEQLIB,1
+     C                     Z-ADD0         CHOIX3
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQRES    COMP 0                    29
+    C**
+     C                     UPDATF15
+     **
+     ******  APPEL PROGRAMME CHOIX IMPRIMANTE LASER
+     **
+     C                     MOVE XAUSIN    PASUS   1
+     C                     MOVE *BLANK    PASPRT 10
+     C                     CALL 'FAB575£'
+     C           PASUS     PARM PASUS     PASUS
+     C           PASPRT    PARM PASPRT    PASPRT
+     ** PAS DE CHOIX D'IMPRIMANTES
+    C           PASPRT    CABEQ*BLANKS   ZEXT
+     **
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADD1         TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C                     Z-ADD0         TTBOU
+     C                     MOVE 'O'       PASREE  1
+     C                     CALL 'FAB588L'
+     C           PAS2      PARM PAS2      PAS2
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           PASREE    PARM PASREE    PASREE
+    C                     GOTO ZEXT
+F1  C                     ENDIF
+    C**
+    C******  OPTION 9= SUPPRESSION D'UN BOUCHON
+    C**
+D1  C           CHOIX3    IFEQ 9
+    C           FAQRES    CABEQ0         ZUITE
+     C                     Z-ADDXAUSIN    TTUSIN
+     C                     Z-ADD1         TTTENC
+     C                     Z-ADDFACBPA    TTCB
+     C           BOUCH2    ADD  1         TTBOU
+     C                     MOVE 'N'       OK633   1
+     C                     CALL 'FAB633£'
+     C           PAS2      PARM PAS2      PAS2
+     C           OK633     PARM OK633     OK633
+     C                     Z-ADD0         CHOIX3
+    C**  OK='O'  ==> SUPPRESSION EFFECTUEE
+D2  C           OK633     IFEQ 'O'
+     C                     ADD  FAQRES    FAQTFE
+     C                     Z-ADD0         FAQRES
+F2  C                     ENDIF
+    C**  COULEUR=ROUGE A L'AFFICHAGE SI RETOUR BOUCHON
+     C           FAQRES    COMP 0                    29
+    C**
+     C                     UPDATF15
+    C                     GOTO ZEXT
+F1  C                     ENDIF
+    C**
+    C                     GOTO ZEXT
+    C           PAPF      ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : SELECTION TYPE ENCOURS A PRODUIRE                  *
+    C*                                                               *
+    C*****************************************************************
+    C           SELENC    BEGSR
+     C                     Z-ADD0         XATENC
+     C                     Z-ADD0         II
+     C                     Z-ADD0         TYE
+     C                     MOVE *BLANK    LIE
+     C                     Z-ADDFAUSIN    XAUSIN
+    C**
+    C******  OFFSET : FABRICATION DES AFFICHES => ENCOURS 8
+    C**
+    C*          SECT      IFEQ '1'
+    C*          SSECT     ANDEQ'4'
+    C*          NOPRO     ANDGT8000
+    C*                    Z-ADD8         FATENC
+    C*                    GOTO SELF
+    C*                    ENDIF
+    C**
+     C           KFAB20    SETLLXFAB20
+     C           SEL1      TAG
+     C           XAUSIN    READEXFAB20                   99
+D1  C           *IN99     IFEQ *OFF
+    C**
+    C******  TEST SI LA FABRICATION DE CET ENCOURS EST POSSIBLE
+    C**
+     C                     MOVE 'F'       FAEFC
+     C           KFAB13    CHAINXFAB13               99
+    C           *IN99     CABEQ*ON       SEL1
+    C**
+    C******  SI COUPEUSE 1303 DOIT FABRIQUER DU NEUTRE (98=OFF)
+    C******             ON NE TRAITE PAS L'IMPRIMÉ (FATENC=2)
+    C**
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+    C           *IN98     ANDEQ*OFF
+    C           XATENC    ANDEQ2
+    C                     GOTO SEL1
+F2  C                     ENDIF
+    C**
+    C******  SI COUPEUSE 1303 DOIT FABRIQUER DE L'IMPRIME (98=ON)
+    C******             ON NE TRAITE PAS LE PAPIER (FATENC=1)
+    C**
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'13'
+    C           NOMAC     ANDEQ'03'
+    C           *IN98     ANDEQ*ON
+    C           XATENC    ANDEQ1
+    C                     GOTO SEL1
+F2  C                     ENDIF
+    C******  SI DOREUSE GAUFREUSE 5120 SUR ROCHECHOUART
+    C******
+D2  C           FAUSIN    IFEQ 2
+    C           FAATEL    ANDEQ'51'
+    C           NOMAC     ANDEQ'20'
+D2  C           FAUSIN    OREQ 2
+    C           FAATEL    ANDEQ'51'
+    C           NOMAC     ANDEQ'23'
+     C           KFAB05    SETLLPREACOP3                 97
+D3  C           *IN97     IFEQ '1'                        DORURE
+    C           XATENC    CABNE2         SEL1             PAS IMPRIME
+X3  C                     ELSE                            GAUFRAGE
+    C           XATENC    CABNE5         SEL1             PAS DECOUPE
+F3  C                     ENDIF
+F2  C                     ENDIF
+      *
+     C******  SI ONDULEUSE 14 TY ET 8928 ET PRODUIT N
+     C******  TY DOIT FABRIQUER DU PF
+     C**
+     C           FAUSIN    IFEQ 3
+     C           FAATEL    ANDEQ'21'
+     C           NOMAC     ANDEQ'14'
+     C           NOCLI     ANDEQ8928
+     C           TS1       ANDEQ'N'
+     C           XATENC    ANDNE9
+     C                     GOTO SEL1
+     C                     ENDIF
+      *
+    C**
+     C                     ADD  1         II      20
+     C                     Z-ADDXATENC    TYE,II
+     C                     MOVE FALENC    LIE,II
+    C                     GOTO SEL1
+F1  C                     ENDIF
+    C**
+    C***** PAS DE SELECTION SI UN SEUL TYPE D'ENCOURS
+    C**
+D1  C           II        IFEQ 1
+     C                     Z-ADDTYE,II    FATENC
+    C                     GOTO SELF
+F1  C                     ENDIF
+    C**
+     C           SEL2      TAG
+     C                     EXFMTF07
+    C**
+D1  C           *IN12     IFEQ *ON
+     C                     Z-ADD0         FATENC
+    C                     GOTO SELF
+F1  C                     ENDIF
+    C**
+     C                     Z-ADD1         II
+     C           POS2      LOKUPZO,II                    99
+    C           *IN99     CABEQ*OFF      SEL2
+    C           TYE,II    CABEQ0         SEL2
+     C                     Z-ADDTYE,II    FATENC
+    C           SELF      ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : TOTALISATION DES QTES PRODUITES ET CONSOMMEES      *
+    C*            SI LES QTES SONT NULLES => LIGNE NON CREEE DS F02  *
+    C*                                                               *
+    C*****************************************************************
+    C           TOTAL     BEGSR
+     C                     Z-ADD0         TOTLIG
+     C           QTFAIT    ADD  QTENC     TOTLIG
+     C                     ADD  NBFAIT    TOTLIG
+     C                     ADD  NBENC     TOTLIG
+    C                     ENDSR
+    C*****************************************************************
+    C*                                                               *
+    C*       SR : INITIALISATION DES FENETRES EXTERNES               *
+    C*                                                               *
+    C*****************************************************************
+    C           GESFEN    BEGSR
+D1  C           *IN03     IFEQ *ON
+     C                     MOVE '2'       INDIC
+     C                     MOVE '2'       INDIC1
+     C                     MOVE '2'       INDIC2
+     C                     MOVE '2'       INDIC3
+     C                     MOVE '2'       INDIC4
+     C                     MOVE '2'       INDIC5
+     C                     MOVE '2'       INDIC6
+X1  C                     ELSE
+     C                     MOVE *BLANK    INDIC
+     C                     MOVE *BLANK    INDIC1
+     C                     MOVE *BLANK    INDIC2
+     C                     MOVE *BLANK    INDIC3
+     C                     MOVE *BLANK    INDIC4
+     C                     MOVE *BLANK    INDIC5
+     C                     MOVE *BLANK    INDIC6
+F1  C                     ENDIF
+     C                     CALL 'FAB525£'              85
+     C           PAS1A     PARM PAS1A     PAS1A  35
+     C           INDIC     PARM INDIC     INDIC   1
+     C                     CALL 'FAB526£'              85
+     C           PAS4      PARM PAS4      PAS4
+     C           INDIC1    PARM INDIC1    INDIC1  1
+     C           PARM20    PARM PARM20    PARM20 28
+     C                     CALL 'FAB528£'              85
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC2    PARM INDIC2    INDIC2  1
+     C                     CALL 'FAB529L'              85
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           PASPRT    PARM PASPRT    PASPRT
+     C           INDIC3    PARM INDIC3    INDIC3  1
+     C                     CALL 'FAB530£'              85
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC4    PARM INDIC4    INDIC4  1
+     C                     CALL 'FAB554£'              85
+     C           PAS1A     PARM PAS1A     PAS1A
+     C           INDIC5    PARM INDIC5    INDIC5  1
+    C**         FENETRE DES CODES AUTO-CONTROLE
+     C                     CALL 'FEN503£'              85
+     C           PASCO2    PARM PASCO2    PASCO2  2
+     C           INDIC6    PARM INDIC6    INDIC6  1
+     C           LIGNE     PARM LIGNE     LIGNE   2
+     C           PXLIBE    PARM PXLIBE    PXLIBE
+    C                     ENDSR
+    C*****************************************************************
+     * MINI/MAXI  ==> CDEC92C
+    C           MINMAX    BEGSR
+     C                     Z-ADD0         MINI
+     C                     Z-ADD0         MAXI
+     C                     Z-ADDNOPRO     NOP92
+     C                     Z-ADDNOCLI     NOC92
+     C                     Z-ADDFACONF    NCF92
+     C                     Z-ADDFAQTE     SURF
+     C                     Z-ADDFAQTE     SURFF
+     C                     Z-ADD1,000     SF
+     C                     MOVE '*'       EXP
+     C                     CALL 'CDEC92C'
+     C                     PARM           DSPARA
+    C                     ENDSR
+    C*===============================================================*
+    C*                                                               *
+    C*                     SORTIES FICHIERS                          *
+    C*                                                               *
+    C*===============================================================*
+     OXFAB16  E                MAJ16
+     O                         FA1602
+     OXFAB22  E                MAJ22
+     O                         FA2202
+**
+  MATIN
+APRES-MIDI
+  NUIT
+**
+FABRIQ.
+CONSO
+**
+LIBE1
+LIBE2
+LIBE3
+LIBE4
+LIBE5
+LIBE6
+LIBE7
+LIBE8
+**
+SAISIE ENCOURS TERMINE
+**
+Options : 1=Détail 2=Modif. 3= Auto-Contrôle 4=Suppr. 6=Réédition
+Options : 1=Détail 4=Réintégration en stock 9=Suppression bouchon
+Options : 1=Détail 2=Modif.Quantité  4= Suppression  6=Réédition
+Options : 1=Détail 4=Réintégration en stock 9=Suppression bouchon

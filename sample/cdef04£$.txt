@@ -1,0 +1,3126 @@
+    ******************************************************************
+    H*
+    H* CORGNET JEAN PAUL LE 3 JUILLET 1985
+    H*
+    H* SAISIE DES ENTREES EN STOCK DE PAPIER NEUTRE
+    H* 86 : ENTREE S.N.C.F. LIMOGES
+    H* NZS 250315: AJOUT INDICATEUR UPDATE FOUL0
+    H*****************************************************************
+     FCDEF04D CF  E                    WORKSTN
+     F                                        R2    KSFILE F6
+     F                                        R3    KSFILE F10
+     F                                        R3    KSFILE F14
+     F                                        R4    KSFILE F16
+     F                                        R4    KSFILE F20
+     F                                        R7    KSFILE F27
+     F                                        LIG   KSFILE F24
+     F                                        LOG   KSFILE F51
+     F                                        RECNO KSFILE WAS
+     FFOURNIL1IF  E           K        DISK
+     FFOUSTEL1IF  E           K        DISK
+     FCALENAL0IF  E           K        DISK
+     *
+     FMNUUTIL1IF  E           K        DISK
+     *
+     FMNUOPTL2IF  E           K        DISK
+     *
+     FMNUAUTL1IF  E           K        DISK
+     FPAPCDLL7IF  E           K        DISK                           UC
+    FPAPCDEL2UF  E           K        DISK
+    FPAPCDLL5UF  E           K        DISK
+     F            PAPCDLF1                          KRENAMEFOUL0
+    FPAPCDLL2UF  E           K        DISK
+     F            PAPCDLF1                          KRENAMEPAPCDLF2
+    FPAPCDML1UF  E           K        DISK
+     FQUAUSI  IF  E           K        DISK
+     FQUAUSH  IF  E           K        DISK
+     FQUAFOUL1IF  E           K        DISK
+     FQUSFOUL3IF  E           K        DISK
+    FARTPAPL1UF  E           K        DISK
+     F            ARTPAPF1                          KRENAMEPAPF1
+    FARTPAPL2UF  E           K        DISK
+     F            ARTPAPF1                          KRENAMEPAPF2
+     FMVTPAL28IF  E           K        DISK
+     F            MVTPAPF1                          KRENAMEMVTPAP28
+    FMVTPAPW UF  E           K        DISK                      A    UC
+    FMVTPAP  O   E           K        DISK                      A    UC
+     FMVTENCL1IF  E           K        DISK
+     FMPAPARL1IF  E           K        DISK                           UC
+     F            MVTPAPF1                          KRENAMEMVF1
+     FMVTFOU  IF  E           K        DISK
+     FMVTCXH  IF  E           K        DISK
+     FQUALIL6 IF  E           K        DISK
+    FLIVFOU  O   E           K        DISK                      A
+     FSTDLAIZ1IF  E           K        DISK
+     FSIECLE  IF  E           K        DISK
+     FPARAME  IF  E           K        DISK
+     * Fichier fournisseurs plateforme PSP
+     FFOUPSPL2IF  E           K        DISK
+     FFOUFABL2IF  E           K        DISK
+     * Fichier des commandes PSP
+     FPAPCPSL4IF  E           K        DISK
+     * Fichier livraison fournisseurs plateforme PSP
+    FLIVPSP  O   E           K        DISK
+     *
+     E                    ER          9  1
+     E                    EE         41  1
+     E                    DD         41  1 0
+     E                    BOB       200  6 0
+     E                    TB         80  1
+     E                    CLR     1   1 80
+     E                    RMV     1   1 80
+     E                    PFM     1   1 80
+     E                    OVR     1   1 80
+     E                    STL        70  4 1
+     *
+     IMNUOPTF1
+     I              PARAME                          ZUT
+     * RENOMME LES ZONES DE FOURNIS POUR EVITER UNE
+     * CONFUSION AVEC CELLES DEJA TRAITEES DANS LE PROGRAMME
+     * MODIF DE F.L. LE 04/02/93
+     IFOURNIF1
+     I              NOFOU                           FOU01
+     I              NOMFOU                          FOU02
+     I              RAIFOU                          FOU03
+     I              RUEFOU                          FOU04
+     I              VILFOU                          FOU05
+     I              DEPFOU                          FOU06
+     I              CPFOU                           FOU07
+     I              BDFOU                           FOU08
+     I              CPAYFO                          FOU09
+     I              PAYFOU                          FOU10
+     I              TELFOU                          FOU11
+     I              TEXFOU                          FOU12
+     I              TELEFO                          FOU13
+     I              PRCFO1                          FOU14
+     I              FONFO1                          FOU15
+     I              PRCFO2                          FOU16
+     I              FONFO2                          FOU17
+     I              PRCFO3                          FOU18
+     I              FONFO3                          FOU19
+     I              PRCFO4                          FOU20
+     I              FONFO4                          FOU21
+     I              ABRFOU                          FOU22
+     I              ANCFOU                          FOU23
+     I              FOUCLI                          FOU24
+     I              CORECH                          FOU25
+     I              CORJOU                          FOU26
+     I              FDM                             FOU27
+     I              COREGL                          FOU28
+     I              ESCPT                           FOU29
+     I              AGIOS                           FOU30
+     I              SUIVI                           FOU31
+     I              ANNUL                           FOU32
+     I              ACRE                            FOU33
+     I              MCRE                            FOU34
+     I              JCRE                            FOU35
+     I              INICRE                          FOU36
+     I              AMAJ                            FOU37
+     I              MMAJ                            FOU38
+     I              JMAJ                            FOU39
+     I              INIMAJ                          FOU40
+     I              SEQADR                          FOU41
+     I              TVAFOU                          FOU42
+     IMVF1
+     I              USINE                           ZON001
+     I              NOBOB                           ZON002
+     I              NOBOB2                          ZON003
+     I              PAL2                            ZON004
+     I              BOUCH                           ZON005
+     I              BOUCH2                          ZON006
+     I              PAPI                            ZON007
+     I              GRAMM                           ZON008
+     I              REFOUR                          ZON009
+     I              GRAREL                          ZON010
+     I              FOUB                            ZON011
+     I              LAIZE                           ZON012
+     I              FORL                            ZON013
+     I              FORH                            ZON014
+     I              SENSMA                          ZON015
+     I              ESSAI                           ZON016
+     I              ESQUAL                          ZON017
+     I              ESGRAM                          ZON018
+     I              ESPROV                          ZON019
+     I              JENT                            ZON020
+     I              MENT                            ZON021
+     I              AENT                            ZON022
+     I              SENT                            ZON122
+     I              HENT                            ZON023
+     I              CODIN                           ZON024
+     I              PDSBOB                          ZON025
+     I              NBFE                            ZON026
+     I              HPAL                            ZON027
+     I              USORI                           ZON028
+     I              STACH                           ZON029
+     I              NOFOU                           ZON030
+     I              ANCOM                           ZON031
+     I              NOCOM                           ZON032
+     I              SEQCOM                          ZON033
+     I              FOUBOR                          ZON034
+     I              RFBFOU                          ZON035
+     I              CARIN                           ZON036
+     I              USEXP                           ZON037
+     I              OPENT                           ZON038
+     I              JSO                             ZON039
+     I              MSO                             ZON040
+     I              ASO                             ZON041
+     I              SSO                             ZON141
+     I              HSO                             ZON042
+     I              CODOUT                          ZON043
+     I              USFA                            ZON044
+     I              SECT                            ZON045
+     I              SSECT                           ZON046
+     I              NOMAC                           ZON047
+     I              STE                             ZON048
+     I              NOCLI                           ZON049
+     I              NOPRO                           ZON050
+     I              NCONF                           ZON051
+     I              NOSEQ                           ZON052
+     I              STSO                            ZON053
+     I              USDEST                          ZON054
+     I              CARSO                           ZON055
+     I              PDSBOU                          ZON056
+     I              FEUBOU                          ZON057
+     I              HBOU                            ZON058
+     I              CDEMU                           ZON059
+     I              TAGNU                           ZON060
+     I              SUIMP                           ZON061
+     I              JREA                            ZON062
+     I              MREA                            ZON063
+     I              AREA                            ZON064
+     I              SREA                            ZON164
+     I              PDREA                           ZON065
+     I              FEREA                           ZON066
+     I              OPREA                           ZON067
+     I              OPDEC                           ZON068
+     I              LMINI                           ZON069
+     I              ABRFOU                          ZON070
+     I              IDEFOU                          ZON071
+     I              ACHREC                          ZON072
+     I              ACHEM                           ZON073
+     I              DIAMAN                          ZON074
+     I              DIABOB                          ZON075
+     I              CODREA                          ZON076
+     I              TAGAPP                          ZON077
+     IMVTPARF1
+     I              USINE                           ZON001
+     I              NOBOB                           ZON002
+     I              NOBOB2                          ZON003
+     I              PAL2                            ZON004
+     I              BOUCH                           ZON005
+     I              BOUCH2                          ZON006
+     I              PAPI                            ZON007
+     I              GRAMM                           ZON008
+     I              REFOUR                          ZON009
+     I              GRAREL                          ZON010
+     I              FOUB                            ZON011
+     I              LAIZE                           ZON012
+     I              FORL                            ZON013
+     I              FORH                            ZON014
+     I              SENSMA                          ZON015
+     I              ESSAI                           ZON016
+     I              ESQUAL                          ZON017
+     I              ESGRAM                          ZON018
+     I              ESPROV                          ZON019
+     I              JENT                            ZON020
+     I              MENT                            ZON021
+     I              AENT                            ZON022
+     I              SENT                            ZON122
+     I              HENT                            ZON023
+     I              CODIN                           ZON024
+     I              PDSBOB                          ZON025
+     I              NBFE                            ZON026
+     I              HPAL                            ZON027
+     I              USORI                           ZON028
+     I              STACH                           ZON029
+     I              NOFOU                           ZON030
+     I              ANCOM                           ZON031
+     I              NOCOM                           ZON032
+     I              SEQCOM                          ZON033
+     I              FOUBOR                          ZON034
+     I              RFBFOU                          ZON035
+     I              CARIN                           ZON036
+     I              USEXP                           ZON037
+     I              OPENT                           ZON038
+     I              JSO                             ZON039
+     I              MSO                             ZON040
+     I              ASO                             ZON041
+     I              SSO                             ZON141
+     I              HSO                             ZON042
+     I              CODOUT                          ZON043
+     I              USFA                            ZON044
+     I              SECT                            ZON045
+     I              SSECT                           ZON046
+     I              NOMAC                           ZON047
+     I              STE                             ZON048
+     I              NOCLI                           ZON049
+     I              NOPRO                           ZON050
+     I              NCONF                           ZON051
+     I              NOSEQ                           ZON052
+     I              STSO                            ZON053
+     I              USDEST                          ZON054
+     I              CARSO                           ZON055
+     I              PDSBOU                          ZON056
+     I              FEUBOU                          ZON057
+     I              HBOU                            ZON058
+     I              CDEMU                           ZON059
+     I              TAGNU                           ZON060
+     I              SUIMP                           ZON061
+     I              JREA                            ZON062
+     I              MREA                            ZON063
+     I              AREA                            ZON064
+     I              SREA                            ZON164
+     I              PDREA                           ZON065
+     I              FEREA                           ZON066
+     I              OPREA                           ZON067
+     I              OPDEC                           ZON068
+     I              LMINI                           ZON069
+     I              ABRFOU                          ZON070
+     I              IDEFOU                          ZON071
+     I              ACHREC                          ZON072
+     I              ACHEM                           ZON073
+     I              DIAMAN                          ZON074
+     I              DIABOB                          ZON075
+     I              CODREA                          ZON076
+     I              TAGAPP                          ZON077
+     ISTDLAIZE
+     I              LAIZE1                          STL,01
+     I              LAIZE2                          STL,02
+     I              LAIZE3                          STL,03
+     I              LAIZE4                          STL,04
+     I              LAIZE5                          STL,05
+     I              LAIZE6                          STL,06
+     I              LAIZE7                          STL,07
+     I              LAIZE8                          STL,08
+     I              LAIZE9                          STL,09
+     I              LAIZ10                          STL,10
+     I              LAIZ11                          STL,11
+     I              LAIZ12                          STL,12
+     I              LAIZ13                          STL,13
+     I              LAIZ14                          STL,14
+     I              LAIZ15                          STL,15
+     I              LAIZ16                          STL,16
+     I              LAIZ17                          STL,17
+     I              LAIZ18                          STL,18
+     I              LAIZ19                          STL,19
+     I              LAIZ20                          STL,20
+     I              LAIZ21                          STL,21
+     I              LAIZ22                          STL,22
+     I              LAIZ23                          STL,23
+     I              LAIZ24                          STL,24
+     I              LAIZ25                          STL,25
+     I              LAIZ26                          STL,26
+     I              LAIZ27                          STL,27
+     I              LAIZ28                          STL,28
+     I              LAIZ29                          STL,29
+     I              LAIZ30                          STL,30
+     I              LAIZ31                          STL,31
+     I              LAIZ32                          STL,32
+     I              LAIZ33                          STL,33
+     I              LAIZ34                          STL,34
+     I              LAIZ35                          STL,35
+     I              LAIZ36                          STL,36
+     I              LAIZ37                          STL,37
+     I              LAIZ38                          STL,38
+     I              LAIZ39                          STL,39
+     I              LAIZ40                          STL,40
+     I              LAIZ41                          STL,41
+     I              LAIZ42                          STL,42
+     I              LAIZ43                          STL,43
+     I              LAIZ44                          STL,44
+     I              LAIZ45                          STL,45
+     I              LAIZ46                          STL,46
+     I              LAIZ47                          STL,47
+     I              LAIZ48                          STL,48
+     I              LAIZ49                          STL,49
+     I              LAIZ50                          STL,50
+     I              LAIZ51                          STL,51
+     I              LAIZ52                          STL,52
+     I              LAIZ53                          STL,53
+     I              LAIZ54                          STL,54
+     I              LAIZ55                          STL,55
+     I              LAIZ56                          STL,56
+     I              LAIZ57                          STL,57
+     I              LAIZ58                          STL,58
+     I              LAIZ59                          STL,59
+     I              LAIZ60                          STL,60
+     I              LAIZ61                          STL,61
+     I              LAIZ62                          STL,62
+     I              LAIZ63                          STL,63
+     I              LAIZ64                          STL,64
+     I              LAIZ65                          STL,65
+     I              LAIZ66                          STL,66
+     I              LAIZ67                          STL,67
+     I              LAIZ68                          STL,68
+     I              LAIZ69                          STL,69
+     I              LAIZ70                          STL,70
+     IPAPF1
+     I              CODAP                           GUI001
+     I              USINE                           GUI002
+     I              FAMIL                           GUI003
+     I              EDIFA                           GUI004
+     I              SFAMI                           GUI005
+     I              EDISFA                          GUI006
+     I              PAPI                            GUI007
+     I              GRAMM                           GUI008
+     I              REFOUR                          GUI009
+     I              GRAREL                          GUI010
+     I              FOUB                            GUI011
+     I              LAIZE                           GUI012
+     I              FORL                            GUI013
+     I              FORH                            GUI014
+     I              SENSMA                          GUI015
+     I              JCREAT                          GUI016
+     I              MCREAT                          GUI017
+     I              ACREAT                          GUI018
+     I              CODSTU                          GUI019
+     I              SUIVI                           GUI020
+     I              INICRT                          GUI021
+     I              JMAJ                            GUI022
+     I              MMAJ                            GUI023
+     I              AMAJ                            GUI024
+     I              INIMAJ                          GUI025
+     I              REFCLI                          GUI026
+     I              DEPOT                           GUI027
+     I              EMPCT1                          GUI028
+     I              EMPCT2                          GUI029
+     I              QTPHYS                          GUI030
+     I              QTRESV                          GUI041
+     I              QTREHO                          GUI042
+     I              STSECU                          GUI043
+     I              STCOUV                          GUI044
+     I              STREAP                          GUI045
+     I              STALER                          GUI046
+     I              MOREAP                          GUI047
+     I              QTCDEH                          GUI048
+     I              MOQTCD                          GUI049
+     I              INTCDE                          GUI050
+     I              CONMOI                          GUI054
+     I              MOCONS                          GUI055
+     I              QTDISP                          GUI056
+     I              JDERSO                          GUI057
+     I              MDERSO                          GUI058
+     I              ADERSO                          GUI059
+     IPAPF2
+     I              CODAP                           GUI001
+     I              USINE                           GUI002
+     I              FAMIL                           GUI003
+     I              EDIFA                           GUI004
+     I              SFAMI                           GUI005
+     I              EDISFA                          GUI006
+     I              PAPI                            GUI007
+     I              GRAMM                           GUI008
+     I              REFOUR                          GUI009
+     I              GRAREL                          GUI010
+     I              FOUB                            GUI011
+     I              LAIZE                           GUI012
+     I              FORL                            GUI013
+     I              FORH                            GUI014
+     I              SENSMA                          GUI015
+     I              JCREAT                          GUI016
+     I              MCREAT                          GUI017
+     I              ACREAT                          GUI018
+     I              CODSTU                          GUI019
+     I              SUIVI                           GUI020
+     I              INICRT                          GUI021
+     I              JMAJ                            GUI022
+     I              MMAJ                            GUI023
+     I              AMAJ                            GUI024
+     I              INIMAJ                          GUI025
+     I              REFCLI                          GUI026
+     I              DEPOT                           GUI027
+     I              EMPCT1                          GUI028
+     I              EMPCT2                          GUI029
+     I              QTPHYS                          GUI030
+     I              QTRESV                          GUI041
+     I              QTREHO                          GUI042
+     I              STSECU                          GUI043
+     I              STCOUV                          GUI044
+     I              STREAP                          GUI045
+     I              STALER                          GUI046
+     I              MOREAP                          GUI047
+     I              QTCDEH                          GUI048
+     I              MOQTCD                          GUI049
+     I              INTCDE                          GUI050
+     I              CONMOI                          GUI054
+     I              MOCONS                          GUI055
+     I              QTDISP                          GUI056
+     I              JDERSO                          GUI057
+     I              MDERSO                          GUI058
+     I              ADERSO                          GUI059
+     IF10
+     I              DIAMAN                          DIAM
+     I              DIABOB                          DIAB
+     IPAPCDLF2
+     I              STE                             STEX
+     I              SCOM                            SCOMX
+     I              ANCOM                           ANCOMX
+     I              NOCOM                           NOCOMX
+     I              TYPCOM                          TYPCOX
+     I              USCOM                           USCOMX
+     I              USFACT                          USFACX
+     I              USLIV                           USLIVX
+     I              LIEULI                          LIEULX
+     I              CONDAC                          CONDAX
+     I              NOFOU                           NOFOUX
+     I              SEQADR                          SEQADX
+     I              ABRFOU                          ABRFOX
+     I              SEQCOM                          SEQCOX
+     I              STALIG                          STALIX
+     I              REFUSC                          REFUSX
+     I              REFACO                          REFACX
+     I              REFNUM                          REFNUX
+     I              REFNLG                          REFNLX
+     I              QUALQT                          QUALQX
+     I              FAMIL                           FAMILX
+     I              SFAMI                           SFAMIX
+     I              PAPI                            PAPIX
+     I              GRAMM                           GRAMMX
+     I              REFOUR                          REFOUX
+     I              GRAREL                          GRAREX
+     I              FOUB                            FOUBX
+     I              LAIZE                           LAIZEX
+     I              FORL                            FORLX
+     I              FORH                            FORHX
+     I              DIAMAN                          DIAMAX
+     I              DIABOB                          DIABOX
+     I              PUNIT                           PUNITX
+     I              QTMARC                          QTMARX
+     I              QTPERM                          QTPERX
+     I              QTECOM                          QTECOX
+     I              QTCLIV                          QTCLIX
+     I              FEUCOM                          FEUCOX
+     I              FECLIV                          FECLIX
+     I              ANPREV                          ANPREX
+     I              MPREV                           MPREVX
+     I              JPREV                           JPREVX
+     I              SPREV                           SPREVX
+     I              CODEL                           CODELX
+     I              AADEL                           AADELX
+     I              MMDEL                           MMDELX
+     I              JJDEL                           JJDELX
+     I              SEDEL                           SEDELX
+     I              JSDEL                           JSDELX
+     I              NOJOUR                          NOJOUX
+     I              DACHEM                          DACHEX
+     I              JGEST                           JGESTX
+     I              MGEST                           MGESTX
+     I              AGEST                           AGESTX
+     I              SGEST                           SGESTX
+     I              TOLMIN                          TOLMIX
+     I              TOLMAX                          TOLMAX
+     I              PUCOM                           PUCOMX
+     I              CODPRI                          CODPRX
+     I              UFACTU                          UFACTX
+     I              UVALOR                          UVALOX
+     I              EQUIV                           EQUIVX
+     I              REMREL                          REMREX
+     I              REMABS                          REMABX
+     I              PAPFOU                          PAPFOX
+     I              QTLIV                           QTLIVX
+     I              FEULIV                          FEULIX
+     I              ARECEP                          ARECEX
+     I              MRECEP                          MRECEX
+     I              JRECEP                          JRECEX
+     I              SOLDIS                          SOLDIX
+     I              SOLDIF                          SOLDFX
+     I              ARAPL                           ARAPLX
+     IPAPCDMF1
+     I              STE                             STEX
+     I              SCOM                            SCOMX
+     I              ANCOM                           ANCOMX
+     I              NOCOM                           NOCOMX
+     I              TYPCOM                          TYPCOX
+     I              USCOM                           USCOMX
+     I              USFACT                          USFACX
+     I              USLIV                           USLIVX
+     I              LIEULI                          LIEULX
+     I              CONDAC                          CONDAX
+     I              NOFOU                           NOFOUX
+     I              SEQADR                          SEQADX
+     I              ABRFOU                          ABRFOX
+     I              SEQCOM                          SEQCOX
+     I              STALIG                          STALIX
+     I              REFUSC                          REFUSX
+     I              REFACO                          REFACX
+     I              REFNUM                          REFNUX
+     I              REFNLG                          REFNLX
+     I              QUALQT                          QUALQX
+     I              FAMIL                           FAMILX
+     I              SFAMI                           SFAMIX
+     I              PAPI                            PAPIX
+     I              GRAMM                           GRAMMX
+     I              REFOUR                          REFOUX
+     I              GRAREL                          GRAREX
+     I              FOUB                            FOUBX
+     I              LAIZE                           LAIZEX
+     I              FORL                            FORLX
+     I              FORH                            FORHX
+     I              DIAMAN                          DIAMAX
+     I              DIABOB                          DIABOX
+     I              PUNIT                           PUNITX
+     I              QTMARC                          QTMARX
+     I              QTPERM                          QTPERX
+     I              QTECOM                          QTECOX
+     I              QTCLIV                          QTCLIX
+     I              FEUCOM                          FEUCOX
+     I              FECLIV                          FECLIX
+     I              ANPREV                          ANPREX
+     I              MPREV                           MPREVX
+     I              JPREV                           JPREVX
+     I              SPREV                           SPREVX
+     I              CODEL                           CODELX
+     I              AADEL                           AADELX
+     I              MMDEL                           MMDELX
+     I              JJDEL                           JJDELX
+     I              SEDEL                           SEDELX
+     I              JSDEL                           JSDELX
+     I              NOJOUR                          NOJOUX
+     I              DACHEM                          DACHEX
+     I              TOLMIN                          TOLMIX
+     I              TOLMAX                          TOLMAX
+     I              PUCOM                           PUCOMX
+     I              CODPRI                          CODPRX
+     I              UFACTU                          UFACTX
+     I              UVALOR                          UVALOX
+     I              EQUIV                           EQUIVX
+     I              REMREL                          REMREX
+     I              REMABS                          REMABX
+     I              PAPFOU                          PAPFOX
+     I              QTLIV                           QTLIVX
+     I              FEULIV                          FEULIX
+     I              ARECEP                          ARECEX
+     I              MRECEP                          MRECEX
+     I              JRECEP                          JRECEX
+     I              SOLDIS                          SOLDIX
+     I              SOLDIF                          SOLDFX
+     I              ARAPL                           ARAPLX
+     IFOUFABF1
+     I              NOFOU                           FFXX01
+    I*****************************************************************
+    I* DATA STRUCTURES DE TRAVAIL
+    I*****************************************************************
+     I            DS
+     I                                        1  13 CLEFOU
+     I                                        1   50CPT
+     I                                        6   9 NOFOU
+     I            DS
+     I                                        1   2 Z1Z2
+     I                                        1   1 ACHREC
+     I                                        2   2 ACHEM
+     *
+     INCOMU       DS
+     I                                        6   9 NOFO
+     I           SDS
+     I                                      244 253 LIBUS
+     I                                      254 263 USRNAM
+     I            DS
+     I I            0                         1   80DATENT
+     I                                        1   40SAENT
+     I                                        1   20SENT
+     I                                        3   40AENT
+     I                                        5   60MENT
+     I                                        7   80JENT
+     I            DS
+     I I            0                         1   80DATEN1
+     I                                        1   40SAENT1
+     I                                        1   20SENT1
+     I                                        3   40AENT1
+     I                                        5   60MENT1
+     I                                        7   80JENT1
+     *
+     I            DS
+     I                                        1   40ANEDIT
+     I                                        5   60MMEDIT
+     I                                        7   80JJEDIT
+     I                                        1   80DATEDI
+     *
+     I            DS
+     I                                        1  41 DS1
+     I                                        1   60NOBOB
+     I                                        7  100PDSBOB
+     I I            0                        11  200NUM10
+     I                                       11  22 RFBFOU
+     I                                       23  23 ESSAI
+     I                                       24  26 ESQUAL
+     I                                       27  290ESGRAM
+     I                                       30  35 ESPROV
+     I                                       36  410NBFE
+     I            DS
+     I                                        1   9 ER
+     I                                        1   1 ER1
+     I                                        2   2 ER2
+     I                                        3   3 ER3
+     I                                        4   4 ER4
+     I                                        5   5 ER5
+     I                                        6   6 ER6
+     I                                        7   7 ER7
+     I                                        8   8 ER8
+     I                                        9   9 ER9
+    I*
+     I            DS
+     I                                        1   20ANCOM
+     I                                        3   60NOCOM
+     I                                        1   60RFCOM
+    I*
+     IDSPARM      DS
+     I                                        1   10ZIZI1                 PROD13
+     I                                        2   2 SNCF
+     I                                        3   3 MPSP
+     *
+     I            DS
+     I                                        1   20SSHOR
+     I                                        3   40AAHOR
+     I                                        5   60MMHOR
+     I                                        7   80JJHOR
+     I                                        1   80DATHOR
+     *
+     I            DS
+     I                                        1   20SGEST
+     I                                        3   40AGEST
+     I                                        5   60MGEST
+     I                                        7   80JGEST
+     I                                        1   80DATGES
+     *
+     I                                        1   3 ISOPAY
+     I                                        4   6 SITPRO
+     I                                        1   6 IDEPSP
+     *
+     I/EJECT
+     C           *ENTRY    PLIST
+     C                     PARM           DSPARM
+     C                     MOVE *BLANK    MPSP
+     C                     SETON                     94
+    C***************************************************************
+    C*                                                             *
+    C* CLES D'ACCES AUX DIFFERENTS FICHIERS UTILISES DANS CDEF01£  *
+    C*                                                             *
+    C***************************************************************
+     *
+     C           CLEAUT    KLIST
+     C                     KFLD           USRNAM
+     C                     KFLD           NOMENU
+     C                     KFLD           NOPTIO
+    C** CLE D'ACCES A CALENAL0
+    C***********************
+     C           CLECAL    KLIST
+     C                     KFLD           AENT
+     C                     KFLD           MENT
+     C                     KFLD           JENT
+    C** CLE D'ACCES A PAPCDLL7
+    C*************************
+     C           CFL9      KLIST
+     C                     KFLD           ZIZI1   10
+     C                     KFLD           NOFOU1  4
+     C           CFL9B     KLIST
+     C                     KFLD           ZIZI1   10
+     C                     KFLD           NOFOU   4
+     C                     KFLD           SS
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     C                     KFLD           SEQCOM
+     C           CFL9C     KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           SEQADR
+     C                     KFLD           USCOM
+     C                     KFLD           SCOM
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     *
+     C                     Z-ADD40100     CPT
+    C** CLE D'ACCES A PAPCDLL5
+    C*************************
+     C           CFL0      KLIST
+     C                     KFLD           USCOM
+     C                     KFLD           SCOM
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     C                     KFLD           SEQCOM
+     *
+     C           CFL1      KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           SEQADR
+     C                     KFLD           USCOM
+     C                     KFLD           SCOM
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     *
+     C           CFL2      KLIST
+     C                     KFLD           USCOM
+     C                     KFLD           SCOM
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+    C** CLE D'ACCES A QUAUSI
+    C***********************
+     C           CQAUSI    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+    C** CLE D'ACCES A QUALI
+    C***********************
+     C           CQUALI    KLIST
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+    C** CLE D'ACCES A QUAFOU
+    C***********************
+     C           CQUFOU    KLIST
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           NOFOU1
+    C** CLE D'ACCES A QUSFOU
+    C***********************
+     C           CQSFOU    KLIST
+     C                     KFLD           NOFOU1
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C           KQFMVT    KLIST
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           NOFMVT
+    C** CLE D'ACCES A ARTPAPL1
+    C*************************
+     C           CLPAP1    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           LAIZE
+    C** CLE D'ACCES A ARTPAPL2
+    C*************************
+     C           CLPAP2    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           FORL
+     C                     KFLD           FORH
+    C* ACCES A MVTPAP ET MVTPAPW
+    C***************************
+     *
+     C           KMV28     KLIST
+     C                     KFLD           USINE
+     C                     KFLD           XF1     1
+     C                     KFLD           XF2     1
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           LAIZE
+     C                     KFLD           FORL
+     C                     KFLD           FORH
+     *
+     C           CLMVTP    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           NOBOB
+    C* ACCES A FOUSTE
+    C****************
+     C           KSTE      KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           STACH
+    C* ACCES A PAPCDL & A PAPCDM
+    C***************************
+     C           KPAP      KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           SEQADR
+     C                     KFLD           REFUSC
+     C                     KFLD           SS
+     C                     KFLD           REFACO
+     C                     KFLD           WNOCOM
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           WSEQCO
+    C** PARAME
+    C*********
+     C           CLPARA    KLIST
+     C                     KFLD           ARGU    4
+     C                     KFLD           VALE    8
+     *
+     C           CLEPAR    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+    C** PAPCPS
+    C*********
+     C           KPAPCP    KLIST
+     C                     KFLD           NOFOU
+     C                     KFLD           USCOM
+     C                     KFLD           ANCOM
+     C                     KFLD           NOCOM
+     *
+     *
+     C           *LIKE     DEFN NOCOM     WNOCOM
+     C           *LIKE     DEFN SEQCOM    WSEQCO
+     C           *LIKE     DEFN NOFOU     NOFSAV
+     C           *LIKE     DEFN ABRFOU    ABFSAV
+    C***************************************************************
+     * ENTREE S.N.C.F LIMOGES ?
+D1  C           SNCF      IFEQ 'O'
+     C           TAG0      TAG
+     *          ----      ---
+     C                     EXFMTF0
+    C           *IN03     CABEQ'1'       FIN
+     *
+    C           *IN04     CASEQ'1'       TRTCOD         44
+    C                     END
+    C           *IN44     CABEQ'1'       TAG0
+     *
+     C                     MOVE 'TAGN'    PXARGU
+     C                     MOVE *BLANK    PXVALE
+     C                     MOVELSTKEXT    PXVALE
+     C           CLEPAR    CHAINPARAME               99
+    C           *IN99     CABEQ'1'       TAG0           13
+    C           PXMONT    CABNE999       TAG0       1313
+     * RETOUR VALIDE
+     C                     MOVE '1'       *IN86
+     C                     MOVELPXABRG    LIBSTK
+X1  C                     ELSE
+     C                     MOVE '0'       *IN86
+F1  C                     END
+     *
+     C           AUTORI    TAG
+     *          ******    ***
+     C           USRNAM    CHAINMNUUTIL1             99
+    C           *IN99     CABEQ'1'       FIN
+     *
+     C                     MOVE *BLANK    NOMPGM 10
+     C                     MOVEL'CDEF04'  NOMPGM
+     C           NOMPGM    CHAINMNUOPTL2             99
+D1  C           *IN99     DOWEQ'0'
+    C           *IN85     ANDEQ'0'
+     C           CLEAUT    SETLLMNUAUTL1                 85
+     C           NOMPGM    READEMNUOPTL2                 99
+F1  C                     END
+    C           *IN85     CABEQ'0'       FIN
+     C/EJECT
+    C***************************************************************
+    C*                                                             *
+    C* MODULE 1                                                    *
+    C*                                                             *
+    C***************************************************************
+    C** VERIF SI EXISTENCE DU MEMBRE                               *
+    C*******************************                               *
+     C                     MOVE ' '       EXIST   1
+     C                     MOVE ' '       MBEX    1
+     C                     CALL 'CDEF04L'                           *
+     C           EXIST     PARM           EXI     1                 *
+     C                     PARM           LIBUS
+     C           MBEX      PARM           MB      1
+D1  C           EXIST     IFEQ '1'                                 *
+     C                     MOVEAOVR       TB,1                      *
+     C                     MOVEALIBUS     TB,20                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+     C                     OPEN MVTPAPW                             *
+D2  C                     DO   *HIVAL    R7      40                *
+     C                     READ MVTPAPW                  38         *
+    C           *IN38     CABEQ'1'       ERREUR                    *
+     C                     WRITEF27                                 *
+F2  C                     END                                      *
+     C           ERREUR    TAG                                      *
+    C**         ******    ***                                      *
+     C                     WRITEF29                                 *
+     C                     SETON                     9091           *
+     C                     EXFMTF28                                 *
+     C                     SETOF                     9091           *
+    C** SUPPRESSION DES DEJA SAISIS                                *
+    C******************************                                *
+D2  C           *IN16     IFEQ '1'                                 *
+     C                     CLOSEMVTPAPW                             *
+     C                     MOVEARMV       TB,1                      *
+     C                     MOVEALIBUS     TB,18                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+     C                     SETON                     93             *
+     C                     WRITEF28                                 *
+     C                     SETOF                     93             *
+    C                     GOTO FERREU                              *
+F2  C                     END                                      *
+    C** VALIDATION DES DEJA SAISIS                                 *
+    C*****************************                                 *
+D2  C           *IN15     IFEQ '1'                                 *
+     C                     CLOSEMVTPAPW                             *
+     C                     MOVEAOVR       TB,1                      *
+     C                     MOVEALIBUS     TB,20                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+     C                     SETON                     93
+     C                     WRITEF28
+     C                     SETOF                     93
+     C                     MOVE 'NOSO'    ARGU
+     C                     Z-ADDSTACH     SSTA    10
+     C                     MOVE SSTA      VALE      P
+     C           CLPARA    CHAINPARAME               38
+     C                     MOVELPXLIBE    LIBSOC
+     C           CQAUSI    CHAINQUAUSI               38
+     C                     OPEN PAPCDLL7
+     C           ANCOM     CHAINSIECLE               38
+     C           CFL9B     CHAINPAPCDLL7             38
+     C           CFL9C     CHAINPAPCDEL2             38
+     C  N38                EXCPTLIBCDE
+     C                     CLOSEPAPCDLL7
+     C                     Z-ADDSTE       STACH
+     C           QTCLIV    SUB  QTLIV     QLIVRE
+     C           FECLIV    SUB  FEULIV    FLIVRE
+D3  C           QLIVRE    IFLT 0
+     C                     Z-ADD0         QLIVRE
+F3  C                     END
+D3  C           FLIVRE    IFLT 0
+     C                     Z-ADD0         FLIVRE
+F3  C                     END
+     C                     MOVE NOFOU     NOFOU1
+     C           CQUALI    CHAINQUALIL6              81
+D3  C           FOUB      IFEQ 'B'
+     C                     SETON                     49
+     C                     WRITEF11
+     C                     WRITEF8
+    C                     GOTO FF3                                 *
+F3  C                     END                                      *
+D3  C           FOUB      IFEQ 'F'
+     C                     SETON                     49
+     C                     WRITEF11
+     C                     WRITEF12
+    C                     GOTO FFF3                                *
+F3  C                     END                                      *
+F2  C                     END                                      *
+    C                     GOTO ERREUR
+F1  C                     END                                      *
+     C           FERREU    TAG                                      *
+    C**         ******    ***                                      *
+D1  C           MBEX      IFEQ '1'
+D2  C           EXIST     IFEQ '0'
+     C                     MOVEAOVR       TB,1                      *
+     C                     MOVEALIBUS     TB,20                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+    C                     GOTO FRM1
+F2  C                     END
+F1  C                     END
+    C** AFFICHAGE 1ER FORMAT DEMANDE DE LA SOCIETE                 *
+    C**   ET DU CODE FOURNISSEUR A TRAITER                         *
+    C***************************************************************
+    C**   CERATION DU MEMBRE DE TRAVAIL DANS MVTPAP
+    C***************************************************************
+    C** MVTPAPW                                                    *
+    C**********                                                    *
+     C                     MOVEAPFM       TB,1                      *
+     C                     MOVEALIBUS     TB,20                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+     C                     MOVEAOVR       TB,1                      *
+     C                     MOVEALIBUS     TB,20                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+     C/EJECT
+    C***************************************************************
+    C* TRAITEMENT DU PREMIER FORMAT DEMANDE DU NUMERO DE SOCIETE
+    C* ET DU FOURNISSEUR A TRAITER
+    C***************************************************************
+     C           FRM1      TAG
+    C**         ****      ***
+     C                     SETON                     93
+     C                     WRITEF28
+     C                     SETOF                     93
+     C                     MOVE *YEAR     SAENT
+     C                     Z-ADDUMONTH    MENT
+D1  C           ZIZI1     IFEQ 7
+     C                     Z-ADD4         STACH
+X1  C                     ELSE
+     C                     Z-ADD1         STACH
+F1  C                     END
+     C                     Z-ADDUDAY      JENT
+     C                     MOVE *YEAR     SAENT1
+     C                     Z-ADDUMONTH    MENT1
+     C                     Z-ADDUDAY      JENT1
+     C                     EXFMTF1
+D1  C           *IN03     IFEQ '1'
+     C                     MOVEARMV       TB,1                      *
+     C                     MOVEALIBUS     TB,18                     *
+     C                     Z-ADD80        LG                        *
+     C                     CALL 'QCMDEXC'                           *
+     C                     PARM           TB                        *
+     C                     PARM           LG                        *
+    C                     GOTO FIN
+F1  C                     END
+    C* PAS PSP EN DIRECT
+    C***************
+    C           NOFOU     CABEQ'5004'    FRM1           72
+     *
+     C           CLECAL    CHAINCALENAL0             10
+    C* DATE INVALIDE
+    C***************
+D1  C           *IN10     IFEQ '1'
+    C                     GOTO FRM1
+F1  C                     END
+     C           AENT      CHAINSIECLE               57
+     C                     Z-ADDSS        SENT
+    C* DATE DE LIVRAISON SUPERIEUR A DATE DU JOUR
+    C********************************************
+D1  C           DATENT    IFGT DATEN1
+     C                     MOVE '1'       *IN11
+    C                     GOTO FRM1
+F1  C                     END
+    C* CODE SOCIETE INVALIDE
+    C************************
+     C                     MOVE 'NOSO'    ARGU
+     C                     Z-ADDSTACH     SSTA    10
+     C                     MOVE SSTA      VALE      P
+     C           CLPARA    CHAINPARAME               17
+D1  C           *IN17     IFEQ '1'
+    C                     GOTO FRM1
+F1  C                     END
+     C                     MOVELPXLIBE    LIBSOC
+     C                     MOVE STACH     SOC     2
+    C** VERIF EXISTANCE DUFOURNISSEUR
+    C********************************
+D1  C           NOFOU     IFNE *BLANKS                             *
+     C                     SETOF                     73
+     * Le fournisseur travaille t il pour la société
+     * en cours de traitement ?
+     C           KSTE      CHAINFOUSTEL1             13             *
+    C           *IN13     CABEQ'1'       FRM1                      *
+     * Ok, il y travaille --> on récupère le nom du Frs
+     C           NOFOU     CHAINFOURNIL1             13
+    C                     GOTO BAS                                 *
+F1  C                     END                                      *
+     * NOFOU A BLANC, ON APPEL LE PROGRAMME DE RECHERCHE
+D1  C           NOFOU     IFEQ *BLANKS
+     C                     MOVELSTACH     £SETFO  2
+     C                     CALL 'CDEF98£'
+     C                     PARM           NOFOU
+     C                     PARM           £SETFO
+     C                     PARM           RECHER
+    C                     GOTO FRM1
+F1  C                     END
+     *
+     C           BAS       TAG                                      *
+    C**         ***       ***                                      *
+     C                     SETON                     93
+     C                     WRITEF28
+     C                     SETOF                     93
+     C/EJECT
+    C***************************************************************
+    C* FORMAT DEUX AFFICHAGE DES COMMANDES EN COURS POUR LE FOURNIS.
+    C***************************************************************
+     C                     MOVE NOFOU     NOFOU1
+     *
+     * S'AGIT-IL D'UN FOURNISSEUR DE LA PLATEFORME PSP ?
+     C           NOFOU     SETLLFOUPSPL2                 58
+     C                     MOVE NOFOU     NOFMVT
+     C                     MOVE FOU22     ABFMVT
+D1  C           *IN58     IFEQ '1'
+     C                     MOVE '5004'    NOFOU
+     C                     MOVE '5004'    NOFOU1
+     C           NOFMVT    CHAINFOUFABL2             90
+     C                     MOVELIDEPSP    IDEFOU    P
+     C           NOFOU     CHAINFOURNIL1             13
+F1  C                     END
+     C                     MOVE NOFOU     NOFSAV
+     C                     MOVE FOU22     ABFSAV
+     *
+     C           REAFFI    TAG
+    C**         ******    ***
+     C                     SETON                     93
+     C                     WRITEF5
+     C                     SETOF                     93
+     C                     MOVE *BLANKS   FOUBOR
+     C                     Z-ADD0         PORTDU
+     C                     OPEN PAPCDLL7
+     C           CFL9      CHAINPAPCDLL7             98
+     C                     Z-ADD*ZEROS    IIII    40
+     C                     Z-ADD*ZEROS    R2      40
+D1  C           *IN98     DOWEQ'0'
+     C  N98      CFL9C     CHAINPAPCDEL2             56
+     C  N56N98             EXCPTLIBCDE
+     C           KQFMVT    SETLLQUAFOUL1                 95
+D2  C           *IN95     IFEQ '1'
+     C                     ADD  1         IIII
+     C                     ADD  1         R2
+     C                     Z-ADDUSCOM     USINE
+     C                     Z-ADDSTE       STACH
+     C           QTCLIV    SUB  QTLIV     QLIVRE
+     C           FECLIV    SUB  FEULIV    FLIVRE
+D3  C           QLIVRE    IFLT 0
+     C                     Z-ADD0         QLIVRE
+F3  C                     END
+D3  C           FLIVRE    IFLT 0
+     C                     Z-ADD0         FLIVRE
+F3  C                     END
+     C                     WRITEF6
+F2  C                     END
+     C           CFL9      READEPAPCDLL7                 98
+F1  C                     END
+     C                     CLOSEPAPCDLL7
+     C           IIII      COMP 0                        97
+D1  C           *IN97     IFEQ '1'
+     C                     SETON                     72
+F1  C                     END
+    C           *IN97     CABEQ'1'       FRM1
+     C                     SETOF                     73
+     C                     SETOF                     93             *
+    C                     GOTO FRM2
+     C           FRM2      TAG
+    C**         ****      ***
+     * LE LIBELLE ABREGE
+     C                     MOVE FOU22     ABRFOU                    *
+     C                     WRITEF7
+     C                     SETON                     9091
+     C                     EXFMTF5
+     C                     Z-ADD0         SAVRF
+     C                     SETOF                     909149
+D1  C           *IN12     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF5
+     C                     SETOF                     93
+    C                     GOTO FRM1
+F1  C                     END
+D1  C                     DO   *HIVAL    R2
+     C                     READCF6                       70
+D2  C           *IN70     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF5
+     C                     SETOF                     93
+    C                     GOTO REAFFI
+F2  C                     END
+    C           CHOI      CABEQ' '       LECT2
+D2  C           SAVRF     IFNE 0
+    C           RFCOM     CABNESAVRF     LECT2
+F2  C                     END
+     C                     MOVE ' '       CHOI
+     C                     UPDATF6
+     C                     Z-ADDRFCOM     SAVRF   60
+     C           CQUALI    CHAINQUALIL6              38
+     C           CQAUSI    CHAINQUAUSI               38
+     C           CQUFOU    CHAINQUAFOUL1             38
+     C           CQSFOU    CHAINQUSFOUL3             38
+     C                     MOVE ACHEM     ACHREC
+     C                     Z-ADDQLIVRE    QSOL1
+     C                     Z-ADDFLIVRE    FSOL1
+     C                     Z-ADD*ZEROS    BOB
+     C                     Z-ADD*ZEROS    NUM10
+    C**
+     C/EJECT
+    C** SI BOBINE
+     C                     Z-ADDANCOM     ANCOM2
+     C                     MOVE '1'       *IN25
+     C                     MOVE 'NON'     OUINON
+D2  C           FOUB      IFEQ 'B'
+     * ARTICLE EN STOCK EXTERIEUR FOURNISSEUR ?
+     C                     MOVE 'X'       XF1
+     C                     MOVE 'F'       XF2
+     C           KMV28     SETLLMVTPAL28                 90
+D3  C           *IN90     IFEQ '1'
+     C                     EXFMTMSG1
+    C           *IN12     CABEQ'1'       REAFFI
+    C           OUINON    CABEQ'NON'     REAFFI
+     C                     EXFMTMSG2
+    C           *IN12     CABEQ'1'       REAFFI
+F3  C                     END
+     C                     MOVE 'NON'     OUINON
+     C           FF1       TAG
+     C                     EXFMTFCONF
+     C                     MOVE '0'       *IN25
+    C           *IN12     CABEQ'1'       REAFFI
+    C           OUINON    CABEQ'NON'     REAFFI
+    C**         ***       ***
+     C                     WRITEF11
+     C           FF2       TAG
+    C**         ***       ***
+     C                     EXFMTF8
+D3  C           *IN12     IFEQ '1'
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO REAFFI
+F3  C                     END
+D3  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F3  C                     END
+    C           ACHREC    CABEQ*BLANKS   FF2            10
+    C           FOUBOR    CABEQ*BLANKS   FF2            11
+     C                     MOVE PAPI      PAPA1   3
+     C                     MOVE GRAMM     PAPA2   30
+     C                     MOVE REFOUR    PAPA3   6
+     C                     MOVE GRAREL    PAPA4   30
+     C                     MOVE FOUB      PAPA5   1
+     C                     MOVE NOFOU     PAPA6   4
+     C                     MOVE ABRFOU    PAPA7  15
+     C                     MOVE NOCOM     PAPA8   40
+     C                     MOVE ANCOM     PAPA9   20
+     C                     MOVE IDEFOU    PAPA10  8
+     C                     MOVE FOUBOR    PAPA11 12
+     C                     MOVE PORTDU    PAPA23  62
+     C                     MOVE LAIZE     PAPA12  41
+     C                     MOVE SEQCOM    PAPA13  31
+     C                     MOVE JCOM      PAPA20  20
+     C                     MOVE MCOM      PAPA21  20
+     C                     MOVE ACOM      PAPA22  20
+     C           FF3       TAG
+    C**         ***       ***
+     C                     SETON                     92
+     C                     WRITEF9
+     C                     SETOF                     92
+     C           FF4       TAG
+    C**         ***       ***
+     C                     SETON                     93
+     C                     WRITEF25
+     C                     SETOF                     933443
+     C                     SETON                     9091
+D3  C           QSOL1     IFLT 0
+     C                     SETON                     43
+F3  C                     END
+     C                     EXFMTF9
+     C                     SETOF                     9091
+D3  C           *IN05     IFEQ '1'
+     C                     MOVE '0'       *IN50
+     C                     MOVE DIAMAN    DUAM    30
+     C                     MOVE DIABOB    DUAB    30
+     C                     EXSR SPMAJ1
+     C                     MOVE DUAM      DIAMAN
+     C                     MOVE DUAB      DIABOB
+     C                     WRITEF11
+     C                     WRITEF8
+    C   50                GOTO LECT2
+    C                     GOTO FF3
+F3  C                     END
+     *          *IN08     IFEQ '1'
+     *                    EXSR VALIDA
+     *                    WRITEF11
+     *                    WRITEF8
+     *                    GOTO LECT2
+     *                    END
+D3  C           *IN12     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     SETOF                     93
+    C                     GOTO FF2
+F3  C                     END
+D3  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F3  C                     END
+    C** TEST SI ZONES BIEN SAISIES
+    C*****************************
+     C                     MOVE *BLANKS   ER
+D3  C                     DO   8         R3      10
+     C                     MOVE *BLANKS   ER
+     C           R3        CHAINF10                  38
+     C                     Z-ADD*ZEROS    NBFE
+     C                     MOVE ESQUAL    ESQUA1  3
+     C                     MOVE ESGRAM    ESGRA1  30
+     C                     MOVE ESPROV    ESPRO1  6
+     C                     MOVE ESSAI     ESSAI1  1
+     C                     Z-ADDPDSBOB    PDSBO1  40
+     C                     MOVE RFBFOU    RFBFO1 12
+     C                     MOVE DIAM      DIAM1   30
+     C                     MOVE DIAB      DIAB1   30
+    C* TEST SI LIGNE SAISIE
+    C**********************
+     C                     MOVEADS1       EE,1
+     C                     MOVE EE        DD
+     C                     XFOOTDD        TRUC   150
+    C           TRUC      CABEQ*ZEROS    SLECT
+    C* TEST SI BOBINE SAISIE
+    C***********************
+D4  C           NOBOB     IFEQ *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'A'       ER,1
+F4  C                     END
+    C** TEST SI N° BOBINE DEJA EXISTANT
+    C**********************************
+     C                     Z-ADD1         U       30
+D4  C           NOBOB     IFNE *ZEROS
+     C           NOBOB     LOKUPBOB,U                    20
+D5  C           *IN20     IFEQ '1'
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'B'       ER,2
+X5  C                     ELSE
+     C                     Z-ADD1         U
+     C           *ZEROS    LOKUPBOB,U                    35
+     C                     Z-ADDNOBOB     BOB,U
+F5  C                     END
+F4  C                     END
+     C                     MOVE DIAMAN    DIAMAA  30
+     C                     MOVE DIABOB    DIABAA  30
+     C                     OPEN MPAPARL1
+     C           CLMVTP    CHAINMPAPARL1             38
+     C                     CLOSEMPAPARL1
+     C                     MOVE DIAMAA    DIAMAN
+     C                     MOVE DIABAA    DIABOB
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'B'       ER,2
+     C                     MOVE PAPA1     PAPI
+     C                     MOVE PAPA2     GRAMM
+     C                     MOVE PAPA3     REFOUR
+     C                     MOVE PAPA4     GRAREL
+     C                     MOVE PAPA5     FOUB
+     C                     MOVE PAPA6     NOFOU
+     C                     MOVE PAPA7     ABRFOU
+     C                     MOVE PAPA8     NOCOM
+     C                     MOVE PAPA9     ANCOM
+     C                     MOVE PAPA10    IDEFOU
+     C                     MOVE PAPA11    FOUBOR
+     C                     MOVE PAPA23    PORTDU
+     C                     MOVE PAPA12    LAIZE
+     C                     MOVE PAPA13    SEQCOM
+     C                     MOVE PAPA20    JCOM
+     C                     MOVE PAPA21    MCOM
+     C                     MOVE PAPA22    ACOM
+F4  C                     END
+     C                     OPEN MVTPAPW
+     C                     MOVE DIAMAN    DIAMAA  30
+     C                     MOVE DIABOB    DIABAA  30
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     MOVE DIAMAA    DIAMAN
+     C                     MOVE DIABAA    DIABOB
+     C                     CLOSEMVTPAPW
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'B'       ER,2
+F4  C                     END
+     C           CLMVTP    SETLLMVTFOU                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '1'       *IN34
+     C                     MOVE '0'       *IN38
+     C                     MOVE 'B'       ER,2
+F4  C                     END
+     C           CLMVTP    SETLLMVTCXH                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '1'       *IN34
+     C                     MOVE '0'       *IN38
+     C                     MOVE 'B'       ER,2
+F4  C                     END
+    C* TEST SI QTE SAISIE
+    C********************
+D4  C           PDSBO1    IFEQ *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'C'       ER,3
+     C                     Z-ADD1         PDSBO1
+F4  C                     END
+    C** CALCUL DU POIDS BOBINE
+    C*****************************
+     C           MICRON    DIV  1000000   MIG21   86
+     C           MIG21     MULT 4         MIG21
+     C           3,1416    DIV  MIG21     Z157   157
+D4  C           DIAM1     IFEQ *ZEROS
+     C                     MOVE DIAMAN    DIADIA  30
+X4  C                     ELSE
+     C                     MOVE DIAM1     DIADIA
+F4  C                     END
+     C           DIADIA    DIV  1000      DIADAA  43
+D4  C           DIAB1     IFEQ *ZEROS
+     C                     MOVE DIABOB    BOBBOB  30
+X4  C                     ELSE
+     C                     MOVE DIAB1     BOBBOB
+F4  C                     END
+     C           BOBBOB    DIV  100       BOBBBB  32
+     C           BOBBBB    MULT BOBBBB    BOBOBO 157
+     C           DIADAA    MULT DIADAA    DIDIDI 157
+     C           LAIZE     DIV  100       LAILAI 103
+     C           GRAMOY    DIV  1000      GRGRGR 103
+     C           BOBOBO    SUB  DIDIDI    BOBOBO
+     C           LAILAI    MULT GRGRGR    LAILAI
+     C           Z157      MULT BOBOBO    TATATA 157
+     C           TATATA    MULT LAILAI    TATATA
+     C                     Z-ADDTATATA    PDPDPD  50
+     C           PDSBO1    SUB  PDPDPD    ZINZIN  50
+     C           ZINZIN    DIV  PDSBO1    RURURU 105H
+     C           RURURU    MULT 100       CABOUD 157
+D4  C           CABOUD    IFGT 20
+    C           ZIZI1     ANDNE5
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'I'       ER,9
+F4  C                     END
+    C* SI ESSAI VERIF SI SAISE BONNE
+    C*******************************
+D4  C           ESSAI1    IFEQ *BLANKS
+D5  C           ESQUA1    IFNE *BLANKS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'F'       ER,6
+F5  C                     END
+F4  C                     END
+D4  C           ESSAI1    IFEQ *BLANKS
+D5  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'F'       ER,6
+F5  C                     END
+F4  C                     END
+D4  C           ESSAI1    IFEQ *BLANKS
+D5  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'F'       ER,6
+F5  C                     END
+F4  C                     END
+D4  C           ESQUA1    IFNE *BLANKS
+D5  C           ESGRA1    IFEQ *ZEROS
+     C                     MOVE 'G'       ER,7
+     C                     MOVE '1'       *IN34
+F5  C                     END
+F4  C                     END
+D4  C           ESQUA1    IFEQ *BLANKS
+D5  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE 'G'       ER,7
+     C                     MOVE '1'       *IN34
+F5  C                     END
+F4  C                     END
+D4  C           ESQUA1    IFEQ *BLANKS
+D5  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE 'G'       ER,7
+     C                     MOVE '1'       *IN34
+F5  C                     END
+F4  C                     END
+    C* SI ERREUR SAISIE DANS SOUS FICHIER ERREURS
+    C********************************************
+D4  C           *IN34     IFEQ '1'
+     C                     Z-ADDR3        LIG     10
+     C                     WRITEF24
+F4  C                     END
+     C           SLECT     TAG
+    C**         *****     ***
+F3  C                     END
+D3  C           *IN34     IFEQ '1'
+     C                     SETON                     9091
+     C                     WRITEF25
+     C                     SETOF                     9091
+     C                     WRITEF26
+D4  C                     DO   8         R3
+     C           R3        CHAINF10                  80
+     C                     Z-ADD1         U
+     C           NOBOB     LOKUPBOB,U                    80
+     C                     Z-ADD*ZEROS    BOB,U
+F4  C                     END
+    C                     GOTO FF4
+X3  C                     ELSE
+D4  C                     DO   8         R3      10
+     C           R3        CHAINF10                  38
+    C* TEST SI LIGNE SAISIE
+    C**********************
+     C                     MOVEADS1       EE,1
+     C                     MOVE EE        DD
+     C                     XFOOTDD        TRUC   150
+    C           TRUC      CABEQ*ZEROS    SLECT1
+     C                     SUB  PDSBOB    QSOL1
+     C                     Z-ADD*ZEROS    NBFE
+     C                     MOVE DIAMAN    DUAM    30
+     C                     MOVE DIABOB    DUAB    30
+     C                     OPEN MVTPAPW
+D5  C           DIAM      IFNE *ZEROS
+     C                     Z-ADDDIAM      DIAMAN
+F5  C                     END
+D5  C           DIAB      IFNE *ZEROS
+     C                     Z-ADDDIAB      DIABOB
+F5  C                     END
+     C                     MOVE USINE     USORI
+     C                     TIME           HENT
+     C   86                MOVE STKEXT    TAGNU
+     C                     MOVE ZSTK      Z1Z2
+     C                     MOVE NOFMVT    NOFOU
+     C                     MOVE ABFMVT    ABRFOU
+     C                     WRITEMVTPAPW1
+     C                     MOVE NOFSAV    NOFOU
+     C                     MOVE ABFSAV    ABRFOU
+     C                     SETON                     49
+     C                     CLOSEMVTPAPW
+     C                     MOVE DUAM      DIAMAN
+     C                     MOVE DUAB      DIABOB
+     C           SLECT1    TAG
+    C**         ******    ****
+F4  C                     END
+     C                     WRITEF8
+    C                     GOTO FF3
+F3  C                     END
+F2  C                     END
+     C/EJECT
+    C** SI FORMAT
+D2  C           FOUB      IFEQ 'F'
+     C                     MOVE '0'       *IN25
+     C                     MOVE 'NON'     OUINON
+     C           KMV28     SETLLMVTPAL28                 90
+     * ARTICLE EN STOCK EXTERIEUR FOURNISSEUR ?
+     C                     MOVE 'X'       XF1
+     C                     MOVE 'F'       XF2
+D3  C           *IN90     IFEQ '1'
+     C                     EXFMTMSG1
+    C           *IN12     CABEQ'1'       REAFFI
+    C           OUINON    CABEQ'NON'     REAFFI
+     C                     EXFMTMSG2
+    C           *IN12     CABEQ'1'       REAFFI
+F3  C                     END
+     C                     MOVE 'NON'     OUINON
+     C           FFF1      TAG
+     C                     MOVE '0'       *IN25
+     C                     EXFMTFCONF
+    C           *IN12     CABEQ'1'       REAFFI
+    C           OUINON    CABEQ'NON'     REAFFI
+    C**         ***       ***
+     C                     WRITEF11
+     C           FFF2      TAG
+    C**         ***       ***
+     C                     EXFMTF12
+D3  C           *IN12     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO REAFFI
+F3  C                     END
+D3  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F3  C                     END
+    C           ACHREC    CABEQ*BLANKS   FFF2           10
+    C           FOUBOR    CABEQ*BLANKS   FFF2           11
+     C                     MOVE PAPI      PAPA1   3
+     C                     MOVE GRAMM     PAPA2   30
+     C                     MOVE REFOUR    PAPA3   6
+     C                     MOVE GRAREL    PAPA4   30
+     C                     MOVE FOUB      PAPA5   1
+     C                     MOVE NOFOU     PAPA6   4
+     C                     MOVE ABRFOU    PAPA7  15
+     C                     MOVE NOCOM     PAPA8   40
+     C                     MOVE ANCOM     PAPA9   20
+     C                     MOVE IDEFOU    PAPA10
+     C                     MOVE FOUBOR    PAPA11 12
+     C                     MOVE PORTDU    PAPA23  62
+     C                     MOVE FORL      PAPA15  40
+     C                     MOVE SEQCOM    PAPA13  31
+     C                     MOVE FORH      PAPA14  40
+     C                     MOVE JCOM      PAPA20
+     C                     MOVE MCOM      PAPA21
+     C                     MOVE ACOM      PAPA22
+     C           FFF3      TAG
+    C**         ***       ***
+     C                     SETON                     92
+     C                     WRITEF13
+     C                     SETOF                     92
+     C           FFF4      TAG
+    C**         ***       ***
+     C                     SETON                     93
+     C                     WRITEF25
+     C                     SETOF                     933443
+     C                     SETON                     9091
+D3  C           QSOL1     IFLT 0
+     C                     SETON                     43
+F3  C                     END
+D3  C           FSOL1     IFLT 0
+     C                     SETON                     43
+F3  C                     END
+     C                     EXFMTF13
+     C                     SETOF                     9091
+D3  C           *IN05     IFEQ '1'
+     C                     EXSR SPMAJ2
+     C                     WRITEF11
+     C                     WRITEF12
+    C   50                GOTO LECT2
+    C                     GOTO FFF3
+F3  C                     END
+     *          *IN08     IFEQ '1'
+     *                    EXSR VALIDA
+     *                    WRITEF11
+     *                    WRITEF12
+     *                    GOTO LECT2
+     *                    END
+D3  C           *IN12     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF13
+     C                     SETOF                     93
+    C                     GOTO FFF2
+F3  C                     END
+D3  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F3  C                     END
+    C** TEST SI ZONES BIEN SAISIES
+    C*****************************
+     C                     MOVE *BLANKS   ER
+D3  C                     DO   8         R3      10
+     C                     MOVE *BLANKS   ER
+     C           R3        CHAINF14                  38
+     C                     MOVE ESQUAL    ESQUA1
+     C                     MOVE ESGRAM    ESGRA1
+     C                     MOVE ESPROV    ESPRO1
+     C                     MOVE ESSAI     ESSAI1  1
+     C                     Z-ADDPDSBOB    PDSBO1  40
+     C                     Z-ADDNBFE      NBFE1   60
+     C                     MOVE RFBFOU    RFBFO1
+    C* TEST SI LIGNE SAISIE
+    C**********************
+     C                     MOVEADS1       EE,1
+     C                     MOVE EE        DD
+     C                     XFOOTDD        TRUC   150
+    C           TRUC      CABEQ*ZEROS    SLECT2
+    C* TEST SI BOBINE SAISIE
+    C***********************
+D4  C           NOBOB     IFEQ *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'A'       ER,1
+F4  C                     END
+    C** TEST SI N° BOBINE DEJA EXISTANT
+    C**********************************
+     C                     Z-ADD1         U       30
+D4  C           NOBOB     IFNE *ZEROS
+     C           NOBOB     LOKUPBOB,U                    20
+D5  C           *IN20     IFEQ '1'
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'B'       ER,2
+X5  C                     ELSE
+     C                     Z-ADD1         U
+     C           *ZEROS    LOKUPBOB,U                    35
+     C                     Z-ADDNOBOB     BOB,U
+F5  C                     END
+F4  C                     END
+     C                     OPEN MPAPARL1
+     C           CLMVTP    CHAINMPAPARL1             38
+     C                     CLOSEMPAPARL1
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'B'       ER,2
+     C                     MOVE PAPA20    JCOM
+     C                     MOVE PAPA21    MCOM
+     C                     MOVE PAPA22    ACOM
+     C                     MOVE PAPA1     PAPI
+     C                     MOVE PAPA2     GRAMM
+     C                     MOVE PAPA3     REFOUR
+     C                     MOVE PAPA4     GRAREL
+     C                     MOVE PAPA5     FOUB
+     C                     MOVE PAPA6     NOFOU
+     C                     MOVE PAPA7     ABRFOU
+     C                     MOVE PAPA8     NOCOM
+     C                     MOVE PAPA9     ANCOM
+     C                     MOVE PAPA10    IDEFOU
+     C                     MOVE PAPA11    FOUBOR
+     C                     MOVE PAPA23    PORTDU
+     C                     MOVE PAPA15    FORL
+     C                     MOVE PAPA13    SEQCOM
+     C                     MOVE PAPA14    FORH
+F4  C                     END
+     C                     OPEN MVTPAPW
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     CLOSEMVTPAPW
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'B'       ER,2
+F4  C                     END
+     C           CLMVTP    SETLLMVTFOU                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '1'       *IN34
+     C                     MOVE '0'       *IN38
+     C                     MOVE 'B'       ER,2
+F4  C                     END
+     C           CLMVTP    SETLLMVTCXH                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '1'       *IN34
+     C                     MOVE '0'       *IN38
+     C                     MOVE 'B'       ER,2
+F4  C                     END
+    C* TEST SI QTE SAISIE
+    C********************
+D4  C           PDSBO1    IFEQ *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'C'       ER,3
+     C                     Z-ADD1         PDSBO1
+F4  C                     END
+    C* TEST SI NOMBRE DE FEUILLES SAISI
+    C**********************************
+D4  C           NBFE1     IFEQ *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'D'       ER,4
+     C                     Z-ADD1         NBFE1
+F4  C                     END
+    C** CALCUL DU POIDS PAR RAPPORT AUX NB FEUILLES
+    C**********************************************
+D4  C           GRAREL    IFNE *ZEROS
+     C           GRAREL    DIV  1000      GRACAL  43
+X4  C                     ELSE
+     C           GRAMM     DIV  1000      GRACAL
+F4  C                     END
+     C           FORL      DIV  1000      FORCA1  43
+     C           FORH      DIV  1000      FORCA2  43
+     C           FORCA1    MULT FORCA2    POIFEU 107
+     C           POIFEU    MULT GRACAL    POIFEU
+     C           POIFEU    MULT NBFE1     PDREEL  70H
+     C           PDSBO1    SUB  PDREEL    PDDIFF  70
+D4  C           PDDIFF    IFLT 0
+     C                     Z-SUBPDDIFF    PDDIFF
+F4  C                     END
+     C           PDDIFF    DIV  PDSBO1    POURDD 105
+     C           POURDD    MULT 100       POURDD
+D4  C           POURDD    IFGT 25
+     C                     MOVE 'H'       ER,8
+     C                     MOVE '1'       *IN34
+F4  C                     END
+    C* SI ESSAI VERIF SI SAISE BONNE
+    C*******************************
+D4  C           ESSAI1    IFEQ *BLANKS
+D5  C           ESQUA1    IFNE *BLANKS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'F'       ER,6
+F5  C                     END
+F4  C                     END
+D4  C           ESSAI1    IFEQ *BLANKS
+D5  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'F'       ER,6
+F5  C                     END
+F4  C                     END
+D4  C           ESSAI1    IFEQ *BLANKS
+D5  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE '1'       *IN34
+     C                     MOVE 'F'       ER,6
+F5  C                     END
+F4  C                     END
+D4  C           ESQUA1    IFNE *BLANKS
+D5  C           ESGRA1    IFEQ *ZEROS
+     C                     MOVE 'G'       ER,7
+     C                     MOVE '1'       *IN34
+F5  C                     END
+F4  C                     END
+D4  C           ESQUA1    IFEQ *BLANKS
+D5  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE 'G'       ER,7
+     C                     MOVE '1'       *IN34
+F5  C                     END
+F4  C                     END
+D4  C           ESQUA1    IFEQ *BLANKS
+D5  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE 'G'       ER,7
+     C                     MOVE '1'       *IN34
+F5  C                     END
+F4  C                     END
+    C* SI ERREUR SAISIE DANS SOUS FICHIER ERREURS
+    C********************************************
+D4  C           *IN34     IFEQ '1'
+     C                     Z-ADDR3        LIG     10
+     C                     WRITEF24
+F4  C                     END
+     C           SLECT2    TAG
+    C**         *****     ***
+F3  C                     END
+D3  C           *IN34     IFEQ '1'
+     C                     SETON                     9091
+     C                     WRITEF25
+     C                     SETOF                     9091
+     C                     WRITEF26
+D4  C                     DO   8         R3
+     C           R3        CHAINF14                  80
+     C                     Z-ADD1         U
+     C           NOBOB     LOKUPBOB,U                    80
+     C                     Z-ADD*ZEROS    BOB,U
+F4  C                     END
+    C                     GOTO FFF4
+X3  C                     ELSE
+D4  C                     DO   8         R3      10
+     C           R3        CHAINF14                  38
+    C* TEST SI LIGNE SAISIE
+    C**********************
+     C                     MOVEADS1       EE,1
+     C                     MOVE EE        DD
+     C                     XFOOTDD        TRUC   150
+    C           TRUC      CABEQ*ZEROS    SLECT3
+     C                     OPEN MVTPAPW
+     C                     SUB  PDSBOB    QSOL1
+     C                     SUB  NBFE      FSOL1
+     C                     MOVE USINE     USORI
+     C                     TIME           HENT
+     C   86                MOVE STKEXT    TAGNU
+     C                     MOVE ZSTK      Z1Z2
+     C                     MOVE NOFMVT    NOFOU
+     C                     MOVE ABFMVT    ABRFOU
+     C                     WRITEMVTPAPW1
+     C                     MOVE NOFSAV    NOFOU
+     C                     MOVE ABFSAV    ABRFOU
+     C                     SETON                     49
+     C                     CLOSEMVTPAPW
+     C           SLECT3    TAG
+    C**         ******    ****
+F4  C                     END
+     C                     WRITEF12
+    C                     GOTO FFF3
+F3  C                     END
+F2  C                     END
+     C           LECT2     TAG
+    C**         *****     ***
+F1  C                     END
+    C                     GOTO FRM2
+     C           FIN       TAG
+    C**         ***       ***
+     C                     MOVE '1'       *INLR
+     C/EJECT
+    C** SOUS PROGRAMME DE MISE A JOUR POUR LES BOBINES
+    C*************************************************
+    C           SPMAJ1    BEGSR
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     SETOF                     93
+     C           DMAJ1     TAG
+    C**         *****     ***
+     C                     OPEN MVTPAPW
+     C                     Z-ADD*ZEROS    D       40
+D1  C                     DO   *HIVAL    R4      40
+     C                     READ MVTPAPW                  38
+D2  C           *IN38     IFEQ '1'
+     C           D         COMP 0                    90
+D3  C           *IN90     IFEQ '0'
+     C                     SETOF                     49
+F3  C                     END
+     C                     CLOSEMVTPAPW
+    C                     GOTO SMAJ1
+F2  C                     END
+     C                     ADD  1         D
+     C                     MOVE DIAMAN    DIAM
+     C                     MOVE DIABOB    DIAB
+     C                     MOVE Z1Z2      ZSTK
+     C                     WRITEF16
+F1  C                     END
+     C           SMAJ1     TAG
+    C**         *****     ***
+     C                     WRITEF18
+     C           SMAJ2     TAG
+    C**         *****     ***
+     C                     SETON                       91
+     C                     EXFMTF15
+     C                     SETOF                     9091
+D1  C           *IN04     IFEQ '1'
+    C                     GOTO FSMAJ1
+F1  C                     END
+D1  C           *IN08     IFEQ '1'
+     C                     SETON                     50
+     C                     EXSR VALIDA
+     C                     SETON                     93
+     C                     WRITEF15
+     C                     SETOF                     93
+    C   50                GOTO FSMAJ1
+    C                     GOTO DMAJ1
+F1  C                     END
+D1  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F1  C                     END
+D1  C                     DO   *HIVAL    R4
+     C                     READCF16                      38
+D2  C           *IN38     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF15
+     C                     SETOF                     93
+    C                     GOTO DMAJ1
+F2  C                     END
+D2  C           CHOI      IFEQ 'S'
+     C                     OPEN MVTPAPW
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     ADD  PDSBOB    QSOL1
+     C                     DELETMVTPAPW1
+     C                     CLOSEMVTPAPW
+     C                     Z-ADD1         U
+     C           NOBOB     LOKUPBOB,U                    38
+     C   38                Z-ADD*ZEROS    BOB,U
+X2  C                     ELSE
+     C                     Z-ADDPDSBOB    QQQQQQ  70
+     C                     MOVE NOBOB     NOBOBO  60
+     C           MAJ1      TAG
+    C**         ****      ***
+     C                     EXFMTF17
+     C                     MOVE ESQUAL    ESQUA1  3
+     C                     MOVE ESGRAM    ESGRA1  30
+     C                     MOVE ESPROV    ESPRO1  6
+     C                     MOVE ESSAI     ESSAI1  1
+     C                     Z-ADDPDSBOB    PDSBO1  40
+     C                     MOVE RFBFOU    RFBFO1
+     C                     MOVE NOBOB     NOBOBA  60
+    C*
+    C* TEST SI BOBINE SAISIE
+    C***********************
+D3  C           NOBOBA    IFEQ *ZEROS
+     C                     MOVE '1'       *IN10
+    C                     GOTO MAJ1
+F3  C                     END
+    C** TEST SI N° BOBINE DEJA EXISTANT
+    C**********************************
+     C                     Z-ADD1         U       30
+D3  C           NOBOBA    IFNE *ZEROS
+D4  C           NOBOBA    IFNE NOBOBO
+     C           NOBOBA    LOKUPBOB,U                    11
+D5  C           *IN11     IFEQ '1'
+    C                     GOTO MAJ1
+X5  C                     ELSE
+     C                     Z-ADD1         U
+     C           NOBOBO    LOKUPBOB,U                    35
+     C                     Z-ADD*ZEROS    BOB,U
+     C                     Z-ADD1         U
+     C           *ZEROS    LOKUPBOB,U                    35
+     C                     Z-ADDNOBOBA    BOB,U
+F5  C                     END
+F4  C                     END
+F3  C                     END
+D3  C           NOBOBA    IFNE NOBOBO
+     C                     MOVE NOBOBA    NOBOB
+     C                     OPEN MPAPARL1
+     C           CLMVTP    CHAINMPAPARL1             38
+     C                     CLOSEMPAPARL1
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ1
+F4  C                     END
+     C                     OPEN MVTPAPW
+     C                     MOVE NOBOBA    NOBOB
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     CLOSEMVTPAPW
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ1
+F4  C                     END
+     C           CLMVTP    SETLLMVTFOU                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '0'       *IN38
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ1
+F4  C                     END
+     C           CLMVTP    SETLLMVTCXH                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '0'       *IN38
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+    C* TEST SI QTE SAISIE
+    C********************
+D3  C           PDSBO1    IFEQ *ZEROS
+     C                     MOVE '1'       *IN17
+    C                     GOTO MAJ1
+F3  C                     END
+    C** CALCUL DU POIDS BOBINE
+    C*****************************
+     C           MICRON    DIV  1000000   MIG21   86
+     C           MIG21     MULT 4         MIG21
+     C           3,1416    DIV  MIG21     Z157   157
+D3  C           DIAM      IFEQ *ZEROS
+     C                     MOVE DIAMAN    DIADIA  30
+X3  C                     ELSE
+     C                     MOVE DIAM      DIADIA
+F3  C                     END
+     C           DIADIA    DIV  1000      DIADAA  43
+D3  C           DIAB      IFEQ *ZEROS
+     C                     MOVE DIABOB    BOBBOB  30
+X3  C                     ELSE
+     C                     MOVE DIAB      BOBBOB
+F3  C                     END
+     C           BOBBOB    DIV  100       BOBBBB  32
+     C           BOBBBB    MULT BOBBBB    BOBOBO 157
+     C           DIADAA    MULT DIADAA    DIDIDI 157
+     C           LAIZE     DIV  100       LAILAI 103
+     C           GRAMOY    DIV  1000      GRGRGR 103
+     C           BOBOBO    SUB  DIDIDI    BOBOBO
+     C           LAILAI    MULT GRGRGR    LAILAI
+     C           Z157      MULT BOBOBO    TATATA 157
+     C           TATATA    MULT LAILAI    TATATA
+     C                     Z-ADDTATATA    PDPDPD  50
+     C           PDSBO1    SUB  PDPDPD    ZINZIN  50
+     C           ZINZIN    DIV  PDSBO1    RURURU 105H
+     C           RURURU    MULT 100       CABOUD 157
+D3  C           CABOUD    IFGT 20
+    C           ZIZI1     ANDNE5
+     C                     MOVE '1'       *IN51
+    C                     GOTO MAJ1
+F3  C                     END
+    C* SI ESSAI VERIF SI SAISE BONNE
+    C*******************************
+D3  C           ESSAI1    IFEQ *BLANKS
+D4  C           ESQUA1    IFNE *BLANKS
+     C                     MOVE '1'       *IN14
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+D3  C           ESSAI1    IFEQ *BLANKS
+D4  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE '1'       *IN14
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+D3  C           ESSAI1    IFEQ *BLANKS
+D4  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE '1'       *IN14
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+D3  C           ESQUA1    IFNE *BLANKS
+D4  C           ESGRA1    IFEQ *ZEROS
+     C                     MOVE '1'       *IN15
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+D3  C           ESQUA1    IFEQ *BLANKS
+D4  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE '1'       *IN15
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+D3  C           ESQUA1    IFEQ *BLANKS
+D4  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE '1'       *IN15
+    C                     GOTO MAJ1
+F4  C                     END
+F3  C                     END
+     C                     OPEN MVTPAPW
+     C                     MOVE NOBOBO    NOBOB
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     MOVE ESQUA1    ESQUAL
+     C                     MOVE ESGRA1    ESGRAM
+     C                     MOVE ESPRO1    ESPROV
+     C                     MOVE ESSAI1    ESSAI
+     C                     Z-ADDPDSBO1    PDSBOB
+     C                     MOVE RFBFO1    RFBFOU
+     C                     MOVE NOBOBA    NOBOB
+     C           PDSBOB    SUB  QQQQQQ    PDSBO1
+     C                     SUB  PDSBO1    QSOL1
+D3  C           DIAM      IFNE *ZEROS
+     C                     Z-ADDDIAM      DIAMAN
+F3  C                     END
+D3  C           DIAB      IFNE *ZEROS
+     C                     Z-ADDDIAB      DIABOB
+F3  C                     END
+     C   86                MOVE STKEXT    TAGNU
+     C                     MOVE ZSTK      Z1Z2
+     C                     UPDATMVTPAPW1
+     C                     CLOSEMVTPAPW
+F2  C                     END
+F1  C                     END
+    C*
+     C           FSMAJ1    TAG
+    C**         ******    ***
+     C                     SETON                     93
+     C                     WRITEF15
+     C                     SETOF                     93
+    C                     ENDSR
+     C/EJECT
+    C** SOUS PROGRAMME DE MISE A JOUR POUR LES FORMATS
+    C*************************************************
+    C           SPMAJ2    BEGSR
+     C                     SETON                     93
+     C                     WRITEF13
+     C                     SETOF                     93
+     C           DMAJ2     TAG
+    C**         *****     ***
+     C                     OPEN MVTPAPW
+     C                     Z-ADD*ZEROS    D       40
+D1  C                     DO   *HIVAL    R4      40
+     C                     READ MVTPAPW                  38
+D2  C           *IN38     IFEQ '1'
+     C                     CLOSEMVTPAPW
+     C           D         COMP 0                    90
+D3  C           *IN90     IFEQ '0'
+     C                     SETOF                     49
+F3  C                     END
+    C                     GOTO SMAJ3
+F2  C                     END
+     C                     ADD  1         D
+     C                     MOVE Z1Z2      ZSTK
+     C                     WRITEF20
+F1  C                     END
+     C           SMAJ3     TAG
+    C**         *****     ***
+     C                     WRITEF18
+     C           SMAJ4     TAG
+    C**         *****     ***
+     C                     SETON                       91
+     C                     EXFMTF19
+     C                     SETOF                     9091
+D1  C           *IN04     IFEQ '1'
+    C                     GOTO FSMAJ2
+F1  C                     END
+D1  C           *IN08     IFEQ '1'
+     C                     SETON                     50
+     C                     EXSR VALIDA
+     C                     SETON                     93
+     C                     WRITEF19
+     C                     SETOF                     93
+    C   50                GOTO FSMAJ2
+    C                     GOTO DMAJ2
+F1  C                     END
+D1  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F1  C                     END
+D1  C                     DO   *HIVAL    R4
+     C                     READCF20                      38
+D2  C           *IN38     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF19
+     C                     SETOF                     93
+    C                     GOTO DMAJ2
+F2  C                     END
+D2  C           CHOI      IFEQ 'S'
+     C                     OPEN MVTPAPW
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     ADD  NBFE      FSOL1
+     C                     ADD  PDSBOB    QSOL1
+     C                     DELETMVTPAPW1
+     C                     CLOSEMVTPAPW
+     C                     Z-ADD1         U
+     C           NOBOB     LOKUPBOB,U                    38
+     C   38                Z-ADD*ZEROS    BOB,U
+X2  C                     ELSE
+     C                     MOVE NOBOB     NOBOBO
+     C                     Z-ADDNBFE      PPPPPP  70
+     C                     Z-ADDPDSBOB    QQQQQQ
+     C           MAJ2      TAG
+    C**         ****      ***
+     C                     EXFMTF21
+     C                     MOVE ESQUAL    ESQUA1  3
+     C                     MOVE ESGRAM    ESGRA1  30
+     C                     MOVE ESPROV    ESPRO1  6
+     C                     MOVE ESSAI     ESSAI1  1
+     C                     Z-ADDPDSBOB    PDSBO1  40
+     C                     Z-ADDNBFE      NBFE1
+     C                     MOVE RFBFOU    RFBFO1
+     C                     MOVE NOBOB     NOBOBA
+    C* TEST SI BOBINE SAISIE
+    C***********************
+D3  C           NOBOBA    IFEQ *ZEROS
+     C                     MOVE '1'       *IN10
+    C                     GOTO MAJ2
+F3  C                     END
+    C** TEST SI N° BOBINE DEJA EXISTANT
+    C**********************************
+     C                     Z-ADD1         U       30
+D3  C           NOBOBA    IFNE *ZEROS
+D4  C           NOBOBA    IFNE NOBOBO
+     C           NOBOBA    LOKUPBOB,U                    11
+D5  C           *IN11     IFEQ '1'
+    C                     GOTO MAJ2
+X5  C                     ELSE
+     C                     Z-ADD1         U
+     C           NOBOBO    LOKUPBOB,U                    35
+     C                     Z-ADD*ZEROS    BOB,U
+     C                     Z-ADD1         U
+     C           *ZEROS    LOKUPBOB,U                    35
+     C                     Z-ADDNOBOBA    BOB,U
+F5  C                     END
+F4  C                     END
+F3  C                     END
+D3  C           NOBOBA    IFNE NOBOBO
+     C                     MOVE NOBOBA    NOBOB
+     C                     OPEN MPAPARL1
+     C           CLMVTP    CHAINMPAPARL1             38
+     C                     CLOSEMPAPARL1
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ2
+F4  C                     END
+     C                     OPEN MVTPAPW
+     C                     MOVE NOBOBA    NOBOB
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     CLOSEMVTPAPW
+D4  C           *IN38     IFEQ '0'
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ2
+F4  C                     END
+     C           CLMVTP    SETLLMVTFOU                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '0'       *IN38
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ2
+F4  C                     END
+     C           CLMVTP    SETLLMVTCXH                   37
+D4  C           *IN37     IFEQ '1'
+     C                     MOVE '0'       *IN38
+     C                     MOVE '1'       *IN11
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+    C* TEST SI QTE SAISIE
+    C********************
+D3  C           PDSBO1    IFEQ *ZEROS
+     C                     MOVE '1'       *IN17
+    C                     GOTO MAJ2
+F3  C                     END
+    C* TEST SI NB FEUILLES SAISI
+    C***************************
+D3  C           NBFE1     IFEQ *ZEROS
+     C                     MOVE '1'       *IN18
+    C                     GOTO MAJ2
+F3  C                     END
+    C** CALCUL DU POIDS PAR RAPPORT AUX NB FEUILLES
+    C**********************************************
+D3  C           GRAREL    IFNE *ZEROS
+     C           GRAREL    DIV  1000      GRACAL  43
+X3  C                     ELSE
+     C           GRAMM     DIV  1000      GRACAL
+F3  C                     END
+     C           FORL      DIV  1000      FORCA1  43
+     C           FORH      DIV  1000      FORCA2  43
+     C           FORCA1    MULT FORCA2    POIFEU 107
+     C           POIFEU    MULT GRACAL    POIFEU
+     C           POIFEU    MULT NBFE1     PDREEL  70H
+     C           PDSBO1    SUB  PDREEL    PDDIFF  70
+D3  C           PDDIFF    IFLT 0
+     C                     Z-SUBPDDIFF    PDDIFF
+F3  C                     END
+     C           PDDIFF    DIV  PDSBO1    POURDD 105
+     C           POURDD    MULT 100       POURDD
+D3  C           POURDD    IFGT 25
+     C                     MOVE '1'       *IN67
+    C                     GOTO MAJ2
+F3  C                     END
+    C* SI ESSAI VERIF SI SAISE BONNE
+    C*******************************
+D3  C           ESSAI1    IFEQ *BLANKS
+D4  C           ESQUA1    IFNE *BLANKS
+     C                     MOVE '1'       *IN14
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+D3  C           ESSAI1    IFEQ *BLANKS
+D4  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE '1'       *IN14
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+D3  C           ESSAI1    IFEQ *BLANKS
+D4  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE '1'       *IN14
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+D3  C           ESQUA1    IFNE *BLANKS
+D4  C           ESGRA1    IFEQ *ZEROS
+     C                     MOVE '1'       *IN15
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+D3  C           ESQUA1    IFEQ *BLANKS
+D4  C           ESGRA1    IFNE *ZEROS
+     C                     MOVE '1'       *IN15
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+D3  C           ESQUA1    IFEQ *BLANKS
+D4  C           ESPRO1    IFNE *BLANKS
+     C                     MOVE '1'       *IN15
+    C                     GOTO MAJ2
+F4  C                     END
+F3  C                     END
+     C                     OPEN MVTPAPW
+     C           CLMVTP    CHAINMVTPAPW              38
+     C                     MOVE ESQUA1    ESQUAL
+     C                     MOVE ESGRA1    ESGRAM
+     C                     MOVE ESPRO1    ESPROV
+     C                     MOVE ESSAI1    ESSAI
+     C                     Z-ADDPDSBO1    PDSBOB
+     C                     Z-ADDNBFE1     NBFE
+     C                     MOVE RFBFO1    RFBFOU
+     C                     MOVE NOBOBA    NOBOB
+     C           PDSBOB    SUB  QQQQQQ    PDSBO1
+     C           NBFE      SUB  PPPPPP    NBFE1
+     C                     SUB  PDSBO1    QSOL1
+     C                     SUB  NBFE1     FSOL1
+     C   86                MOVE STKEXT    TAGNU
+     C  N38                UPDATMVTPAPW1
+     C                     CLOSEMVTPAPW
+F2  C                     END
+F1  C                     END
+    C*
+     C           FSMAJ2    TAG
+    C**         ******    ***
+     C                     SETON                     93
+     C                     WRITEF19
+     C                     SETOF                     93
+    C                     ENDSR
+     C/EJECT
+    C*****************************************************************
+    C* SOUS PROGRAMME DE VALIDATION DE LA LIVRAISON
+    C*****************************************************************
+    C           VALIDA    BEGSR
+     C                     Z-ADD*ZEROS    NBUNIT
+     C                     Z-ADD*ZEROS    QTEREC
+     C                     Z-ADD*ZEROS    FEUREC
+     C                     MOVE *BLANKS   SOLDL
+     C                     OPEN MVTPAPW
+D1  C                     DO   *HIVAL
+     C                     READ MVTPAPW                  38
+    C           *IN38     CABEQ'1'       BABA
+     C                     ADD  1         NBUNIT
+     C                     ADD  PDSBOB    QTEREC
+     C                     ADD  NBFE      FEUREC
+F1  C                     END
+     C           BABA      TAG
+     C                     Z-ADDANCOM     ACOM
+     C           ACOM      CHAINSIECLE               99
+     C                     Z-ADDSS        SCOM
+     C           CFL0      CHAINPAPCDLL5             38
+     C                     Z-ADDANCOM     ANCOM2
+     C           QLIVRE    SUB  QTEREC    QTSOL
+     C           FLIVRE    SUB  FEUREC    FEUSOL
+D1  C           QTSOL     IFLT 0
+     C                     Z-ADD0         QTSOL
+F1  C                     END
+D1  C           FEUSOL    IFLT 0
+     C                     Z-ADD0         FEUSOL
+F1  C                     END
+     C                     CLOSEMVTPAPW
+     C           CLLSTD    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     MOVE *BLANKS   LAISTD
+D1  C           FOUB      IFEQ 'B'
+     C           CLLSTD    CHAINSTDLAIZ1             40
+     C   40                MOVEL'INCONNUE'LAISTD
+     C                     Z-ADD1         CU      20
+     C           LAIZE     LOKUPSTL,CU                   40
+     C  N40                MOVEL'INCONNUE'LAISTD
+F1  C                     END
+     C           BABA1     TAG
+     C                     EXFMTF23
+     C/EJECT
+    C* VALID ET AUTRE FOURNISSEUR
+    C****************************
+D1  C           *IN06     IFEQ '1'
+     C                     Z-ADD0         LOG
+     C                     SETOF                     96
+     C                     OPEN MVTPAPW
+D2  C                     DO   *HIVAL
+     C                     READ MVTPAPW                  38
+D3  C           *IN38     IFEQ '1'
+     C                     CLOSEMVTPAPW
+    C        N96          GOTO ZAZA1
+     C                     WRITEF52
+     C           ZOZO1     TAG
+    C**         *****     ***
+     C                     SETON                     60
+     C                     EXFMTF50
+     C                     SETOF                     60
+D4  C           *IN05     IFEQ '1'
+D5  C           FOUB      IFEQ 'B'
+     C                     SETON                     93
+     C                     WRITEF50
+     C                     SETOF                     9350
+     C                     EXSR SPMAJ1
+X5  C                     ELSE
+     C                     SETON                     93
+     C                     WRITEF50
+     C                     SETOF                     9350
+     C                     EXSR SPMAJ2
+F5  C                     END
+F4  C                     END
+D4  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF50
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F4  C                     END
+    C                     GOTO ZOZO1
+F3  C                     END
+     C                     OPEN MPAPARL1
+     C           CLMVTP    CHAINMPAPARL1             85
+     C  N85                MOVE ZON002    PABO
+     C  N85                MOVE ZON007    PAPIR
+     C  N85                MOVE ZON008    GRA
+     C  N85                MOVE ZON009    RFOURE
+     C  N85                MOVE ZON010    RAREL
+     C  N85                MOVE ZON011    BOUF
+     C  N85                MOVE ZON012    LEZE
+     C  N85                MOVE ZON013    FORLE
+     C  N85                MOVE ZON014    FORHE
+     C  N85                MOVE ZON001    USCOME
+     C  N85                MOVE ZON031    ANECOM
+     C  N85                MOVE ZON032    NOCOME
+     C  N85                MOVE ZON033    SECOME
+     C  N85                ADD  1         LOG     40
+     C  N85                SETON                     96
+     C  N85                WRITEF51
+     C                     CLOSEMPAPARL1
+F2  C                     END
+     C           ZAZA1     TAG
+    C**         *****     ***
+     C                     OPEN MVTPAPW
+D2  C                     DO   *HIVAL
+     C                     READ MVTPAPW                  38
+     C                     MOVE ACHREC    MW01    1
+     C                     MOVE ACHEM     MW02    1
+     C                     MOVE Z1Z2      ZSAV
+D3  C           *IN38     IFEQ '1'
+     C                     CLOSEMVTPAPW
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     931208
+     C                     SETOF                     0305
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO VALID1
+F3  C                     END
+     C                     MOVE 'EF'      CODIN
+    C**         ******    MOVE *BLANK    Z1Z2
+     C                     OPEN MVTPAP
+D3  C           *IN86     IFEQ '1'
+     C                     MOVE STKEXT    TAGNU
+     C                     MOVE 'X'       ACHREC
+     C                     MOVE STKEXT    ACHEM
+X3  C                     ELSE
+     C           CLMVTP    CHAINMVTENCL1             99
+     C  N99                MOVE ZONSTK    Z1Z2
+     C   99                MOVE ZSAV      Z1Z2
+F3  C                     END
+     C                     MOVE NOFMVT    NOFOU
+     C                     MOVE ABFMVT    ABRFOU
+     *
+     *
+     C                     WRITEMVTPAPF1
+     C                     MOVE NOFSAV    NOFOU
+     C                     MOVE ABFSAV    ABRFOU
+     C                     CLOSEMVTPAP
+F2  C                     END
+     C           VALID1    TAG
+    C**         ******    ***
+     C                     MOVE MW01      ACHREC
+     C                     MOVE MW02      ACHEM
+     C                     Z-ADDANCOM     ACOM
+     C           ACOM      CHAINSIECLE               99
+     C                     Z-ADDSS        SCOM
+     C           CFL0      CHAINPAPCDLL5             38
+     C                     Z-ADDQTLIV     RFLIV   70
+     C                     ADD  QTEREC    QTLIV
+     C                     ADD  FEUREC    FEULIV
+     C                     Z-ADDJENT      JRECEP
+     C                     Z-ADDMENT      MRECEP
+     C                     Z-ADDAENT      ARECEP
+     C                     Z-ADDSENT      SRECEP
+D2  C           SOLDL     IFEQ '*'
+     C                     MOVEL'S'       STALIG
+F2  C                     END
+     C  N38                UPDATFOUL0
+     * Si la livraison est soldée, alors il faut recalculer le SOLDE
+     * de la commande de référence par rapport au réel livré :
+     * (uniquement si il y une commande de référence...)
+     C                     MOVEA'000'     *IN,38
+D2  C           STALIG    IFEQ 'S'
+D3  C           REFNUM    IFNE 0
+     C                     Z-ADDREFNUM    WNOCOM
+     C                     Z-ADDREFNLG    WSEQCO
+     C           REFACO    CHAINSIECLE               38
+     C           KPAP      CHAINPAPCDML1             39
+     C           KPAP      CHAINPAPCDLL2             40
+     C                     ADD  QTCLIV    SOLDIX
+     C                     SUB  QTLIV     SOLDIX
+D4  C           SOLDIX    IFLT 0
+     C                     Z-ADD0         SOLDIX
+     C                     MOVEL'S'       STALIX
+X4  C                     ELSE
+     * Pour les Bobines, au dessous de 400 Kg, on ne réactive
+     * pas la commande à dispo.
+D5  C           FOUB      IFEQ 'B'
+D6  C           SOLDIX    IFLT 400
+     C                     MOVEL'S'       STALIX
+X6  C                     ELSE
+     C                     MOVEL' '       STALIX
+F6  C                     END
+F5  C                     END
+F4  C                     END
+D4  C           FOUB      IFEQ 'F'
+     C                     ADD  FECLIV    SOLDFX
+     C                     SUB  FEULIV    SOLDFX
+D5  C           SOLDFX    IFLT 0
+     C                     Z-ADD0         SOLDFX
+F5  C                     END
+     * Pour les Formats, au dessous de 500 Feuilles, on ne réactive
+     * pas la commande de Ferme à dispo.
+D5  C           SOLDFX    IFLT 500
+     C                     MOVEL'S'       STALIX
+X5  C                     ELSE
+     C                     MOVEL' '       STALIX
+F5  C                     END
+F4  C                     END
+     C  N39                EXCPTMAJCDM
+     C  N40                EXCPTMAJCD2
+F3  C                     END
+     * RESTE IL DES LIGNES ACTIVES POUR LA COMMANDES LIVRÉE ?
+     C           CFL2      SETLLPAPCDLL5                 38
+D3  C           *IN38     IFEQ '0'
+     C           CFL1      CHAINPAPCDEL2             38
+     C                     MOVEL'S'       STACDE
+     C  N38                UPDATPAPCDEF1
+F3  C                     END
+F2  C                     END
+     C                     MOVE NOFOU     NOFOU1
+     C           CQUFOU    CHAINQUAFOUL1             38
+     C                     MOVELFOUART    FOUAR
+     C                     Z-ADDANCOM     ACOM
+     C           ACOM      CHAINSIECLE               57
+     C                     Z-ADDSS        SCOM
+D2  C           PUNIT     IFNE 0
+     C                     Z-ADDPUNIT     PUCOM
+F2  C                     END
+     C                     MOVE *BLANKS   SENSMA
+     *
+     * Livraison d'une cde PSP => IMPORT='P'
+     C           NOFMVT    SETLLFOUPSPL2                 58
+D2  C           *IN58     IFEQ '1'
+     C                     MOVE 'P'       IMPORT
+X2  C                     ELSE
+     C                     MOVE *BLANKS   IMPORT
+F2  C                     ENDIF
+     *
+     C                     Z-ADDAADEL     ANPREV
+     C                     Z-ADDMMDEL     MPREV
+     C                     Z-ADDJJDEL     JPREV
+     C                     Z-ADD0         PUMATI
+     C                     Z-ADDQTCLIV    QTECOM
+     C                     Z-ADDFECLIV    FEUCOM
+     C                     MOVE ' '       SOLDL
+     C                     MOVE 'R'       ACHEM
+     C                     WRITELIVFOUF1
+D2  C           IMPORT    IFEQ 'P'
+    C** Ecriture fichier livraison papier de fournisseur PSP
+     C           KPAPCP    CHAINPAPCPSL4             99
+D3  C           *IN99     IFEQ '1'
+     C                     MOVE *BLANKS   NCDPSP
+F3  C                     ENDIF
+     C                     MOVE *BLANK    TAGEDI
+     C                     Z-ADDDATENT    DATEDI
+     C                     WRITELIVPSPF1
+     C                     MOVE 'O'       MPSP
+F2  C                     ENDIF
+     *
+     C           CQAUSI    CHAINQUAUSH               38
+D2  C           MMHOR     IFNE *ZEROS
+     C           AAHOR     CHAINSIECLE               57
+     C                     Z-ADDSS        SSHOR
+F2  C                     END
+D2  C           FOUB      IFEQ 'B'
+     C           CLPAP1    CHAINARTPAPL1             38
+     C                     Z-ADDJENT      JDEREN
+     C                     Z-ADDMENT      MDEREN
+     C                     Z-ADDAENT      ADEREN
+     C                     ADD  QTEREC    QTSTOC
+     * M-à-J de QTCOM & QTCOHO de ARTPAP
+     * ---------------------------------
+D3  C           QTLIV     IFLE QTCLIV
+    C           STALIG    ANDEQ*BLANK
+     C                     SUB  QTEREC    QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C                     SUB  QTEREC    QTCOHO
+F4  C                     END
+X3  C                     ELSE
+     * Si Cde Soldée ou Livraison > Commande
+     * -------------------------------------
+     C           QTCLIV    SUB  RFLIV     RFLIV        55
+     C  N55                SUB  RFLIV     QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C  N55                SUB  RFLIV     QTCOHO
+F4  C                     END
+F3  C                     END
+     C                     UPDATPAPF1
+X2  C                     ELSE
+     C           CLPAP2    CHAINARTPAPL2             38
+     C                     Z-ADDJENT      JDEREN
+     C                     Z-ADDMENT      MDEREN
+     C                     Z-ADDAENT      ADEREN
+     C                     ADD  QTEREC    QTSTOC
+     C                     ADD  FEUREC    QFEUIL
+     * M-à-J de QTCOM & QTCOHO de ARTPAP
+     * ---------------------------------
+D3  C           QTLIV     IFLE QTCLIV
+    C           STALIG    ANDEQ*BLANK
+     C                     SUB  QTEREC    QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C                     SUB  QTEREC    QTCOHO
+F4  C                     END
+X3  C                     ELSE
+     * Si Cde Soldée ou Livraison > Commande
+     * -------------------------------------
+     C           QTCLIV    SUB  RFLIV     RFLIV        55
+     C  N55                SUB  RFLIV     QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C  N55                SUB  RFLIV     QTCOHO
+F4  C                     END
+F3  C                     END
+     C                     UPDATPAPF2
+F2  C                     END
+     *
+    C                     GOTO FRM1
+F1  C                     END
+D1  C           *IN05     IFEQ '1'
+     C                     SETOF                     50
+    C                     GOTO FBABA
+F1  C                     END
+     C/EJECT
+    C* VALID ET MEME  FOURNISSEUR
+    C****************************
+D1  C           *IN12     IFEQ '1'
+     C                     SETOF                     96
+     C                     Z-ADD0         LOG
+     C                     OPEN MVTPAPW
+D2  C                     DO   *HIVAL
+     C                     READ MVTPAPW                  38
+D3  C           *IN38     IFEQ '1'
+     C                     CLOSEMVTPAPW
+    C        N96          GOTO ZAZA2
+     C                     WRITEF52
+     C           ZOZO2     TAG
+    C**         *****     ***
+     C                     SETON                     60
+     C                     EXFMTF50
+     C                     SETOF                     60
+D4  C           *IN05     IFEQ '1'
+D5  C           FOUB      IFEQ 'B'
+     C                     SETON                     93
+     C                     WRITEF50
+     C                     SETOF                     93
+     C                     EXSR SPMAJ1
+X5  C                     ELSE
+     C                     SETON                     93
+     C                     WRITEF50
+     C                     SETOF                     93
+     C                     EXSR SPMAJ2
+F5  C                     END
+F4  C                     END
+D4  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF50
+     C                     WRITEF19
+     C                     SETOF                     93
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F4  C                     END
+    C                     GOTO ZOZO2
+F3  C                     END
+     C                     OPEN MPAPARL1
+     C           CLMVTP    CHAINMPAPARL1             85
+     C  N85                MOVE ZON002    PABO
+     C  N85                MOVE ZON007    PAPIR
+     C  N85                MOVE ZON008    GRA
+     C  N85                MOVE ZON009    RFOURE
+     C  N85                MOVE ZON010    RAREL
+     C  N85                MOVE ZON011    BOUF
+     C  N85                MOVE ZON012    LEZE
+     C  N85                MOVE ZON013    FORLE
+     C  N85                MOVE ZON014    FORHE
+     C  N85                MOVE ZON031    ANECOM
+     C  N85                MOVE ZON032    NOCOME
+     C  N85                MOVE ZON033    SECOME
+     C  N85                ADD  1         LOG
+     C  N85                SETON                     96
+     C  N85                WRITEF51
+     C                     CLOSEMPAPARL1
+F2  C                     END
+     C           ZAZA2     TAG
+    C**         *****     ***
+     C                     OPEN MVTPAPW
+     C                     TIME           HENT
+D2  C                     DO   *HIVAL
+     C                     READ MVTPAPW                  38
+     C                     MOVE ACHREC    MW01    1
+     C                     MOVE ACHEM     MW02    1
+     C                     MOVE Z1Z2      ZSAV    2
+D3  C           *IN38     IFEQ '1'
+     C                     CLOSEMVTPAPW
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     931208
+     C                     SETOF                     0305
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO VALID2
+F3  C                     END
+     C                     MOVE 'EF'      CODIN
+     C                     MOVE *BLANK    ACHREC
+     C                     MOVE *BLANK    ACHEM
+     C                     OPEN MVTPAP
+     C   86                MOVE STKEXT    TAGNU
+     C   86                MOVE 'X'       ACHREC
+     C   86                MOVE STKEXT    ACHEM
+     C  N86                MOVE ZSAV      Z1Z2
+     C                     MOVE NOFMVT    NOFOU
+     C                     MOVE ABFMVT    ABRFOU
+     *
+     C                     WRITEMVTPAPF1
+     C                     MOVE NOFSAV    NOFOU
+     C                     MOVE ABFSAV    ABRFOU
+     C                     CLOSEMVTPAP
+F2  C                     END
+     C           VALID2    TAG
+    C**         ******    ****
+     C                     MOVE MW01      ACHREC
+     C                     MOVE MW02      ACHEM
+     C                     Z-ADDANCOM     ACOM
+     C           ACOM      CHAINSIECLE               99
+     C                     Z-ADDSS        SCOM
+     C           CFL0      CHAINPAPCDLL5             38
+     C                     Z-ADDQTLIV     RFLIV   70
+     C                     ADD  QTEREC    QTLIV
+     C                     ADD  FEUREC    FEULIV
+     C                     Z-ADDJENT      JRECEP
+     C                     Z-ADDMENT      MRECEP
+     C                     Z-ADDAENT      ARECEP
+     C                     Z-ADDSENT      SRECEP
+D2  C           SOLDL     IFEQ '*'
+     C                     MOVEL'S'       STALIG
+F2  C                     END
+     C  N38                UPDATFOUL0
+     * Si la livraison est soldée, alors il faut recalculer le SOLDE
+     * de la Commande de référence par rapport au réel livré :
+     * (Si il y a une commnde de référence...)
+     C                     MOVEA'000'     *IN,38
+D2  C           STALIG    IFEQ 'S'
+D3  C           REFNUM    IFNE 0
+     C                     Z-ADDREFNUM    WNOCOM
+     C                     Z-ADDREFNLG    WSEQCO
+     C           REFACO    CHAINSIECLE               38
+     C           KPAP      CHAINPAPCDML1             39
+     C           KPAP      CHAINPAPCDLL2             40
+     C                     ADD  QTCLIV    SOLDIX
+     C                     SUB  QTLIV     SOLDIX
+D4  C           SOLDIX    IFLT 0
+     C                     Z-ADD0         SOLDIX
+     C                     MOVEL'S'       STALIX
+X4  C                     ELSE
+     * Pour les Bobines, au dessous de 400 Kg, on ne réactive
+     * pas la commande à dispo.
+D5  C           FOUB      IFEQ 'B'
+D6  C           SOLDIX    IFLT 400
+     C                     MOVEL'S'       STALIX
+X6  C                     ELSE
+     C                     MOVEL' '       STALIX
+F6  C                     END
+F5  C                     END
+F4  C                     END
+D4  C           FOUB      IFEQ 'F'
+     C                     ADD  FECLIV    SOLDFX
+     C                     SUB  FEULIV    SOLDFX
+D5  C           SOLDFX    IFLT 0
+     C                     Z-ADD0         SOLDFX
+F5  C                     END
+     * Pour les Formats, au dessous de 500 Feuilles, on ne réactive
+     * pas la commande de Ferme à dispo.
+D5  C           SOLDFX    IFLT 500
+     C                     MOVEL'S'       STALIX
+X5  C                     ELSE
+     C                     MOVEL' '       STALIX
+F5  C                     END
+F4  C                     END
+     C  N39                EXCPTMAJCDM
+     C  N40                EXCPTMAJCD2
+F3  C                     END
+     * RESTE IL DES LIGNES ACTIVES POUR LA COMMANDES LIVRÉE ?
+     C           CFL2      SETLLPAPCDLL5                 38
+D3  C           *IN38     IFEQ '0'
+     C           CFL1      CHAINPAPCDEL2             38
+     C                     MOVEL'S'       STACDE
+     C  N38                UPDATPAPCDEF1
+F3  C                     END
+F2  C                     END
+     C                     MOVE NOFOU     NOFOU1
+     C           CQUFOU    CHAINQUAFOUL1             38
+     C                     MOVELFOUART    FOUAR
+     C                     Z-ADDANCOM     ACOM
+     C           ACOM      CHAINSIECLE               57
+     C                     Z-ADDSS        SCOM
+D2  C           PUNIT     IFNE 0
+     C                     Z-ADDPUNIT     PUCOM
+F2  C                     END
+     C                     MOVE *BLANKS   SENSMA
+     *
+     C           NOFMVT    SETLLFOUPSPL2                 58
+     * Livraison d'une cde PSP => IMPORT='P'
+D2  C           *IN58     IFEQ '1'
+     C                     MOVE 'P'       IMPORT
+X2  C                     ELSE
+     C                     MOVE *BLANKS   IMPORT
+F2  C                     ENDIF
+     *
+     C                     Z-ADDAADEL     ANPREV
+     C                     Z-ADDMMDEL     MPREV
+     C                     Z-ADDJJDEL     JPREV
+     C                     Z-ADD0         PUMATI
+     C                     Z-ADDQTCLIV    QTECOM
+     C                     Z-ADDFECLIV    FEUCOM
+     C                     MOVE ' '       SOLDL
+     C                     MOVE 'R'       ACHEM
+     C                     WRITELIVFOUF1
+D2  C           IMPORT    IFEQ 'P'
+    C** Ecriture fichier livraison papier de fournisseur PSP
+     C           KPAPCP    CHAINPAPCPSL4             99
+D3  C           *IN99     IFEQ '1'
+     C                     MOVE *BLANKS   NCDPSP
+F3  C                     ENDIF
+     C                     MOVE *BLANK    TAGEDI
+     C                     Z-ADDDATENT    DATEDI
+     C                     WRITELIVPSPF1
+     C                     MOVE 'O'       MPSP
+F2  C                     ENDIF
+     *
+     C           CQAUSI    CHAINQUAUSH               38
+D2  C           MMHOR     IFNE *ZEROS
+     C           AAHOR     CHAINSIECLE               57
+     C                     Z-ADDSS        SSHOR
+F2  C                     END
+D2  C           FOUB      IFEQ 'B'
+     C           CLPAP1    CHAINARTPAPL1             38
+     C                     Z-ADDJENT      JDEREN
+     C                     Z-ADDMENT      MDEREN
+     C                     Z-ADDAENT      ADEREN
+     C                     ADD  QTEREC    QTSTOC
+     * M-à-J de QTCOM & QTCOHO de ARTPAP
+     * ---------------------------------
+D3  C           QTLIV     IFLE QTCLIV
+    C           STALIG    ANDEQ*BLANK
+     C                     SUB  QTEREC    QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C                     SUB  QTEREC    QTCOHO
+F4  C                     END
+X3  C                     ELSE
+     * Si Cde Soldée ou Livraison > Commande
+     * -------------------------------------
+     C           QTCLIV    SUB  RFLIV     RFLIV        55
+     C  N55                SUB  RFLIV     QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C  N55                SUB  RFLIV     QTCOHO
+F4  C                     END
+F3  C                     END
+     C                     UPDATPAPF1
+    C                     GOTO FBABA
+X2  C                     ELSE
+     C           CLPAP2    CHAINARTPAPL2             38
+     C                     Z-ADDJENT      JDEREN
+     C                     Z-ADDMENT      MDEREN
+     C                     Z-ADDAENT      ADEREN
+     C                     ADD  QTEREC    QTSTOC
+     C                     ADD  FEUREC    QFEUIL
+     * M-à-J de QTCOM & QTCOHO de ARTPAP
+     * ---------------------------------
+D3  C           QTLIV     IFLE QTCLIV
+    C           STALIG    ANDEQ*BLANK
+     C                     SUB  QTEREC    QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C                     SUB  QTEREC    QTCOHO
+F4  C                     END
+X3  C                     ELSE
+     * Si Cde Soldée ou Livraison > Commande
+     * -------------------------------------
+     C           QTCLIV    SUB  RFLIV     RFLIV        55
+     C  N55                SUB  RFLIV     QTCOM
+D4  C           DATGES    IFLE DATHOR
+     C  N55                SUB  RFLIV     QTCOHO
+F4  C                     END
+F3  C                     END
+     C                     UPDATPAPF2
+    C                     GOTO FBABA
+F2  C                     END
+F1  C                     END
+D1  C           *IN11     IFEQ '1'
+     C                     SETON                     93
+     C                     WRITEF9
+     C                     WRITEF13
+     C                     WRITEF15
+     C                     WRITEF19
+     C                     SETOF                     931208
+     C                     SETOF                     030511
+     C                     MOVEACLR       TB,1
+     C                     MOVEALIBUS     TB,20
+     C                     Z-ADD80        LG     155
+     C                     CALL 'QCMDEXC'
+     C                     PARM           TB
+     C                     PARM           LG
+    C                     GOTO FRM1
+F1  C                     END
+    C                     GOTO BABA1
+     C           FBABA     TAG
+    C                     ENDSR
+     *
+    C           TRTCOD    BEGSR
+     *          ======    =====
+     C                     Z-ADD0         RECNO   30
+     C                     MOVE '1'       *IN93
+     C                     WRITEWAC
+     C                     MOVEA'00'      *IN,93
+     C                     MOVE 'TAGN'    PXARGU
+     C           PXARGU    CHAINPARAME               99
+D1  C           *IN99     DOWEQ'0'
+D2  C           PXMONT    IFEQ 999
+     C                     MOVE '1'       *IN94
+     C                     ADD  1         RECNO
+     C                     MOVELPXVALE    STKEXT
+     C                     WRITEWAS
+F2  C                     END
+     C           PXARGU    READEPARAME                   99
+F1  C                     END
+     C                     WRITEWB
+     C                     EXFMTWAC
+     C                     MOVE *BLANK    STKEXT
+    C           *IN12     CABEQ'1'       FTRTC
+     C           SELWA     TAG
+     C   94                READCWAS                      99
+D1  C           CHXWA     IFEQ *BLANK
+    C  N99                GOTO SELWA
+     C                     MOVE *BLANK    STKEXT
+F1  C                     END
+    C           FTRTC     ENDSR
+     *
+     * MISE à JOUR DES FICHIERS :
+     OPAPCDLF2E                MAJCD2
+     O                         STALIX
+     O                         SOLDIX
+     O                         SOLDFX
+     OPAPCDMF1E                MAJCDM
+     O                         STALIX
+     O                         SOLDIX
+     O                         SOLDFX
+     OPAPCDEF1E                LIBCDE
+**  CLR
+CLRPFM MVTPAPW MBR(          )
+**  RMV
+RMVM MVTPAPW MBR(          )
+**  PFM
+ADDPFM MVTPAPW MBR(          )
+**  OVR
+OVRDBF MVTPAPW MBR(          )

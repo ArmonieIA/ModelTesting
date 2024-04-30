@@ -1,0 +1,3009 @@
+      *%CSTD===========================================================*
+      ** Application. : EMAGE      Logiciel métier DS Smith            *
+      ** Composant. . : ETIQSTD£                      Type: RPG        *
+      **===============================================================*
+      ** Sous-système :                                                *
+      ** Fonction . . :                                                *
+      ** Sous-fonction:                                                *
+      **%S=============================================================*
+      ** Description des fonctionnalités:                              *
+      **                                                               *
+      **                                                               *
+      **                                                               *
+      **%E=============================================================*
+      ** AUTEUR:                          00:00                        *
+      ** MODIFS: 24 NOUZIERES  02/04/2024 17:06  90.99.33 FM 24/   81  *
+      **           ajout décalage sur DM TY3                           *
+      **         23 NOUZIERES  26/03/2024 09:06  01.10.96 FM 24/   77  *
+      **           nespresso                                           *
+      **         22 NOUZIERES  18/03/2024 09:07  01.10.93 FM 23/  198  *
+      **           nouvelle etiquette 990 et 315                       *
+      **         22 NOUZIERES  18/03/2024 09:07  01.10.93 FM 24/   38  *
+      **           0047: 2904 et 4021                                  *
+      **         22 NOUZIERES  18/03/2024 09:07  01.10.93 FM 24/   59  *
+      **           ajout DM Toury's market NPF                         *
+      **         21 NOUZIERES  26/06/2023 14:52  01.09.67 FM 23/   96  *
+      **           pour tous date de fab = date 1ere edition           *
+      **         20 NOUZIERES  28/03/2023 14:49  01.09.18 FM 22/  204  *
+      **           etiquette mondelez                                  *
+      **         20 NOUZIERES  28/03/2023 14:49  01.09.18 FM 23/   26  *
+      **           modification etiquette NESPRESSO                    *
+      **         19 NOUZIERES  09/06/2022 09:22  01.07.96 FM 22/  167  *
+      **           modif format 22 MARS (feg 24/05/22)                 *
+      **         18 NOUZIERES  09/05/2022 09:16  01.07.79 FM 22/  146  *
+      **           datamatrix konongs                                  *
+      **         17 NOUZIERES  24/02/2022 09:10  01.07.15 FM 22/   64  *
+      **           projet Guerlain                                     *
+      **         16 NOUZIERES  09/09/2021 10:11  01.06.15 FM 21/  174  *
+      **           specifique courvoisier 2349                         *
+      **         15 NOUZIERES  16/02/2021 09:37  01.04.89 FM 20/  501  *
+      **           carlsberg etiquette V12                             *
+      **         15 NOUZIERES  16/02/2021 09:37  01.04.89 FM 21/    4  *
+      **           sup carlsberg remplacé par MHCS                     *
+      **         15 NOUZIERES  16/02/2021 09:37  01.04.89 FM 21/   15  *
+      **           ajout CAP 5276                                      *
+      *%ECSTD==========================================================*
+     H            D.J
+    H*****************************************************************
+    H*                                                               *
+    H* SUIVI DE FABRICATION : EDITION DE FICHES PALETTES PF AVEC FDP *
+    H*                        STANDARD ROCHECHOUART                  *
+    H*                                                               *
+    H*****************************************************************
+     FPRODAL8 IF  E           K        DISK
+     FPRODST2 IF  E           K        DISK
+     FCODBARL2IF  E           K        DISK
+     FCLIENTS1IF  E           K        DISK
+     FCARCDEL1IF  E           K        DISK
+     FPARAME  IF  E           K        DISK
+     FPRF02L07IF  E           K        DISK
+     FPRF05L01IF  E           K        DISK
+     FFAB25L01IF  E           K        DISK
+     FPALETTL1IF  E           K        DISK
+     FFAB10L03IF  E           K        DISK
+     FCLIEANL1IF  E           K        DISK
+     FCLIOBIL9IF  E           K        DISK
+     FPROCLIL1IF  E           K        DISK
+     FMVTPAL42IF  E           K        DISK
+     FFTOND   IF  E           K        DISK
+     FFOROND  IF  E           K        DISK
+     FPRMOND  IF  E           K        DISK
+     FFORINTL3IF  E           K        DISK
+     FETAT98  O   F     198     OA     PRINTER
+     E                    T1      1   2 30
+     E                    T2      1   7 30
+     E                    T3      1   3 14
+     E                    T5      1   1 17
+     E                    T6      1   1 40
+     E                    RFP        18 20   RGL     2 0
+     IPRODUIF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IRECAPTF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     IPRODARF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              AGENT                           XAGENT
+     ICARCDEF1
+     I              USINE                           XUSINE
+     I              STE                             XSTE
+     I              NCONF                           XCONF
+     I              NOCLI                           XNOCLI
+     I              NOPRO                           XNOPRO
+     I              AGENT                           YAGENT
+     I              UVENT                           XVENT
+     IXFAB25
+     I              NOPRO                           ZZPRO
+     IFTONDF
+     I              USINE                           FTUSI
+     I              SECT                            FTSECT
+     I              SSECT                           FTSSEC
+     I              NOMAC                           FTNOMA
+     I              NOCLI                           FTNOCL
+     I              NOPRO                           FTNOPR
+     IFRONDF
+     I              USINE                           FRUSI
+     I              SECT                            FRSECT
+     I              SSECT                           FRSSEC
+     I              NOMAC                           FRNOMA
+     I              NOFOR                           FRNOFO
+     ILIBEL      IDS
+     I                                        1  40 BLOC1
+     I                                        1   7 CODP07
+     I                                        1  10 CODP10
+     I                                        1  20 CODP20
+     I                                        1  19 CODP19
+     I                                       15  40 DLOREA
+     I                                       41  80 BLOC2
+     I                                       81 120 BLOC4
+     *
+     IINDPCL     IDS                             20
+     I                                        1   6 REFCLI                CCS013
+     I                                        9   9 STKCON                CCS013
+     *
+     I           IDS
+     I                                        1  40 DESART                CCS013
+     I                                        1  20 REFCO                 CCS013
+     I                                       21  40 CLICO                 CCS013
+     I           IDS
+     I                                        1  10 GNUBD
+     I                                        1   20GNUBDJ
+     I I            '.'                       3   3 GNU1
+     I                                        4   50GNUBDM
+     I I            '.'                       6   6 GNU2
+     I                                        7  100GNUBDA
+     I           IDS
+     I                                        1  10 GAUBD
+     I                                        1   20GAUBDJ
+     I I            '.'                       3   3 GAU1
+     I                                        4   50GAUBDM
+     I I            '.'                       6   6 GAU2
+     I                                        7  100GAUBDA
+     I           IDS
+     I                                        1   80DATENT
+     I                                        1   20PFJENT
+     I                                        3   40PFMENT
+     I                                        5   80PFAENT
+     I           IDS
+     I                                        1   80DATEXP
+     I                                        1   20PFJEXP
+     I                                        3   40PFMEXP
+     I I            20                        5   60PFSEXP
+     I                                        7   80PFAEXP
+     I           IDS
+     I                                        1   80CALDAT
+     I                                        1   40CALSA
+     I                                        5   60CALMM
+     I                                        7   80CALJJ
+     I           IDS
+     I                                        1   80DATF6M
+     I                                        1   20F6MJJ
+     I                                        3   40F6MMM
+     I                                        5   80F6MSA
+     I           IDS
+     I                                        1   60DAT66M
+     I                                        1   20F66AA
+     I                                        3   40F66MM
+     I                                        5   60F66JJ
+     I           IDS
+     I                                        1  32 DATPAR
+     I                                        1  140EDATE
+     I                                       15  15 ETYPE
+     I                                       16  180EDURE
+     I                                       19  320SDATE
+     I           IDS
+     I                                        1   60DTBENT
+     I                                        1   20DBJENT
+     I                                        3   40DBMENT
+     I                                        5   60DBAENT
+     I           IDS
+     I                                        1   80DATEDI
+     I                                        1   20PFJEDI
+     I                                        3   40PFMEDI
+     I                                        5   80PFAEDI
+     I           IDS
+     I                                        1   4 MACH
+     I                                        1   1 SECT
+     I                                        2   2 SSECT
+     I                                        1   2 ATEL
+     I                                        3   4 NOMAC
+     I           IDS
+     I                                        1  100CODB
+     I                                        1   20CODB2
+     I                                        1   10USINE
+     I                                        2   20FATENC
+     I                                        3   80FACBPA
+     I                                        1   80CODBA
+     I                                        2   80CODBAS
+     I                                        9  100PFNBOU
+     I           IDS
+     I                                        1  15 LIGCO
+     I                                        1   80CODB8
+     I                                        9  10 SUPHAB
+     I                                       11  12 SUPHA1
+    I*                                      13  14 SUPHA2
+     I                                       15  15 PALPRE
+     I           IDS
+     I                                        1  77 PARM1
+     I                                        1   50XXCONF
+     I                                        6   70XXSEQ
+     I                                        8  110XXCLI
+     I                                       12  26 XXRCLI
+     I                                       27  320XXQREL
+     I                                       33  360XXOPAL
+     I                                       37  50 LIEGAM
+     I                                       51  580XCODBA
+     I                                       59  590XXNFI
+     I                                       60  630XXPRO
+     I                                       64  77 LIEGA2
+     *
+     IHABIL1      DS
+     I                                        1   1 HAB11
+     I                                        2   2 HAB12
+     *
+     ISSCC       IDS                             22
+     I                                        1   4 AI
+     I                                        5  220SSCC0
+     I                                        5  140SSCC1
+     I                                       15  210SSCC2
+     I                                       22  220SSCC3
+     *
+     IGTIN       IDS                             42
+     I I            '02'                      1   2 TT02
+     I                                        3  160TT021
+     I I            '11'                     17  18 TT11
+     I                                       19  240TT111
+     I I            '37'                     25  26 TT37
+     I                                       27  320TT371
+     I                                       33  33 TFNC1
+     I I            '10'                     34  35 TT10
+     I                                       36  400TT101
+     I                                       41  420TT103
+     *
+     IGTINL      IDS                             49
+     I I            '(02)'                    1   4 GT02
+     I                                        5  180GT021
+     I I            '(11)'                   19  22 GT11
+     I                                       23  280GT111
+     I I            '(37)'                   29  32 GT37
+     I                                       33  380GT371
+     I I            '(10)'                   39  42 GT10
+     I                                       43  470GT101
+     I                                       48  490GT103
+     *
+     IGTINN      IDS                             34
+     I                                        1  260ZERO
+     I                                        1   10CHIFR1
+     I                                        2  140CODEAN
+     I                                        1  140GTIN02
+     I                                       15  200GTDT
+     I                                       15  160GTA
+     I                                       17  180GTM
+     I                                       19  200GTJ
+     I                                       21  260PFQREL
+     I                                       27  27 FNC1
+     I                                       28  320LOT1
+     I                                       33  340LOT2
+     *
+     IMARSL1     IDS                             30
+     I I            '(15)'                    1   4 M15
+     I                                        5   60M15A
+     I                                        7   80M15M
+     I                                        9  100M15J
+     I I            '(11)'                   11  14 M11
+     I                                       15  160M11A
+     I                                       17  180M11M
+     I                                       19  200M11J
+     I I            '(37)'                   21  24 M37
+     I                                       25  300M371
+     *
+     IMARSL2     IDS                             35
+     I I            '(10)'                    1   4 M10
+     I                                        5  090M101
+     I                                       10  110M102
+     I I            '(240)'                  12  16 M240
+     I                                       17  23 M2401
+     I I            '(91)'                   24  27 M91
+     I                                       28  35 M911
+     *
+     IMARSB1     IDS                             24
+     I I            '15'                      1   2 MB15
+     I                                        3   40MB15A
+     I                                        5   60MB15M
+     I                                        7   80MB15J
+     I I            '11'                      9  10 MB11
+     I                                       11  120MB11A
+     I                                       13  140MB11M
+     I                                       15  160MB11J
+     I I            '37'                     17  18 MB37
+     I                                       19  240MB371
+     *
+     IMARSB2     IDS                             31
+     I I            '10'                      1   2 MB10
+     I                                        3   70MB101
+     I                                        8   90MB102
+     I I            '§'                      10  10 MGS25
+     I I            '240'                    11  13 MB240
+     I                                       14  20 MB2401
+     I I            '§'                      21  21 MGS24
+     I I            '91'                     22  23 MB91
+     I                                       24  31 MB911
+     *
+     *
+     IMARSL3     IDS                             30
+     I I            '(11)'                    1   4 M311
+     I                                        5   60M311A
+     I                                        7   80M311M
+     I                                        9  100M311J
+     I I            '(15)'                   11  14 M315
+     I                                       15  160M315A
+     I                                       17  180M315M
+     I                                       19  200M315J
+     I I            '(37)'                   21  24 M337
+     I                                       25  300M3371
+     *
+     IMARSL4     IDS                             23
+     I I            '(91)'                    1   4 M491
+     I                                        5  12 M4911
+     I I            '(10)'                   13  16 M410
+     I                                       17  210M4101
+     I                                       22  230M4102
+     *
+     IMARSL5     IDS                             34
+     I I            '(00)'                    1   4 M500
+     I                                        5  220M5001
+     I I            '(240)'                  23  27 M5240
+     I                                       28  34 M52401
+     *
+     IMARSB3     IDS                             24
+     I I            '11'                      1   2 MB311
+     I                                        3   40MB311A
+     I                                        5   60MB311M
+     I                                        7   80MB311J
+     I I            '15'                      9  10 MB315
+     I                                       11  120MB315A
+     I                                       13  140MB315M
+     I                                       15  160MB315J
+     I I            '37'                     17  18 MB337
+     I                                       19  240MB3371
+     *
+     IMARSB4     IDS                             19
+     I I            '91'                      1   2 MB491
+     I                                        3  10 MB4911
+     I I            '10'                     11  12 MB410
+     I                                       13  170MB4101
+     I                                       18  190MB4102
+     *
+     IMARSB5     IDS                             31
+     I I            '00'                      1   2 MB500
+     I                                        3  200MB5001
+     I I            '§'                      21  21 MB5S1
+     I I            '240'                    22  24 MB5240
+     I                                       25  31 MB5241
+     *
+     IBCOD1      IDS                             34
+     I I            '241'                     1   3 BC11
+     I                                        4  13 BC12
+     I I            '§'                      14  14 BC13
+     I I            '21'                     15  16 BC14
+     I                                       17  250BC15
+     I I            '§'                      26  26 BC16
+     I I            '11'                     27  28 BC17
+     I                                       29  340BC18
+     *
+     IBCOD1L     IDS                             35
+     I I            '(241)'                   1   5 BC11L
+     I                                        6  15 BC12L
+     I I            '(21)'                   16  19 BC14L
+     I                                       20  250BC15L
+     I I            '(11)'                   26  29 BC17L
+     I                                       30  350BC18L
+     *
+     IBCOD2      IDS                              8
+     I I            '37'                      1   2 BC21
+     I                                        3   80BC22
+     *
+     IBCOD2L     IDS                             10
+     I I            '(37)'                    1   4 BC21L
+     I                                        5  100BC22L
+     I           IDS
+     I                                        1   60DTAMJ
+     I                                        1   20DTA
+     I                                        3   40DTM
+     I                                        5   60DTJ
+     IALOD1      IDS                             40
+     I I            '241'                     1   3 AL11
+     I                                        4  18 AL12
+     I I            '§'                      19  19 AL13
+     I I            '10'                     20  21 AL14
+     I                                       22  31 AL15
+     I I            '§'                      32  32 AL16
+     I I            '37'                     33  34 AL17
+     I                                       35  400AL18
+     *
+     IALOD1L     IDS                             44
+     I I            '(241)'                   1   5 AL11L
+     I                                        6  20 AL12L
+     I I            '(10)'                   21  24 AL14L
+     I                                       25  34 AL15L
+     I I            '(37)'                   35  38 AL17L
+     I                                       39  440AL18L
+     *
+     IVCOD1      IDS                             13
+     I I            '000'                     1   3 VC11
+     I                                        4   40VC12
+     I                                        5   80VC13
+     I I            '0'                       9   9 VC14
+     I                                       10  130VC15
+     *
+     *
+     IGNIN       IDS                             32
+     I I            '15'                      1   2 GN15
+     I                                        3   80GN151
+     I I            '02'                      9  10 GN02
+     I                                       11  240GN021
+     I I            '37'                     25  26 GN37
+     I                                       27  320GN371
+     *
+     IGNINL      IDS                             38
+     I I            '(15)'                    1   4 GN15L
+     I                                        5  100GN151L
+     I I            '(02)'                   11  14 GN02L
+     I                                       15  280GN021L
+     I I            '(37)'                   29  32 GN37L
+     I                                       33  380GN371L
+     *
+     IGNSS       IDS                             29
+     I                                        1  200GNSS0
+     I I            '10'                     21  22 GN100
+     I                                       23  270GN101
+     I                                       28  290GN103
+     *
+     IGNSSL      IDS                             33
+     I                                        1  22 GNSS0L
+     I I            '(10)'                   23  26 GN100L
+     I                                       27  310GN101L
+     I                                       32  330GN103L
+     *
+     IHENNE      IDS                             70
+     I                                        1  55 HENND1
+     I                                       57  70 HENND2
+     I I            '02'                      1   2 HE02
+     I                                        3  160HE02D
+     I I            '37'                     17  18 HE37
+     I                                       19  240HE37D
+     I I            '{FNC1}'                 25  30 HE37S
+     I I            '10'                     31  32 HE10
+     I                                       33  370HE101D
+     I                                       38  390HE102D
+     I                                       33  39 HE10D
+     I I            '{FNC1}'                 40  45 HE24S
+     I I            '241'                    46  48 HE24
+     I                                       49  56 HE24D
+     I                                       56  56 HE24D8
+     I I            '{FNC1}'                 57  62 HE10S
+     I I            '11'                     63  64 HE11
+     I                                       65  700HE11D
+     *
+     IHENNT       DS                             69
+     I                                        1  55 HENNT1
+     I                                       56  69 HENNT2
+     *
+     IHENNEL     IDS
+     I I            '(02)'                    1   4 HE02L
+     I                                        5  180HE02DL
+     I I            '(37)'                   19  22 HE37L
+     I                                       23  280HE37DL
+     I I            '(10)'                   29  32 HE10L
+     I                                       33  39 HE10DL
+     I I            '(241)'                  40  44 HE24L
+     I                                       45  52 HE24DL
+     I I            '(11)'                   53  56 HE11L
+     I                                       57  620HE11DL
+     *
+     IHENNDM     IDS                             96
+     I I            '{FNC1}'                  1   6 HE232
+     I                                        7  260HESSCC
+     I                                       27  96 HEGTIN
+     *
+     IHENEAN     IDS                             14
+     I                                        1   1 EAN1
+     I                                        2   20EANSOC
+     I                                        3   30EANUSI
+     I                                        4   7 EANCLI
+     I                                        8  11 EANPRO
+     I                                       12  13 EANAUT
+     I                                       14  14 EANCLE
+     I                                        1  14 EAN14
+     *
+     I            DS
+     I                                        1  210DSPDS
+     I                                        1   10STEPDS
+     I                                        2   50NOCPDS
+     I                                        6   90NOPPDS
+     I                                       10  160QTEPDS
+     I                                       17  210PDSPDF
+     *
+     ICLAY       IDS                             16
+     I I            0                         1   20CLAY1
+     I                                        3   8 CLAY2
+     I I            ' '                       9   9 CLAY31
+     I I            ' '                      10  10 CLAY32
+     I I            ' '                      11  11 CLAYB
+     I I            0                        12  160CLAY4
+     *
+     IAGCO       IDS                             17
+     I I            0                         1   60AGCO1
+     I I            0                         7   80AGCO2
+     I I            0                         9  130AGCO3
+     I I            0                        14  170AGCO4
+     *
+     I            DS
+     I                                        1   20WAOPAL
+     I                                        1   10FAOPA1
+     I                                        2   20FAOPA2
+     *
+     IRUYL1      IDS                             23
+     I I            '(240)'                   1   5 RUY1
+     I                                        6  12 RUY2
+     I I            '(10)'                   13  16 RUY3
+     I                                       17  23 RUY4
+     I                                       17  210RUYC
+     I                                       22  230RUYS
+     *
+     *
+     IRUYCB1     IDS                             20
+     I I            '240'                     1   3 RUY5
+     I                                        4  10 RUY6
+     I I            '§'                      11  11 RUY7
+     I I            '10'                     12  13 RUY8
+     I                                       14  20 RUY9
+     I                                       14  180RUYC2
+     I                                       19  200RUYS2
+     *
+     IEUROTA     IDS
+     I                                        1  20 CABEUR
+     I                                        1   4 EURPRO
+     I I            '-'                       5   5 EURS1
+     I                                        6  130EURPAL
+     I I            '-'                      14  14 EURS2
+     I                                       15  200EURQTP
+     *
+     IBRI        IDS                             52
+     I I            '400'                     1   3 BRI400
+     I                                        4  13 BRIREF
+     I I            '@'                      14  14 BRISE1
+     I I            '10'                     15  16 BRI010
+     I                                       17  210BRINCO
+     I                                       22  230BRISEQ
+     I I            '@'                      24  24 BRISE2
+     I I            '37'                     25  26 BRI037
+     I                                       27  310BRIQTE
+     I I            '@'                      32  32 BRISE3
+     I I            '00'                     33  34 BRI000
+     I                                       35  520BRISSC
+     *
+     ISYNUTR     IDS                             36
+     I I            000                       1   30SY101
+     I                                        4   80SY102
+     I                                        9  100SY103
+     I                                       11  180SY200
+     I I            '123456789'              19  27 SY300
+     I I            'PCE'                    28  30 SY400
+     I                                       31  360SY500
+     *
+     ISCHMI      IDS                             34
+     I I            '02'                      1   2 SCH02P
+     I                                        3  16 SCH02C
+     I I            '37'                     17  18 SCH37P
+     I                                       19  24 SCH37C
+     I I            '|10'                    25  27 SCH10P
+     I                                       28  34 SCH10C
+     *
+     ISCHMIL     IDS                             39
+     I I            '(02)'                    1   4 SCH02L
+     I                                        5  18 SCH02D
+     I I            '(37)'                   19  22 SCH37L
+     I                                       23  28 SCH37D
+     I I            '(10)'                   29  32 SCH10L
+     I                                       33  39 SCH10D
+     *
+     ISIMAH      IDS                             15
+     I                                        1   2 SIMAB
+     I                                        1   3 SIMAB2
+     I                                        3   8 SIMAA
+     I                                        4   8 SIMAA2
+     I                                        8   8 SIMA8
+     I                                        9  130SIMAN
+     I                                       14  150SIMAS
+     *
+     IHAGER      IDS                             33
+     I                                        1   4 HAGCLI
+     I I            '-'                       5   5 HAGSP1
+     I                                        6   9 HAGPRO
+     I I            '-'                      10  10 HAGSP2
+     I                                       11  17 HAGLOT
+     I I            '-'                      18  18 HAGSP3
+     I                                       19  240HAGQTE
+     I I            '-'                      25  25 HAGSP4
+     I                                       26  330HAGPAL
+     *
+     *
+     ILINCB1     IDS                             31
+     I I            '\x1e'                    1   4 LTRS1
+     I I            '99'                      5   6 LT99
+     I                                        7  12 LT991
+     I I            '\x1d'                   13  16 LTGS1
+     I I            '11'                     17  18 LT11
+     I                                       19  20 LT11A
+     I                                       21  22 LT11M
+     I                                       23  24 LT11J
+     I I            '37'                     25  26 LT37
+     I                                       27  310LT371
+     *
+     ILINLB1     IDS                             29
+     I I            '(99)'                    1   4 LTL99
+     I                                        5  10 LTL991
+     I I            '(11)'                   11  14 LTL11
+     I                                       15  16 LTL11A
+     I                                       17  18 LTL11M
+     I                                       19  20 LTL11J
+     I I            '(37)'                   21  24 LTL37
+     I                                       25  290LTL371
+     *
+     ILINCB2     IDS                             29
+     I I            '00'                      1   2 LT00
+     I                                        3  20 LT001
+     I I            '10'                     21  22 LT10
+     I                                       23  270LT10C
+     I                                       28  290LT10S
+     *
+     ILINLB2     IDS                             33
+     I I            '(00)'                    1   4 LTL00
+     I                                        5  22 LTL001
+     I I            '(10)'                   23  26 LTL10
+     I                                       27  310LTL10C
+     I                                       32  330LTL10S
+     *
+     *
+     ICAUDDM     IDS                            103
+     I I            '\x1e'                    1   4 COX1E
+     I I            '00'                      5   6 CO00
+     I                                        7  24 COSSCC
+     I I            '02'                     25  26 CO02
+     I                                       27  27 CO02D
+     I                                       28  39 COEAN
+     I                                       28  28 COEAN1
+     I                                       40  40 CO02C
+     I I            '11'                     41  42 CO11
+     I                                       43  44 CO11A
+     I                                       45  46 CO11M
+     I                                       47  48 CO11J
+     I I            '240'                    49  51 CO240
+     I                                       52  55 COREFC
+     I I            '\x1d'                   56  59 COX1D1
+     I I            '37'                     60  61 CO37
+     I                                       62  660COQTEP
+     I I            '\x1d'                   67  70 COX1D2
+     I I            '99'                     71  72 CO99
+     I                                       73  770COQTEC
+     I I            '\x1d'                   78  81 COX1D3
+     I I            '98'                     82  83 CO98
+     I                                       84 103 COCLIR
+     *
+     ICAUDQT     IDS                             20
+     I                                        1   30COQTB1
+     I I            'x'                       4   4 COMUL1
+     I                                        5   90COQTU1
+     I I            ' &'                     10  11 COET
+     I                                       12  140COQTB2
+     I I            'x'                      15  15 COMUL2
+     I                                       16  200COQTU2
+     *
+     IYANBAL     IDS                             22
+     I I            '02'                      1   2 YA02
+     I                                        3  10 YA021
+     I I            '10'                     11  12 YA10
+     I                                       13  170YA10C
+     I                                       18  190YA10S
+     I I            '000'                    20  22 YA10Z
+     *
+     IYANBA2     IDS                             26
+     I I            '(02)'                    1   4 YAL02
+     I                                        5  12 YAL021
+     I I            '(10)'                   13  16 YAL10
+     I                                       17  210YAL10C
+     I                                       22  230YAL10S
+     I I            '000'                    24  26 YAL10Z
+     *
+     * PF EN NEUTRE 8928
+     I            DS
+     I                                        1  08 NEBOB
+     I                                        1  02 NEUT
+     I                                        3  080NOBOB
+     *
+     IECHANG      DS                             15
+     I                                        1  050ECCONF
+     I                                        6  070ECSEQ
+     I                                       08  110ECCLI
+     I                                       12  150ECPRO
+     *
+     *
+     ICOTY       IDS                             48
+     I I            '{FNC1}'                 01  06 CYF1
+     I I            '91'                     07  08 CY91
+     I                                       09  23 CY91D
+     I I            '\x1d'                   24  27 CYF2
+     I I            '10'                     28  29 CY10
+     I                                       30  340CY101D
+     I                                       35  360CY102D
+     I I            '\x1d'                   37  40 CYF3
+     I I            '37'                     41  42 CY37
+     I                                       43  480CY37D
+     *
+     ICOTYL      IDS
+     I I            '(91)'                   01  04 CY91L
+     I                                       05  19 CY91DL
+     I I            '(10)'                   20  23 CY10L
+     I                                       24  280CY10DL
+     I                                       29  300CY10D2
+     I I            '(37)'                   31  34 CY37L
+     I                                       35  400CY37DL
+     *
+     *
+     IREMYDM     IDS                             56
+     I I            '\x1e'                    1   4 RMX1E
+     I I            '241'                    05  07 RM241
+     I                                       08  14 RMREFC
+     I I            '>8'                     15  16 RMX1D1
+     I I            '37'                     17  18 RM37
+     I                                       19  230RMQTEP
+     I I            '>8'                     24  25 RMX1D2
+     I I            '10'                     26  27 RM10
+     I                                       28  320RM101D
+     I                                       33  340RM102D
+     I I            '>8'                     35  36 RMX1D3
+     I I            '00'                     37  38 RM00
+     I                                       39  56 RMSSCC
+     *
+     *
+     IMHCSS2     IDS                             23
+     I I            '400'                     1   3 MH400
+     I                                        4  13 MH400D
+     I I            '241'                    14  16 MH241
+     I                                       17  23 MH241D
+     *
+     IMHCSL2     IDS                             27
+     I I            '(400)'                   1   5 MH400L
+     I                                        6  15 MH4002
+     I I            '(241)'                  16  20 MH241L
+     I                                       21  27 MH2412
+     *
+     ISEBDM      IDS                             70
+     I I            '00'                     01  02 SB00
+     I                                       03  20 SB00D
+     I I            '240'                    21  23 SB240
+     I                                       24  33 SB240D
+     I I            '37'                     34  35 SB37
+     I                                       36  450SB37D
+     I I            000                      46  480SB372D
+     I I            '10'                     49  50 SB10
+     I I            0000000000000            51  630SB100D
+     I                                       64  680SB101D
+     I                                       69  700SB102D
+     *
+     ICOUDM      IDS                             89
+     I I            '90'                      1   2 COU90
+     I I            '28852'                   3   7 COU901
+     I I            '{FNC1}'                  8  13 COUFN1
+     I I            '241'                    14  16 COU241
+     I                                       17  26 COU24C
+     I I            '{FNC1}'                 27  32 COUFN2
+     I I            '10'                     33  34 COU10
+     I                                       35  390COU101
+     I                                       40  410COU102
+     I I            '{FNC1}'                 42  47 COUFN3
+     I I            '37'                     48  49 COU37
+     I                                       50  550COU371
+     I I            '{FNC1}'                 56  61 COUFN4
+     I I            '11'                     62  63 COU11
+     I                                       64  690COU111
+     I I            '00'                     70  71 COU00
+     I                                       72  89 COU001
+     *
+     ICOLDM      IDS                             77
+     I I            '(90)'                    1   4 COL90
+     I I            '28852'                   5   9 COL901
+     I I            '(241)'                  10  14 COL241
+     I                                       15  24 COL24C
+     I I            '(10)'                   25  28 COL10
+     I                                       29  330COL101
+     I                                       34  350COL102
+     I I            '(37)'                   36  39 COL37
+     I                                       40  450COL371
+     I I            '(11)'                   46  49 COL11
+     I                                       50  550COL111
+     I I            '(00)'                   56  59 COL00
+     I                                       60  770COL001
+     *
+     IKONDM      IDS                             82
+     I I            '{FNC1}'                  1   6 KOFN
+     I I            '241'                     7   9 KO241
+     I                                       10  19 KO241A
+     I I            '{FNC1}'                 20  25 KOSEP1
+     I I            '11'                     26  27 KO11
+     I                                       28  290KO11A
+     I                                       30  310KO11M
+     I                                       32  330KO11J
+     I I            '37'                     34  35 KO37
+     I                                       36  400KO37A
+     I I            '{FNC1}'                 41  46 KSEP2
+     I I            '10'                     47  48 KO10
+     I                                       49  530KO10A
+     I I            '-'                      54  54 KO10B
+     I                                       55  560KO10C
+     I I            '{FNC1}'                 57  62 KOSEP3
+     I I            '00'                     63  64 KO00
+     I                                       65  82 KO00A
+     *
+     *MONDELEZ
+     IMONDE1     IDS                             33
+     I I            '15'                      1   2 MD15
+     I                                        3   40MD15A
+     I                                        5   60MD15M
+     I                                        7   80MD15J
+     I I            '10'                      9  10 MD10
+     I                                       11  150MD101
+     I                                       16  170MD102
+     I I            '{FNC1}'                 18  23 MDSEP1
+     I I            '240'                    24  26 MD240
+     I                                       27  33 MD2401
+     *
+     IMONDL1     IDS                             33
+     I I            '(15)'                    1   4 MDL11
+     I                                        5   60MDL12
+     I                                        7   80MDL13
+     I                                        9  100MDL14
+     I I            '(10)'                   11  14 MDL15
+     I                                       15  190MDL16
+     I                                       20  210MDL17
+     I I            '(240)'                  22  26 MDL18
+     I                                       27  33 MDL19
+     *
+     IMONDE2     IDS                             43
+     I I            '00'                      1   2 MD00
+     I                                        3  200MD001
+     I I            '02'                     21  22 MD02
+     I                                       23  360MD021
+     I I            '37'                     37  38 MD37
+     I                                       39  430MD371
+     *
+     IMONDL2     IDS                             49
+     I I            '(00)'                    1   4 MDL21
+     I                                        5  220MDL22
+     I I            '(02)'                   23  26 MDL23
+     I                                       27  400MDL24
+     I I            '(37)'                   41  44 MDL25
+     I                                       45  490MDL26
+     *
+     IMONDDM     IDS                             82
+     I I            '15'                      1   2 MDDM01
+     I                                        3   40MDDM02
+     I                                        5   60MDDM03
+     I                                        7   80MDDM04
+     I I            '10'                      9  10 MDDM05
+     I                                       11  150MDDM06
+     I                                       16  170MDDM07
+     I I            '{FNC1}'                 18  23 MDDM08
+     I I            '240'                    24  26 MDDM09
+     I                                       27  33 MDDM10
+     I I            '{FNC1}'                 34  39 MDDM11
+     I I            '00'                     40  41 MDDM12
+     I                                       42  590MDDM13
+     I I            '02'                     60  61 MDDM14
+     I                                       62  750MDDM15
+     I I            '37'                     76  77 MDDM16
+     I                                       78  820MDDM17
+     I            DS
+     I                                        1  85 DMTY3
+     I                                        1   10T3USI
+     I                                        2   20T3ENC
+     I                                        3   80T3PAL
+     I                                        9  120T3SA
+     I                                       13  140T3MM
+     I                                       15  160T3JJ
+     I                                       17  200T3HM
+     I                                       21  240T3CLI
+     I                                       25  39 T3ABRC
+     I                                       40  430T3PRO
+     I                                       44  480T3CONF
+     I                                       49  500T3SEQ
+     I                                       51  560T3QTE
+     I                                       57  600T3EPAI
+     I                                       61  640T3ONDL
+     I                                       65  680T3ONDH
+     I                                       69  690T3NFLZ
+     I                                       70  700T3DEST
+     I                                       71  72 T3TYPP
+     I                                       73  750T3PLON
+     I                                       76  780T3PLAR
+     I                                       79  790T3SCAN
+     I                                       80  800T3REPE
+     I                                       81  810T3PIMP
+     I                                       82  820T3PGM
+     I*                                      83  83 T3SENS
+     I*                                      84  850T3VALE
+     I                                       83  85 T3SEVA
+     *
+    C**
+     C                     Z-ADD0         ZERO
+     C                     Z-ADD0         LOT1
+     C                     Z-ADD0         LOT2
+     C                     Z-ADD0         GT021
+     C                     Z-ADD0         GN021
+     C                     Z-ADD0         GT111
+     C                     Z-ADD0         GN151
+     C                     Z-ADD0         GT371
+     C                     Z-ADD0         GN371
+     C                     Z-ADD0         GT101
+     C                     Z-ADD0         GT103
+     C                     Z-ADD0         GN101
+     C                     Z-ADD0         GN103
+     C                     Z-ADD0         TT021
+     C                     Z-ADD0         GN021L
+     C                     Z-ADD0         TT111
+     C*                    Z-ADD0         GN11A
+     C*                    Z-ADD0         GN11M
+     C*                    Z-ADD0         GN11J
+     C*                    Z-ADD0         GN11AL
+     C*                    Z-ADD0         GN11ML
+     C*                    Z-ADD0         GN11JL
+     C                     Z-ADD0         GN151L
+     C                     Z-ADD0         TT371
+     C                     Z-ADD0         GN371L
+     C                     Z-ADD0         TT101
+     C                     Z-ADD0         TT103
+     C                     Z-ADD0         GN101L
+     C                     Z-ADD0         GN103L
+     C                     MOVE '§'       FNC1
+     C                     MOVE '§'       TFNC1
+     C                     Z-ADD0         BC15
+     C                     Z-ADD0         BC15L
+     C                     Z-ADD0         BC18
+     C                     Z-ADD0         BC18L
+     C                     Z-ADD0         BC22
+     C                     Z-ADD0         BC22L
+     C                     Z-ADD0         AL18
+     C                     Z-ADD0         AL18L
+     C                     Z-ADD0         RGL
+     C                     Z-ADD0         VC12
+     C                     Z-ADD0         VC13
+     C                     Z-ADD0         VC15
+     C                     Z-ADD0         HE02D
+     C                     Z-ADD0         HE37D
+     C                     Z-ADD0         HE101D
+     C                     Z-ADD0         HE102D
+     C                     Z-ADD0         HE11D
+     C                     Z-ADD0         HE02DL
+     C                     Z-ADD0         HE37DL
+     C                     Z-ADD0         HE11DL
+     C                     Z-ADD0         HESSCC
+    C******  DEFINITION DES CLES
+    C**
+     C           KCLI01    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C           KIMP2     KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KEYPRO    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KEYPR2    KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KEYUSI    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+     C           KFAB10    KLIST
+     C                     KFLD           FAUSIN
+     C                     KFLD           FATENC
+     C                     KFLD           FACBPA
+     C                     KFLD           NOBOU
+     C           KPRF02    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PFCBPA
+     C                     KFLD           PFNBOU
+     C           KPRF05    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PFCBPA
+     C           KEYCDE    KLIST
+     C                     KFLD           PFCONF
+     C                     KFLD           NOPRO
+     C                     KFLD           PFSEQ
+     C           CLEEMB    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           EMBNO
+     C           KCODB     KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           ORD
+     C           KFAB25    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           ZZPRO
+     C           KFA25B    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C           KPAL42    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           RFBFOU
+     C           KFTOND    KLIST
+     C                     KFLD           FTUSI
+     C                     KFLD           FTSECT
+     C                     KFLD           FTSSEC
+     C                     KFLD           FTNOMA
+     C                     KFLD           FTNOCL
+     C                     KFLD           FTNOPR
+     C           KFORON    KLIST
+     C                     KFLD           FRUSI
+     C                     KFLD           FRSECT
+     C                     KFLD           FRSSEC
+     C                     KFLD           FRNOMA
+     C                     KFLD           FRNOFO
+     C           KFORIN    KLIST
+     C                     KFLD           NOFOR
+     C                     KFLD           CODINT
+     * cle pour le fichier parametre .
+     C           KPARAM    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+    C*
+    C******  RECEPTION DES PARAMETRES
+    C*
+     C           *ENTRY    PLIST
+     C           PASCOD    PARM PASCOD    PASCOD 10
+     C           PASNFI    PARM PASNFI    PASNFI  10
+     C           PASREE    PARM PASREE    PASREE  1
+     C                     MOVE PASCOD    CODB
+     C                     Z-ADDFACBPA    PFCBPA
+     C                     Z-ADDCODBA     CODB8
+    C**
+    C*---------------------------------------------------------------*
+    C*       LECTURE INFO FICHE PALETTE DS FICHIER SUIVI FAB10P TOURY*
+    C*---------------------------------------------------------------*
+    C**
+     C           USINE     COMP 3                        03
+D1  C           USINE     IFEQ 3
+    C           USINE     OREQ 7
+     C                     Z-ADD9         FATENC
+     C                     Z-ADDPFNBOU    NOBOU
+     C           KFAB10    CHAINXFAB10               98
+     C                     MOVE *OFF      *IN33
+     C                     Z-ADDFACBPA    PFCBPA
+     C                     Z-ADDNOBOU     PFNBOU
+F1  C                     END
+D1  C           USINE     IFEQ 2
+    C           USINE     OREQ 4
+     C                     Z-ADDUSINE     FAUSIN
+     C                     Z-ADD9         FATENC
+     C                     Z-ADD0         NOBOU
+     C           KFAB10    CHAINXFAB10               98
+F1  C                     END
+    C*
+    C*---------------------------------------------------------------*
+    C******  LECTURE INFO FICHE PALETTE PF DS PRF02P OU DS PRF05P (FEG)
+     * POUR TOUS, DATE DE FAB = DATE DE 1ERE EDITION (PRF05P)
+     C           KPRF05    CHAINXPRF05               97
+    C*
+     C                     MOVE '0'       *IN77
+     C           KPRF02    CHAINXPRF02               99
+D1  C           *IN99     IFEQ *ON
+    C           USINE     ANDNE3
+     C                     MOVE '1'       *IN77
+     C           KPRF05    CHAINXPRF05               99
+D2  C           *IN99     IFEQ *ON
+    C                     GOTO FIN
+X2  C                     ELSE
+     C                     Z-ADDPFQTHE    PFQREL
+     C                     Z-ADDDATEDI    DATENT
+F2  C                     ENDIF
+F1  C                     ENDIF
+D1  C           *IN97     IFEQ '0'
+     C                     Z-ADDDATEDI    DATENT
+F1  C                     ENDIF
+     C                     Z-ADDPFAENT    DBAENT
+     C                     Z-ADDPFMENT    DBMENT
+     C                     Z-ADDPFJENT    DBJENT
+    C*
+    C******  SI PALETTE PAS EN 'CO' => PALETTE EN 'OK'
+     C                     MOVE ' '       REE     1        EDT ROUGE
+D1  C           USINE     IFEQ 2
+    C           FAACST    ANDEQ'BP'
+     C                     MOVE 'R'       REE
+F1  C                     END
+D1  C           PFHALL    IFNE 'CO'
+    C           PF0203    ANDNE'R'
+    C           *IN77     ANDNE'1'
+     C                     MOVE 'OK'      FAACST
+F1  C                     ENDIF
+     C                     MOVE *BLANK    ZOK     4
+     C                     MOVELFAACST    ZOK
+D1  C           PF0201    IFEQ 'T'
+     C                     MOVE 'TEST'    ZOK
+F1  C                     ENDIF
+    C**
+     C                     Z-ADDPFNPAL    FAOPAL  40
+    C**
+     C           KEYCDE    CHAINCARCDEF1             99
+    C**
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE USINE     PXVALE
+     C                     MOVE *BLANKS   PXLIBE
+     C           KEYUSI    CHAINPARAMEF1             99
+     C                     MOVELPXMONT    SSCC1
+    C**
+    C******  LECTURE CLIENT
+    C**
+     C                     MOVE *BLANK    ABRCLI
+     C                     MOVE *BLANK    CLIFOU
+     C           KCLI01    CHAINCLIENTS1             99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' ABRCLI
+X1  C                     ELSE
+D2  C           NOCLI     IFEQ 1520
+     C                     MOVELT6,1      LBFOOD 40
+F2  C                     END
+F1  C                     ENDIF
+     C                     MOVEL'SANSLOG' CODOBI
+     C           KCLI01    SETLLCLIOBIL9                 22
+    C**
+    C******  LECTURE PRODUIT
+    C**
+     C                     CLEARLIBEL
+     C                     MOVE *BLANK    CODPRO 20
+     C           KEYPRO    CHAINPRODAL8              99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVEL'INCONNU' CODPRO                      A
+F1  C                     ENDIF
+D1  C           NOCLI     IFEQ 3701
+     C                     MOVELBLOC1     LBFOOD
+F1  C                     END
+     C                     MOVELINDPCL    CODPRO
+     C           KEYPRO    CHAINCLIEANL1             99
+    C**
+    C******  TEST CODE QUALITE POUR NEUVILLE
+    C**
+     C                     MOVE *BLANK    ZQUAL  17
+D1  C           NATE1     IFEQ 'A'
+    C           USINE     ANDNE2
+     C                     MOVE T5,1      ZQUAL
+F1  C                     ENDIF
+    C*
+    C******  LECTURE LIBELLE N°ARTICLE DS PRODUIT
+     * recherche Libellé de l'élément si Amalgame
+D1  C           PFORDA    IFNE 0
+     C                     MOVE *BLANK    REFCO
+     C                     MOVE *BLANKS   CLICO
+     C                     Z-ADDPFORDA    ORD
+     C           KCODB     CHAINCODBARF1             99
+D2  C           *IN99     IFEQ *OFF
+     C                     MOVE *ON       *IN33
+     C                     MOVE *BLANK    CODPRO
+     C                     MOVELREFCO     CODPRO
+     C                     MOVE *BLANK    DLOREA
+     * recherche de l'EAN propre à l'élément
+     C           KCODB     CHAINCLIEANL1             99
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*
+    C******  LECTURE INFOS LIGNE CONDITIONNEMENT
+    C*
+     C                     MOVE ' '       BANDO   1
+     C                     MOVE ' '       BANDN   1
+     C                     MOVE ' '       BANDP   1
+     C                     Z-ADD0         LIEN    20
+     C                     MOVE ' '       BANDO   1
+     C                     MOVE ' '       BANDO   1
+    C*                    Z-ADDPFORDA    EMBNO
+D1  C           PFORDA    IFNE 0
+     C                     Z-ADDSUIMP     EMBNO
+F1  C                     END
+D1  C           EMBNO     IFEQ 0
+     C                     Z-ADD1         EMBNO
+F1  C                     ENDIF
+     C           CLEEMB    CHAINPALETTL1             99
+D1  C           *IN99     IFEQ *ON
+     C                     MOVE *BLANK    SUPHAB
+     C                     MOVE *BLANK    SUPHA1
+    C*                    MOVE *BLANK    SUPHA2
+     C                     MOVE *BLANK    PALPRE
+     C                     MOVE *BLANK    PLALIB
+     C                     MOVE *BLANK    WGERBA  2
+X1  C                     ELSE
+D2  C           GERBA     IFEQ 'O'
+     C                     MOVE 'G '      WGERBA
+X2  C                     ELSE
+     C                     MOVE 'NG'      WGERBA
+F2  C                     END
+     **
+D2  C           HAB11     IFEQ 'B'
+     C                     MOVE 'X'       BANDO
+X2  C                     ELSE
+     C                     MOVE 'X'       BANDN
+F2  C                     ENDIF
+     **
+D2  C           HAB11     IFEQ 'C'
+D3  C                     SELEC
+     C           HAB12     WHLE '3'
+     C                     Z-ADD2         LIEN
+     C           HAB12     WHLE '6'
+     C                     Z-ADD3         LIEN
+     C                     OTHER
+     C                     Z-ADD4         LIEN
+F3  C                     ENDSL
+X2  C                     ELSE
+     C                     Z-ADD0         LIEN
+F2  C                     ENDIF
+     **
+F1  C                     ENDIF
+    C**
+    C******  SI PASREE = 'G' => ON NE VEUT PAS REEDITER LA PAGE 2
+    C**
+     C                     MOVE *BLANK    LIEGAM
+     C                     MOVE *BLANK    LIEGA2
+D1  C           PASREE    IFEQ 'G'
+     C                     MOVE *BLANK    LIEGAM
+X1  C                     ELSE
+    C**
+    C******  STATUS 'CG' OU 'BP' SUR PROD. EN CONTROLE GAMME => PAGE 2
+    C**
+D2  C           USINE     IFEQ 2
+    C           PFHALL    ANDEQ'CO'
+    C           PFALLE    ANDEQ2
+     C                     MOVE T3,1      LIEGAM
+D3  C           PF0203    IFEQ 'O'
+     C                     MOVE T3,2      LIEGA2
+F3  C                     ENDIF
+F2  C                     ENDIF
+    C**
+    C******  STATUS 'AA' OU 'BP' SUR PRODUIT NORMAL => NON CONFORME
+    C**
+D2  C           USINE     IFEQ 2
+    C           PFHALL    ANDEQ'CO'
+    C           PFALLE    ANDEQ1
+     C                     MOVE T3,2      LIEGAM
+F2  C                     ENDIF
+    C**
+    C******  RETOUR CLIENT
+    C**
+D2  C           USINE     IFEQ 2
+    C           PFHALL    ANDEQ'CO'
+    C           PFALLE    ANDEQ3
+     C                     MOVE T3,3      LIEGAM
+     C                     MOVE T3,2      LIEGA2
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+D1  C           USINE     IFEQ 7
+     C                     MOVELT1,2      LIBFO1 30
+X1  C                     ELSE
+D2  C           STE       IFEQ 1
+     C                     MOVELT1,1      LIBFO1
+X2  C                     ELSE
+     C                     MOVELT1,2      LIBFO1
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C**
+     C                     Z-ADDUSINE     I       10
+     C                     MOVELT2,I      USIDEP 30
+    C**
+    C******  SI ENTETE USINE DOIT ETRE DIFFERENTE DE L'USINE QUI FABRIQUE
+    C** RECHERCHE SI FORMAT SUPPLÉMENTAIRE
+     C                     Z-ADD0         ZZPRO
+     C           KFA25B    CHAINXFAB25               99
+     C   99      KFAB25    CHAINXFAB25               99
+D1  C           *IN99     IFEQ *OFF
+D2  C           FA2501    IFNE *BLANK
+     C                     MOVE FA2501    I
+D3  C           I         IFEQ 7
+     C                     MOVELT1,2      LIBFO1
+X3  C                     ELSE
+D4  C           STE       IFEQ 1
+     C                     MOVELT1,1      LIBFO1
+X4  C                     ELSE
+     C                     MOVELT1,2      LIBFO1
+F4  C                     ENDIF
+F3  C                     ENDIF
+     C                     MOVELT2,I      USIDEP
+F2  C                     ENDIF
+     C                     MOVEL'S'       LIBSUP  6
+     C                     MOVE FAPCB1    LIBSUP
+F1  C                     ENDIF
+    C**
+D1  C           *IN22     IFEQ '1'
+     C                     MOVE *BLANKS   LIBFO1
+     C                     MOVE *BLANKS   USIDEP
+F1  C                     END
+    C**
+     C                     Z-ADDCODBA     CODBA2  80
+     C                     Z-ADD0         CODBA3  80
+D1  C           USINE     IFEQ 2
+     C                     Z-ADDCODBA     CODBA3
+F1  C                     END
+    C** SSCC
+     C                     Z-ADDCODBAS    SSCC2
+     C                     Z-ADD0         SSCC3
+     C                     CALL 'CALSSCC£'
+     C                     PARM           SSCC0
+     C                     MOVE '(00)'    AI
+    C** CODE BARRE SSCC
+     C                     MOVEL'00'      CBSSCC 200
+     C                     MOVE SSCC0     CBSSCC
+    C******
+     C  N81                MOVE *BLANKS   FSC     1
+     C           KEYPR2    CHAINPRODST2              81
+     C  N81                MOVE ICEI2     FSC
+     * Suppression Bandeau spécifique TOURY
+     * si codes à barres dans la partie haute
+D1  C           LIBSUP    IFEQ 'S10003'
+    C           LIBSUP    OREQ 'S10009'
+    C           LIBSUP    OREQ 'S10026'
+    C           LIBSUP    OREQ 'S10028'
+    C           LIBSUP    OREQ 'S10030'
+     C                     SETOF                     03
+F1  C                     END
+     * Suppression du OK (ZOK) si transfo auto de PF en Neutre
+D1  C           LIBSUP    IFEQ 'S10032'
+     C                     MOVE *BLANKS   ZOK
+F1  C                     END
+     * EDITION DE LA PARTIE STANDARD DE L'ETIQUETTE
+     C                     EXCPTSORTI
+    C******
+     * AJOUT DE FORMAT SUPPÉMENTAIRE SI SPÉCIFIQUE CLIENT DANS FAB25P
+    C******
+     * NESTLÉ GTIN  CLIENT : 3709
+D1  C           LIBSUP    IFEQ 'S10001'
+     C                     EXSR S10001
+F1  C                     END
+     * GLENMORANGIE CLIENT : 2992
+D1  C           LIBSUP    IFEQ 'S10002'
+     C                     EXSR S10002
+F1  C                     END
+     * SCHNEIDER  CLIENT : 3053
+    C**                    S10003
+     * ALES         CLIENT : 2876
+D1  C           LIBSUP    IFEQ 'S10004'
+     C                     EXSR S10004
+F1  C                     END
+     * YVES SAINT LAURENT CLIENT : 8527
+D1  C           LIBSUP    IFEQ 'S10005'
+     C                     EXSR S10005
+F1  C                     END
+     * DIOR : 2884
+D1  C           LIBSUP    IFEQ 'S10013'
+F1  C                     END
+     * LEGRAND  5580
+D1  C           LIBSUP    IFEQ 'S10006'
+     C                     EXSR S10006
+F1  C                     END
+     * YVES ROCHER 8215
+D1  C           LIBSUP    IFEQ 'S10007'
+     C                     EXSR S10007
+F1  C                     END
+     * MARS PF  2592
+     * MARS CHOCO 990 ET 315
+     * MFE ERN 9510
+D1  C           LIBSUP    IFEQ 'S10009'
+    C           LIBSUP    OREQ 'S10022'
+     C                     EXSR S10009
+F1  C                     END
+     * DSS VELIN 3694
+D1  C           LIBSUP    IFEQ 'S10011'
+     C                     EXSR S10011
+F1  C                     END
+     * NESPRESSO GTIN  CLIENT : 3418
+D1  C           LIBSUP    IFEQ 'S10012'
+     C                     EXSR S10012
+F1  C                     END
+     * DS CLAY CROSS : 3701
+D1  C           LIBSUP    IFEQ 'S10014'
+     C                     EXSR S10014
+F1  C                     END
+     * AGCO : 4051
+D1  C           LIBSUP    IFEQ 'S10015'
+     C                     EXSR S10015
+F1  C                     END
+     * LINPAC : 2406
+D1  C           LIBSUP    IFEQ 'S10016'
+F1  C                     END
+     * DE RUY PERFUMS : 4110
+D1  C           LIBSUP    IFEQ 'S10017'
+     C                     EXSR S10017
+F1  C                     END
+    C**
+     * HENNESSY : 0329
+D1  C           LIBSUP    IFEQ 'S10018'
+     C                     EXSR S10018
+F1  C                     END
+    C**
+     * EUROTAB  : 2821
+D1  C           LIBSUP    IFEQ 'S10021'
+     C                     EXSR S10021
+F1  C                     END
+     * LOREAL   : 65 8527 8849
+D1  C           LIBSUP    IFEQ 'S10023'
+     C                     EXSR S10023
+F1  C                     END
+     * SYNUTRA
+D1  C           LIBSUP    IFEQ 'S10024'
+     C                     EXSR S10024
+F1  C                     END
+     * PIERRE SCHMIDT
+D1  C           LIBSUP    IFEQ 'S10025'
+     C                     EXSR S10025
+F1  C                     END
+     * SIMAH
+D1  C           LIBSUP    IFEQ 'S10026'
+     C                     EXSR S10026
+F1  C                     END
+     * HAGER
+D1  C           LIBSUP    IFEQ 'S10027'
+     C                     EXSR S10027
+F1  C                     END
+     * LINDT 1564
+D1  C           LIBSUP    IFEQ 'S10028'
+     C                     EXSR S10028
+F1  C                     END
+     * MOET  675
+D1  C           LIBSUP    IFEQ 'S10029'
+     C                     EXSR S10029
+F1  C                     END
+     * CAUDALIE     CLIENT : 2027
+D1  C           LIBSUP    IFEQ 'S10030'
+     C                     EXSR S10030
+F1  C                     END
+     * YANBAL 4743
+D1  C           LIBSUP    IFEQ 'S10031'
+     C                     EXSR S10031
+F1  C                     END
+     * 8928 : ETIQUETTE PF EN NEUTRE
+D1  C           LIBSUP    IFEQ 'S10032'
+     C                     EXSR S10032
+F1  C                     END
+    C**
+     * COTY     : 0668
+D1  C           LIBSUP    IFEQ 'S10033'
+     C                     EXSR S10033
+F1  C                     END
+     * REMY MARTIN 711
+D1  C           LIBSUP    IFEQ 'S10034'
+     C                     EXSR S10034
+F1  C                     END
+     * MHCS    CLIENT : 1396
+D1  C           LIBSUP    IFEQ 'S10036'
+     C                     EXSR S10036
+F1  C                     END
+     * SEB   CLIENT : 5226 5227 5228  5229 5234
+D1  C           LIBSUP    IFEQ 'S10038'
+     C                     EXSR S10038
+F1  C                     END
+     * SEB   CLIENT : 2349 COURVOISIER
+D1  C           LIBSUP    IFEQ 'S10042'
+     C                     EXSR S10007
+     C                     EXSR S10042
+F1  C                     END
+     * SEB   CLIENT : 5382 GUERLAIN
+D1  C           LIBSUP    IFEQ 'S10043'
+     C                     EXSR S10007
+     C                     EXSR S10043
+F1  C                     END
+     * SEB   CLIENT : 4822 KONINGS
+D1  C           LIBSUP    IFEQ 'S10044'
+     C                     EXSR S10044
+F1  C                     END
+     *
+     * MONDELEZ : 1847
+D1  C           LIBSUP    IFEQ 'S10045'
+     C                     EXSR S10045
+F1  C                     END
+     *
+     * MARS2 990 ET 315
+D1  C           LIBSUP    IFEQ 'S10046'
+     C                     EXSR S10046
+F1  C                     END
+     *
+     * THUASNE ET TEXTILE 2904 ET 4021
+D1  C           LIBSUP    IFEQ 'S10047'
+     C                     EXSR S10047
+F1  C                     END
+     *
+    C******  ROCHECHOUART : CLIENTS 9999 9993 9995 => IMPRIMER 'ES'
+    C**
+     C                     MOVE *BLANK    RTES
+D1  C           USINE     IFEQ 2
+D2  C           NOCLI     IFEQ 9993
+    C           NOCLI     OREQ 9995
+    C           NOCLI     OREQ 9999
+     C                     MOVE 'ES'      RTES    2
+F2  C                     ENDIF
+F1  C                     ENDIF
+    C*---------------------------------------------------------------*
+    C*                                                               *
+    C*  SI PALETTE EN CONTROLE GAMME OU EN NON CONFORME => PAGE 2    *
+    C*                                                               *
+    C*---------------------------------------------------------------*
+     C                     MOVE *BLANK    LIEGAM
+D1  C           LIEGAM    IFNE *BLANK
+     C                     Z-ADDPFCONF    XXCONF
+     C                     Z-ADDPFSEQ     XXSEQ
+     C                     Z-ADDNOCLI     XXCLI
+     C                     Z-ADDNOPRO     XXPRO
+     C                     Z-ADDPFQREL    XXQREL
+     C                     Z-ADDFAOPAL    XXOPAL
+     C                     MOVE ABRCLI    XXRCLI
+     C                     Z-ADDCODBA     XCODBA
+     C                     Z-ADDPASNFI    XXNFI
+     C                     CALL 'ETIQ200L'
+     C           PARM1     PARM PARM1     PARM1
+F1  C                     ENDIF
+    C*
+     C           FIN       TAG
+     C                     SETON                     LR
+     *****************************************************************
+     *  NESTLÉ GTIN
+     *****************************************************************
+    C           S10001    BEGSR
+     C                     SETON                     88
+     C                     Z-ADDGTIN02    GT021
+     C                     Z-ADDPFAENT    GTA
+     C                     Z-ADDPFMENT    GTM
+     C                     Z-ADDPFJENT    GTJ
+     C                     Z-ADDGTDT      GT111
+     C                     Z-ADDPFQREL    GT371
+     C                     Z-ADDPFCONF    GT101
+     C                     Z-ADDPFSEQ     GT103
+     C                     Z-ADDPFCONF    LOT1
+     C                     Z-ADDPFSEQ     LOT2
+     C                     MOVE '§'       FNC1
+     C                     MOVE '§'       TFNC1
+     C                     Z-ADDGTIN02    TT021
+     C                     Z-ADDGTDT      TT111
+     C                     Z-ADDPFQREL    TT371
+     C                     Z-ADDPFCONF    TT101
+     C                     Z-ADDPFSEQ     TT103
+     C                     EXCPTE00001
+    C                     ENDSR
+     *****************************************************************
+     *  GLENMORANGIE
+     *****************************************************************
+    C           S10002    BEGSR
+     C                     MOVELCODP10    BC12
+     C                     MOVELCODP10    BC12L
+     C                     Z-ADDPFAENT    DBAENT
+     C                     Z-ADDPFMENT    DBMENT
+     C                     Z-ADDPFJENT    DBJENT
+     C                     Z-ADDPFAENT    DTA
+     C                     Z-ADDPFMENT    DTM
+     C                     Z-ADDPFJENT    DTJ
+     C                     Z-ADDDTAMJ     BC18
+     C                     Z-ADDDTAMJ     BC18L
+     C                     Z-ADDFACBPA    BC15
+     C                     Z-ADDFACBPA    BC15L
+     C                     Z-ADDPFQREL    BC22
+     C                     Z-ADDPFQREL    BC22L
+     C                     EXCPTE00002
+    C                     ENDSR
+     *****************************************************************
+     *  GLENMORANGIE
+     *****************************************************************
+    C           S10004    BEGSR
+     C                     MOVELINDPCL    AL12
+     C                     MOVELINDPCL    AL12L
+     C                     Z-ADDPFQREL    AL18
+     C                     Z-ADDPFQREL    AL18L
+     C                     MOVELPFCONF    LOT     7
+     C                     MOVE PFSEQ     LOT
+     C                     MOVELLOT       AL15
+     C                     MOVELLOT       AL15L
+     C                     EXCPTE00004
+    C                     ENDSR
+     *****************************************************************
+     *  YVES SAINT LAURENT 8527
+     *****************************************************************
+    C           S10005    BEGSR
+     C                     EXCPTE00005
+    C                     ENDSR
+     *****************************************************************
+     *  LEGRAND
+     *****************************************************************
+    C           S10006    BEGSR
+     C                     Z-ADD0         X       20
+     C           KEYPRO    CHAINPROCLIL1             99
+D1  C           *IN99     DOWEQ'0'
+    C           X         ANDLT18
+     C                     ADD  1         X
+     C                     MOVE RGLIV     RGL,X
+     C                     MOVE RFPROL    RFP,X
+     C           KEYPRO    READEPROCLIL1                 99
+F1  C  N99                END
+     C                     EXCPTE00006
+    C                     ENDSR
+     *****************************************************************
+     *  YVES ROCHER 8215
+     *****************************************************************
+    C           S10007    BEGSR
+     * ESTMATION POIDS  ==> CALPDS£2
+     C                     Z-ADD0         DSPDS
+     C                     Z-ADDSTE       STEPDS
+     C                     Z-ADDNOCLI     NOCPDS
+     C                     Z-ADDNOPRO     NOPPDS
+     C                     Z-ADDPFQREL    QTEPDS
+     C                     Z-ADD0         PDSPDF
+     C                     CALL 'CALPDS£2'
+     C                     PARM           DSPDS
+     C                     EXCPTE00007
+    C                     ENDSR
+     *****************************************************************
+     *  MARS TOUS CLIENTS  9510 2592 990 315
+     *****************************************************************
+    C           S10009    BEGSR
+     C                     SETOF                     03
+     C                     Z-ADDPFCONF    M101
+     C                     Z-ADDPFSEQ     M102
+     C                     Z-ADDPFCONF    MB101
+     C                     Z-ADDPFSEQ     MB102
+     C                     Z-ADDPFAENT    M11A
+     C                     Z-ADDPFMENT    M11M
+     C                     Z-ADDPFJENT    M11J
+     C                     Z-ADDPFAENT    MB11A
+     C                     Z-ADDPFMENT    MB11M
+     C                     Z-ADDPFJENT    MB11J
+     C                     MOVELINDPCL    ITEM    7
+     C                     MOVELITEM      M2401
+     C                     MOVELITEM      MB2401
+     C                     Z-ADDPFQREL    M371
+     C                     Z-ADDPFQREL    MB371
+D1  C           NOCLI     IFEQ 2592
+    C           NOCLI     OREQ 9510
+     C                     MOVEL'15054492'M911
+     C                     MOVEL'15054492'MB911
+F1  C                     END
+D1  C           NOCLI     IFEQ 990
+    C           NOCLI     OREQ 315
+     C                     MOVEL'15030162'M911
+     C                     MOVEL'15030162'MB911
+F1  C                     END
+D1  C           NOCLI     IFEQ 2592
+     C                     MOVELCODPRO    COD7    7
+F1  C                     END
+     *
+     C                     Z-ADDM11A      M15A
+     C                     Z-ADDM11M      M15M
+     C                     Z-ADDM11J      M15J
+     C                     ADD  6         M15M
+     C           M15M      COMP 12                   61
+D1  C           *IN61     IFEQ '1'
+     C                     SUB  12        M15M
+     C                     ADD  1         M15A
+F1  C                     END
+D1  C           M15J      IFGT 28
+     C                     Z-ADD28        M15J
+F1  C                     END
+     C                     Z-ADDM15A      MB15A
+     C                     Z-ADDM15M      MB15M
+     C                     Z-ADDM15J      MB15J
+     C                     EXCPTE00009
+    C                     ENDSR
+     *****************************************************************
+     *  MFE ERN
+     *****************************************************************
+    C           S10011    BEGSR
+     C                     Z-ADDUSINE     VC12
+     C                     Z-ADDNOCLI     VC13
+     C                     Z-ADDNOPRO     VC15
+     C                     EXCPTE00011
+    C                     ENDSR
+     *****************************************************************
+     *  NESPRESSO GTIN ET SSCC
+     *****************************************************************
+    C           S10012    BEGSR
+     C                     Z-ADDGTIN02    GN021
+     C                     Z-ADDPFAENT    GTA
+     C                     Z-ADDPFMENT    GTM
+     C                     Z-ADDPFJENT    GTJ
+     C*                    Z-ADDGTA       GN11A
+     C*                    Z-ADDGTM       GN11M
+     C*                    Z-ADDGTJ       GN11J
+     C*                    Z-ADDGTA       GN11AL
+     C*                    Z-ADDGTM       GN11ML
+     C*                    Z-ADDGTJ       GN11JL
+     C                     Z-ADDGTJ       GAUBDJ
+     C                     Z-ADDGTM       GAUBDM
+     C                     Z-ADDGTA       GAUBDA
+     C                     MOVEL'20'      GAUBDA
+     * PASSAGE A 1 AN  TASK0030311
+    C*                    ADD  6         GTM
+    C*          GTM       COMP 12                   61
+    C*          *IN61     IFEQ '1'
+    C*                    SUB  12        GTM
+     C                     ADD  1         GTA
+    C*                    END
+D1  C           GTJ       IFGT 28
+    C           GTM       ANDEQ02
+     C                     Z-ADD28        GTJ
+F1  C                     END
+     C                     Z-ADDGTDT      GN151
+     C                     Z-ADDGTA       GNUBDA
+     C                     MOVEL'20'      GNUBDA
+     C                     Z-ADDGTM       GNUBDM
+     C                     Z-ADDGTJ       GNUBDJ
+     C                     Z-ADDPFQREL    GN371
+     C                     Z-ADDPFCONF    GN101
+     C                     Z-ADDPFSEQ     GN103
+     C                     Z-ADDGTIN02    GN021L
+     C                     Z-ADDGTDT      GN151L
+     C                     Z-ADDPFQREL    GN371L
+     C                     Z-ADDPFCONF    GN101L
+     C                     Z-ADDPFSEQ     GN103L
+     C                     MOVE CBSSCC    GNSS0
+     C                     MOVE SSCC      GNSS0L
+     C                     EXCPTE00012
+    C                     ENDSR
+     *****************************************************************
+     *  DS CLAY CROSS 3701
+     *****************************************************************
+    C           S10014    BEGSR
+     C                     Z-ADD60        CLAY1
+     C                     MOVELCLIREF    CLAY2
+     C                     Z-ADDFAOPAL    WAOPAL
+D1  C           FAOPA1    IFEQ 0
+     C                     MOVELFAOPA2    CLAY31
+X1  C                     ELSE
+     C                     MOVELFAOPA1    CLAY31
+     C                     MOVELFAOPA2    CLAY32
+F1  C                     END
+     C                     Z-ADDPFQREL    CLAY4
+     C                     EXCPTE00014
+    C                     ENDSR
+     *****************************************************************
+     *  AGCO 4051
+     *****************************************************************
+    C           S10015    BEGSR
+     C                     Z-ADDPFCONF    AGCO1
+     C                     Z-ADDPFSEQ     AGCO2
+     C                     Z-ADDPFQREL    AGCO3
+     C                     Z-ADDNOPRO     AGCO4
+     C                     EXCPTE00015
+    C                     ENDSR
+     *****************************************************************
+     *  DE RUY 4110
+     *****************************************************************
+    C           S10017    BEGSR
+     C                     MOVELINDPCL    RUY2
+     C                     MOVELINDPCL    RUY6
+     C                     MOVELPFCONF    RUYC
+     C                     MOVELPFCONF    RUYC2
+     C                     MOVELPFSEQ     RUYS
+     C                     MOVELPFSEQ     RUYS2
+     C                     EXCPTE00017
+    C                     ENDSR
+     *
+     *****************************************************************
+     *  HENNESSY 0329
+     *****************************************************************
+    C           S10018    BEGSR
+    C*                    Z-ADDGTIN02    HE02D
+     C                     MOVE '0'       EAN1
+     C                     MOVE STE       EANSOC
+     C                     MOVE USINE     EANUSI
+     C                     MOVE NOCLI     EANCLI
+     C                     MOVE NOPRO     EANPRO
+     C                     MOVE '00'      EANAUT
+     C                     CALL 'CALEAN£'
+     C                     PARM           EAN14
+     C                     MOVE EAN14     HE02D
+     C                     Z-ADDPFQREL    HE37D
+     C                     MOVELINDPCL    HE24D
+     C                     Z-ADDPFCONF    HE101D
+     C                     Z-ADDPFSEQ     HE102D
+     C                     Z-ADDPFAENT    DTA
+     C                     Z-ADDPFMENT    DTM
+     C                     Z-ADDPFJENT    DTJ
+     C                     Z-ADDDTAMJ     HE11D
+     C                     MOVELHE02D     HE02DL
+     C                     MOVELHE37D     HE37DL
+     C                     MOVELHE24D     HE24DL
+     C                     MOVELHE10D     HE10DL
+     C                     MOVELHE11D     HE11DL
+     C                     MOVELCBSSCC    HESSCC
+    C* SI CODE PRODUIT SUR 7 ON TASSE
+     C                     MOVE *BLANK    HENNOK 70
+D1  C           HE24D8    IFEQ ' '
+     C                     MOVE HENND1    HENNT1
+     C                     MOVE HENND2    HENNT2
+     C                     MOVELHENNT     HENNOK
+X1  C                     ELSE
+     C                     MOVELHENNE     HENNOK
+F1  C                     END
+     C                     MOVELHENNOK    HEGTIN
+     C                     EXCPTE00018
+    C                     ENDSR
+     *
+     *****************************************************************
+     *  EUROTAB  2821
+     *****************************************************************
+    C           S10021    BEGSR
+     C                     MOVE NOPRO     EURPRO
+     C                     Z-ADDCODBA     EURPAL
+     C                     Z-ADDPFQREL    EURQTP
+     C                     EXCPTE00021
+    C                     ENDSR
+     *
+     *****************************************************************
+     *  LOREAL   65 8527 8849
+     *****************************************************************
+    C           S10023    BEGSR
+     C                     MOVELCLIREF    BRIREF
+     C                     Z-ADDPFCONF    BRINCO
+     C                     Z-ADDPFSEQ     BRISEQ
+     C                     Z-ADDPFQREL    BRIQTE
+     C                     MOVELSSCC0     BRISSC
+     C                     EXCPTE00023
+    C                     ENDSR
+     *****************************************************************
+     *  SYNUTRA  4572
+     *****************************************************************
+    C           S10024    BEGSR
+     C                     Z-ADDPFCONF    SY102
+     C                     Z-ADDPFSEQ     SY103
+     C                     Z-ADDCODBA2    SY200
+     C                     Z-ADDPFQREL    SY500
+D1  C           NOCLI     IFEQ 4684
+     C                     MOVEL'000'     SY300
+     C                     MOVELINDPCL    SY304   6
+     C                     MOVE SY304     SY300
+F1  C                     END
+D1  C           NOCLI     IFEQ 4691
+     C                     MOVEL'00'      SY300
+     C                     MOVELINDPCL    SY303   7
+     C                     MOVE SY303     SY300
+F1  C                     END
+     * 6 OU 3 MOIS DE DLUO EN BAS DE PAGE
+     C                     Z-ADD6         DLUBP   10
+D1  C           NOCLI     IFEQ 4684
+    C           NOCLI     OREQ 4691
+    C           NOCLI     OREQ 4572
+     C                     Z-ADD3         DLUBP   10
+F1  C                     END
+     C                     EXCPTE00024
+    C                     ENDSR
+     *****************************************************************
+     *  PIERRE SCHMIDT 2194
+     *****************************************************************
+    C           S10025    BEGSR
+     C                     MOVE '0'       EAN1
+     C                     MOVE STE       EANSOC
+     C                     MOVE USINE     EANUSI
+     C                     MOVE NOCLI     EANCLI
+     C                     MOVE NOPRO     EANPRO
+     C                     MOVE '00'      EANAUT
+     C                     CALL 'CALEAN£'
+     C                     PARM           EAN14
+     C                     MOVE EAN14     SCH02C
+     C                     MOVE EAN14     SCH02D
+     C                     MOVE PFQREL    SCH37C
+     C                     MOVE PFQREL    SCH37D
+     C                     MOVELPFCONF    SCH10C
+     C                     MOVE PFSEQ     SCH10C
+     C                     MOVELPFCONF    SCH10D
+     C                     MOVE PFSEQ     SCH10D
+     C                     EXCPTE00025
+    C                     ENDSR
+     *****************************************************************
+     *  SIMAH    2266
+     *****************************************************************
+    C           S10026    BEGSR
+     C                     MOVE *BLANKS   SIMAB
+     C                     MOVELCODPRO    SIMAA
+     C                     Z-ADDPFCONF    SIMAN
+     C                     Z-ADDPFSEQ     SIMAS
+D1  C           SIMA8     IFEQ ' '
+     C                     MOVE *BLANKS   SIMAB2
+     C                     MOVELCODPRO    SIMAA2
+F1  C                     END
+     C                     EXCPTE00026
+    C                     ENDSR
+     *****************************************************************
+     *  HAGER    657
+     *****************************************************************
+    C           S10027    BEGSR
+     C                     MOVE NOCLI     HAGCLI
+     C                     MOVE '-'       HAGSP1
+     C                     MOVE NOPRO     HAGPRO
+     C                     MOVE '-'       HAGSP2
+     C                     MOVELPFCONF    LOT     7
+     C                     MOVE PFSEQ     LOT
+     C                     MOVELLOT       HAGLOT
+     C                     MOVE '-'       HAGSP3
+     C                     Z-ADDPFQREL    HAGQTE
+     C                     MOVE '-'       HAGSP4
+     C                     Z-ADDCODBA2    HAGPAL
+     C                     EXCPTE00027
+    C                     ENDSR
+     *****************************************************************
+     *  LINDT
+     *****************************************************************
+    C           S10028    BEGSR
+     *CB1
+     C                     MOVELREFCLI    LT991
+     C                     MOVELREFCLI    LTL991
+     C                     MOVE PFAENT    LT11A
+     C                     MOVE PFMENT    LT11M
+     C                     MOVE PFJENT    LT11J
+     C                     MOVE PFAENT    LTL11A
+     C                     MOVE PFMENT    LTL11M
+     C                     MOVE PFJENT    LTL11J
+     C                     Z-ADDPFQREL    LT371
+     C                     Z-ADDPFQREL    LTL371
+     *CB1
+     C                     MOVE SSCC0     LT001
+     C                     MOVE SSCC0     LTL001
+     C                     Z-ADDPFCONF    LT10C
+     C                     Z-ADDPFSEQ     LT10S
+     C                     Z-ADDPFCONF    LTL10C
+     C                     Z-ADDPFSEQ     LTL10S
+     C                     EXCPTE00028
+    C                     ENDSR
+     *****************************************************************
+     *  MOET
+     *****************************************************************
+    C           S10029    BEGSR
+     *CALCUL DATE FAB +6M
+     C                     Z-ADDPFJENT    CALJJ
+     C                     Z-ADDPFMENT    CALMM
+     C                     Z-ADDPFAENT    CALSA
+     C                     MOVELCALDAT    EDATE
+     C                     Z-ADD6         EDURE
+     C                     MOVE 'M'       ETYPE
+     C                     CALL 'DATCAL£'
+     C                     PARM           DATPAR
+     C                     MOVELSDATE     CALDAT
+     C                     Z-ADDCALJJ     F6MJJ
+     C                     Z-ADDCALMM     F6MMM
+     C                     Z-ADDCALSA     F6MSA
+     * POUR CODE A BARRE
+     C                     Z-ADDCALSA     F66AA
+     C                     Z-ADDCALMM     F66MM
+     C                     Z-ADDCALJJ     F66JJ
+     C                     EXCPTE00029
+    C                     ENDSR
+     *****************************************************************
+     *  CAUDALIE
+     *****************************************************************
+    C           S10030    BEGSR
+     *DM
+     C                     MOVE SSCC0     COSSCC           00
+D1  C           CODEAN    IFNE *ZEROS
+     C                     MOVE '3'       CO02D            02
+     C                     MOVELCODEAN    COEAN            02
+     C                     MOVE CODEAN    CO02C            02
+     * CALCUL DE CLÉ: UNITÉ DE 1ER + (13EME *7)
+     C                     MOVE CO02C     WCO02C  20
+     C                     MULT 7         WCO02C
+     C                     MOVE COEAN1    WEAN1   10
+     C                     ADD  WEAN1     WCO02C
+     C                     MOVE WCO02C    CO02C
+X1  C                     ELSE
+     C                     MOVE *BLANK    CO02
+     C                     MOVE *BLANK    CO02D
+     C                     MOVE *BLANK    CO02C
+F1  C                     END
+     C                     MOVE PFAENT    CO11A            11
+     C                     MOVE PFMENT    CO11M            11
+     C                     MOVE PFJENT    CO11J            11
+     C                     MOVELCODPRO    COREFC           240
+     C                     Z-ADDPFQREL    COQTEP           37
+     C                     Z-ADDPFNBT1    COQTEC           99
+D1  C           CLIREF    IFNE *BLANK
+     C                     MOVE CLIREF    COCLIR           98
+X1  C                     ELSE
+     C                     MOVE *BLANK    COCLIR
+     C                     MOVE *BLANK    CO98
+     C                     MOVE *BLANK    COX1D3
+F1  C                     END
+     *DÉTAIL DE LA QTE PALETTE EN CARTON
+     C                     MOVE PFNCO1    COQTB1
+     C                     MOVE PFNBT1    COQTU1
+D1  C           PFNCO2    IFNE *ZEROS
+     C                     MOVE PFNCO2    COQTB2
+     C                     MOVE PFNBT2    COQTU2
+X1  C                     ELSE
+     C                     MOVE *BLANK    COET
+     C                     MOVE *BLANK    COQTB2
+     C                     MOVE *BLANK    COQTU2
+F1  C                     END
+     C                     EXCPTE00030
+    C                     ENDSR
+     *****************************************************************
+     *  YANBAL
+     *****************************************************************
+    C           S10031    BEGSR
+     C                     MOVELINDPCL    YA021
+     C                     MOVELINDPCL    YAL021
+     C                     Z-ADDPFCONF    YA10C
+     C                     Z-ADDPFSEQ     YA10S
+     C                     Z-ADDPFCONF    YAL10C
+     C                     Z-ADDPFSEQ     YAL10S
+     C                     EXCPTE00031
+    C                     ENDSR
+     *****************************************************************
+     *  8928 PF EN NEUTRE
+     *****************************************************************
+    C           S10032    BEGSR
+     C                     MOVELCODBA     RFBFOU
+     C           KPAL42    CHAINMVTPAL42             66
+     C                     MOVELUSINE     NEUT
+     C                     MOVE '1'       NEUT
+     * CODE BARRE ECHANGEUR
+     C                     Z-ADDPFCONF    ECCONF
+     C                     Z-ADDPFSEQ     ECSEQ
+     C                     Z-ADDNOCLI     ECCLI
+     C                     Z-ADDNOPRO     ECPRO
+     * DATAMATRIX  SI 892
+     C                     MOVE '0'       *IN39
+     C                     MOVE *BLANKS   DMTY3
+D1  C           USINE     IFEQ 3
+    C           ADGRA1    ANDEQ892
+     C                     MOVE '1'       *IN39
+     C                     Z-ADDUSINE     T3USI
+     C                     Z-ADD1         T3ENC
+     C                     Z-ADDNOBOB     T3PAL
+     C                     Z-ADDPFAENT    T3SA
+     C                     Z-ADDPFMENT    T3MM
+     C                     Z-ADDPFJENT    T3JJ
+     C                     Z-ADDPFHENT    T3HM
+     C                     Z-ADDNOCLI     T3CLI
+     C                     MOVE ABRCLI    T3ABRC
+     C                     Z-ADDNOPRO     T3PRO
+     C                     Z-ADDPFCONF    T3CONF
+     C                     Z-ADDPFSEQ     T3SEQ
+     C                     Z-ADDPFQREL    T3QTE
+    C* EPAISSEUR MOYENNE * NB FE  CANNELURE: 1=E 2=B 4=N 6=F
+     C                     Z-ADD1         W3EPAI  42
+     C                     READ PRMOND                   99
+D2  C           ONDUL     IFEQ 1
+     C                     Z-ADDEPAM1     W3EPAI
+F2  C                     ENDIF
+D2  C           ONDUL     IFEQ 2
+     C                     Z-ADDEPAM2     W3EPAI
+F2  C                     ENDIF
+D2  C           ONDUL     IFEQ 4
+     C                     Z-ADDEPAM4     W3EPAI
+F2  C                     ENDIF
+D2  C           ONDUL     IFEQ 6
+     C                     Z-ADDEPAM6     W3EPAI
+F2  C                     ENDIF
+     C           W3EPAI    MULT PFQREL    T3EPAI
+     *
+     C                     Z-ADDDECL      T3ONDL
+     C                     Z-ADDDECH      T3ONDH
+     C           LMINI     MULT 10        NBFEL3  40
+D2  C           ONDL      IFNE 0
+     C           NBFEL3    DIV  ONDL      T3NFLZ
+X2  C                     ELSE
+     C                     Z-ADD1         T3NFLZ
+F2  C                     ENDIF
+     C                     Z-ADD1         T3DEST
+     C                     MOVE 'P0'      T3TYPP
+     C                     Z-ADD107       T3PLON
+     C                     Z-ADD080       T3PLAR
+     *
+     C                     Z-ADD3         FRUSI
+     C                     MOVE '2'       FRSECT
+     C                     MOVE '1'       FRSSEC
+     C                     MOVE '14'      FRNOMA
+     C                     Z-ADDNOFOR     FRNOFO
+     C           KFORON    CHAINFOROND               99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVELSENLIB    SENRED  4
+D3  C           SENRED    IFEQ 'PARA'
+     C                     Z-ADD1         T3SCAN
+X3  C                     ELSE
+     C                     Z-ADD0         T3SCAN
+F3  C                     ENDIF
+X2  C                     ELSE
+     C                     Z-ADD0         T3SCAN
+F2  C                     ENDIF
+     C                     Z-ADD3         FTUSI
+     C                     MOVE '2'       FTSECT
+     C                     MOVE '1'       FTSSEC
+     C                     MOVE '14'      FTNOMA
+     C                     Z-ADDNOCLI     FTNOCL
+     C                     Z-ADDNOPRO     FTNOPR
+     C           KFTOND    CHAINFTOND                99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE MARKC1    T3REPE
+     C                     MOVE SCANS     T3PIMP
+X2  C                     ELSE
+     C                     Z-ADD0         T3REPE
+     C                     Z-ADD0         T3PIMP
+F2  C                     ENDIF
+     * INITIALISATION A 1+00 DANS UN 1ER TEMPS
+     C                     MOVE 'DE'      CODINT
+     C           KFORIN    CHAINFORINTL3             99
+     C                     Z-ADD1         T3PGM
+     C*                    MOVE '+'       T3SENS
+     C*                    Z-ADD00        T3VALE
+     C  N99                MOVELOBSINT    T3SEVA
+     C   99                MOVE '+00'     T3SEVA
+F1  C                     ENDIF
+      *
+     C                     EXCPTE00032
+    C                     ENDSR
+     *****************************************************************
+     *  COTY     0668
+     *****************************************************************
+    C           S10033    BEGSR
+     C                     MOVELINDPCL    CY91D
+     C                     Z-ADDPFCONF    CY101D
+     C                     Z-ADDPFSEQ     CY102D
+     C                     Z-ADDPFQREL    CY37D
+     *
+     C                     MOVELCY91D     CY91DL
+     C                     MOVELCY101D    CY10DL
+     C                     MOVELCY102D    CY10D2
+     C                     MOVELCY37D     CY37DL
+     *
+     C                     EXCPTE00033
+    C                     ENDSR
+     *****************************************************************
+     *  REMY MARTIN 711
+     *****************************************************************
+    C           S10034    BEGSR
+     * ESTMATION POIDS  ==> CALPDS£2
+     C                     Z-ADD0         DSPDS
+     C                     Z-ADDSTE       STEPDS
+     C                     Z-ADDNOCLI     NOCPDS
+     C                     Z-ADDNOPRO     NOPPDS
+     C                     Z-ADDPFQREL    QTEPDS
+     C                     Z-ADD0         PDSPDF
+     C                     CALL 'CALPDS£2'
+     C                     PARM           DSPDS
+     *CALCUL DU DATAMATRIX
+    C*                    MOVE PFAENT    RM11A            11
+    C*                    MOVE PFMENT    RM11M            11
+    C*                    MOVE PFJENT    RM11J            11
+     C                     MOVELCODPRO    RMREFC           241
+     C                     Z-ADDPFQREL    RMQTEP           37
+     C                     Z-ADDPFCONF    RM101D           10
+     C                     Z-ADDPFSEQ     RM102D           10
+     C                     MOVE SSCC0     RMSSCC           00
+     C                     EXCPTE00034
+    C                     ENDSR
+     *****************************************************************
+     *  MHCS
+     *****************************************************************
+    C           S10036    BEGSR
+     * 1ER CODE A BARRE IDEM 10001 (02 11 37 10)
+     C                     EXSR S10001
+     * 2EME CODE A BARRE IDEM 10029 (DLUO)
+     C                     EXSR S10029
+     * 3EME CODE A BARRE SPECIFIQUE MHCS (400 241)
+     C                     MOVELCLIREF    MH400D
+     C                     MOVELCLIREF    MH4002
+     C                     MOVELCODP07    MH241D
+     C                     MOVELCODP07    MH2412
+     C                     EXCPTE00036
+    C                     ENDSR
+     *****************************************************************
+     *  SEB
+     *****************************************************************
+    C           S10038    BEGSR
+     * DATAMATRIX
+     *
+     C                     MOVE SSCC0     SB00D
+     C                     MOVELCODPRO    SB240D
+     C                     Z-ADDPFQREL    SB37D
+     C                     Z-ADD*ZEROS    SB100D
+     C                     Z-ADDPFCONF    SB101D
+     C                     Z-ADDPFSEQ     SB102D
+     * ESTMATION POIDS  ==> CALPDS£2
+     C                     Z-ADD0         DSPDS
+     C                     Z-ADDSTE       STEPDS
+     C                     Z-ADDNOCLI     NOCPDS
+     C                     Z-ADDNOPRO     NOPPDS
+     C                     Z-ADDPFQREL    QTEPDS
+     C                     Z-ADD0         PDSPDF
+     C                     CALL 'CALPDS£2'
+     C                     PARM           DSPDS
+     *
+     C                     EXCPTE00038
+    C                     ENDSR
+     *****************************************************************
+     *  COURVOISIER 2349
+     *****************************************************************
+    C           S10042    BEGSR
+     C                     MOVELINDPCL    COU24C
+     C                     Z-ADDPFCONF    COU101
+     C                     Z-ADDPFSEQ     COU102
+     C                     Z-ADDPFQREL    COU371
+     C                     Z-ADDPFAENT    DTA
+     C                     Z-ADDPFMENT    DTM
+     C                     Z-ADDPFJENT    DTJ
+     C                     Z-ADDDTAMJ     COU111
+     C                     MOVELSSCC0     COU001
+     *
+     C                     MOVELCOU24C    COL24C
+     C                     Z-ADDCOU101    COL101
+     C                     Z-ADDCOU102    COL102
+     C                     Z-ADDCOU371    COL371
+     C                     Z-ADDCOU111    COL111
+     C                     MOVELCOU001    COL001
+     C                     EXCPTE00042
+    C                     ENDSR
+     *****************************************************************
+     *  GUERLAIN 5382
+     *****************************************************************
+    C           S10043    BEGSR
+     C                     Z-ADDNBCAIP    GUENBC  20
+     C                     Z-ADDNBDECP    GUEQTT  50
+     C           GUEQTT    DIV  GUENBC    GUEQTC  40
+     C                     MOVE ' X '     GUEMU   3
+     C                     MOVE ' = '     GUEEQ   3
+     C                     EXCPTE00043
+    C                     ENDSR
+     *****************************************************************
+     *  KONINGS 4822
+     *****************************************************************
+    C           S10044    BEGSR
+     C                     MOVELINDPCL    KO241A
+     C                     Z-ADDPFAENT    KO11A
+     C                     Z-ADDPFMENT    KO11M
+     C                     Z-ADDPFJENT    KO11J
+     C                     Z-ADDPFQREL    KO37A
+     C                     Z-ADDPFCONF    KO10A
+     C                     Z-ADDPFSEQ     KO10C
+     C                     MOVELSSCC0     KO00A
+     *
+     C                     EXCPTE00044
+    C                     ENDSR
+     *****************************************************************
+     *  MONDELEZ    1847
+     *****************************************************************
+    C           S10045    BEGSR
+     *               CAB1
+     C                     Z-ADDPFAENT    MD15A
+     C                     ADD  2         MD15A            FAB + 2ANS
+     C                     Z-ADDPFMENT    MD15M
+     C                     Z-ADDPFJENT    MD15J
+     C                     Z-ADDPFCONF    MD101
+     C                     Z-ADDPFSEQ     MD102
+     C                     MOVELINDPCL    MD2401
+     *               CAB2
+     C                     MOVELSSCC0     MD001
+     C                     Z-ADDGTIN02    MD021
+     C                     Z-ADDPFQREL    MD371
+     *          LIB CAB 1
+     C                     Z-ADDMD15A     MDL12
+     C                     Z-ADDMD15M     MDL13
+     C                     Z-ADDMD15J     MDL14
+     C                     Z-ADDMD101     MDL16
+     C                     Z-ADDMD102     MDL17
+     C                     MOVELMD2401    MDL19
+     *          LIB CAB 2
+     C                     MOVELMD001     MDL22
+     C                     Z-ADDMD021     MDL24
+     C                     Z-ADDMD371     MDL26
+     *          DM
+     C                     Z-ADDMD15A     MDDM02
+     C                     Z-ADDMD15M     MDDM03
+     C                     Z-ADDMD15J     MDDM04
+     C                     Z-ADDMD101     MDDM06
+     C                     Z-ADDMD102     MDDM07
+     C                     MOVELMD2401    MDDM10
+     C                     MOVELMD001     MDDM13
+     C                     Z-ADDMD021     MDDM15
+     C                     Z-ADDMD371     MDDM17
+     *
+     C                     EXCPTE00045
+    C                     ENDSR
+     *****************************************************************
+     * 990 ET 315
+     *****************************************************************
+    C           S10046    BEGSR
+     C                     SETOF                     03
+     C                     Z-ADDPFCONF    M4101
+     C                     Z-ADDPFSEQ     M4102
+     C                     Z-ADDPFCONF    MB4101
+     C                     Z-ADDPFSEQ     MB4102
+     C                     Z-ADDPFAENT    M311A
+     C                     Z-ADDPFMENT    M311M
+     C                     Z-ADDPFJENT    M311J
+     C                     Z-ADDPFAENT    MB311A
+     C                     Z-ADDPFMENT    MB311M
+     C                     Z-ADDPFJENT    MB311J
+     C                     MOVELINDPCL    ITEM    7
+     C                     MOVELITEM      M52401
+     C                     MOVELITEM      MB5241
+     C                     MOVELSSCC0     M5001
+     C                     MOVELSSCC0     MB5001
+     C                     Z-ADDPFQREL    M3371
+     C                     Z-ADDPFQREL    MB3371
+D0  C           NOCLI     IFEQ 990
+    C           NOCLI     OREQ 315
+     C                     MOVEL'15030162'M4911
+     C                     MOVEL'15030162'MB4911
+F0  C                     END
+     *
+     C                     Z-ADDM311A     M315A
+     C                     Z-ADDM311M     M315M
+     C                     Z-ADDM311J     M315J
+     C                     ADD  6         M315M
+     C           M315M     COMP 12                   61
+D0  C           *IN61     IFEQ '1'
+     C                     SUB  12        M315M
+     C                     ADD  1         M315A
+F0  C                     END
+D0  C           M315J     IFGT 28
+     C                     Z-ADD28        M315J
+F0  C                     END
+     C                     Z-ADDM315A     MB315A
+     C                     Z-ADDM315M     MB315M
+     C                     Z-ADDM315J     MB315J
+     C                     Z-ADDM315A     PFAEXP
+     C                     Z-ADDM315M     PFMEXP
+     C                     Z-ADDM315J     PFJEXP
+     C                     EXCPTE00046
+    C                     ENDSR
+     *****************************************************************
+     *  GLENMORANGIE
+     *****************************************************************
+    C           S10047    BEGSR
+     C                     MOVELINDPCL    TX2411  7
+     C                     Z-ADDPFQREL    TX371   50
+     C                     EXCPTE00047
+    C                     ENDSR
+     *
+     *
+     OETAT98  E  1 1           SORTI
+     O                                      'ETIQSTD'
+     O                                      '#'
+     O                 03                15 '+ EMBAL'
+     O                         LIBSUP    30
+     O        E  1             SORTI
+     O                                      '#'
+     O                N22      LIBFO1
+     O                                      '# LIB STE'
+     O        E  1             SORTI
+     O                                      '#'
+     O                N22      USIDEP
+     O                                      '# LIB USI'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         PFCONF
+     O                                      ' '
+     O                                      '/'
+     O                         PFSEQ
+     O                                      ' '
+     O                                      '# CONF/SEQ'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         NOCLI
+     O                                      '#NOCLI#'
+     O                         NOPRO
+     O                                      '#NOPRO#'
+     O                         LBFOOD
+     O                                      '#LBFOOD#'
+     O                         TS1
+     O                                      '#TS1'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         CLIREF
+     O                                      '# CLIREF'
+     O                                      '#'
+     O                         CLIFOU
+     O                                      '# CLIFOU'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         ABRCLI
+     O                                      '# LIB CLI ABREGE'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         CODPRO
+     O                                      '# CODE PRODUIT'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         PFQREL4
+     O                                      '# QTE #'
+     O                         FAOPAL4
+     O                                      '# NUM PALETTE'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         DATENT       '  /  /    '
+     O                                      '# DATE #'
+     O                         DTBENT
+     O                                      '# DATE BARRE'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         RTES
+     O                         CODBA2
+     O                                      '# CODBA2 #'
+     O                         CODBA3
+     O                                      '# CODBA3'
+     O        E  1             SORTI
+     O                                      '#'
+     O                         LIGCO
+     O                                      '# LIGCO #'
+     O                         ZOK
+     O                                      '# ZOK'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         PLALON4
+     O                                      ' X '
+     O                         PLALAR4
+     O                                      '  '
+     O                         PLATYP
+     O                                      '# PLALON,PLALAR,PLATYP'
+     O                                      '#'
+     O                         EMBLO 4
+     O                                      ' X '
+     O                         EMBLA 4
+     O                                      '  '
+     O                         EMBTYP
+     O                                      ' '
+     O                         EMBCON
+     O                                      '# EMBLO,LA,TYP,CON'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         BANDO
+     O                                      '# BANDO'
+     O                                      '#'
+     O                         BANDN
+     O                                      '# BANDN'
+     O                                      '#'
+     O                         BANDP
+     O                                      '# BANDP'
+     O                                      '#'
+     O                         LIEN  4
+     O                                      '# LIEN'
+     O                                      '#'
+     O                         EMBHT 4
+     O                                      '# EMBHT'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         ZQUAL
+     O                                      '# ZQUAL NE'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         SSCC
+     O                                      '# SSCC'
+     O        E  1             SORTI
+     O                                      '#'
+     O                 88      GTINL
+     O                                      '# GTINL'
+     O        E  1             SORTI
+     O                                      '#'
+     O                 88      GTIN
+     O                                      '# GTIN'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         CBSSCC
+     O                                      '# CBSSCC'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         FSC
+     O                                      '# FSC'
+     *
+     O        E  1             SORTI
+     O                                      '#'
+     O                         PLALIB
+     O                                      '# PLALIB'
+     * S00001
+     O        E  1             E00001
+     O                                      '#'
+     O                         GTINL
+     O                                      '# GTINL'
+     O        E  1             E00001
+     O                                      '#'
+     O                         GTIN
+     O                                      '# GTIN'
+     * S00002
+     O        E  1             E00002
+     O                                      '#'
+     O                         BCOD1
+     O                                      '# BCOD1'
+     *
+     O        E  1             E00002
+     O                                      '#'
+     O                         BCOD1L
+     O                                      '#BCOD1L'
+     *
+     O        E  1             E00002
+     O                                      '#'
+     O                         BCOD2
+     O                                      '# BCOD2'
+     *
+     O        E  1             E00002
+     O                                      '#'
+     O                         BCOD2L
+     O                                      '#BCOD2L'
+     * S00004
+     O        E  1             E00004
+     O                                      '#'
+     O                         ALOD1
+     O                                      '# ALOD1'
+     *
+     O        E  1             E00004
+     O                                      '#'
+     O                         ALOD1L
+     O                                      '#ALOD1L'
+     * S00005
+     O        E  1             E00005
+     O                                      '#'
+     O                         CHIFR1
+     O                         CODEAN
+     O                                      '#CODEAN'
+     * S00006
+     O        E  1             E00006
+     O                                      '#'
+     O                         RGL,1 4
+     O                                      ':'
+     O                         RFP,1
+     O                                      '#01'
+     O                                      '#'
+     O                         RGL,2 4
+     O                                      ':'
+     O                         RFP,2
+     O                                      '#02'
+     O                                      '#'
+     O                         RGL,3 4
+     O                                      ':'
+     O                         RFP,3
+     O                                      '#03'
+     O        E  1             E00006
+     O                                      '#'
+     O                         RGL,4 4
+     O                                      ':'
+     O                         RFP,4
+     O                                      '#04'
+     O                                      '#'
+     O                         RGL,5 4
+     O                                      ':'
+     O                         RFP,5
+     O                                      '#05'
+     O                                      '#'
+     O                         RGL,6 4
+     O                                      ':'
+     O                         RFP,6
+     O                                      '#06'
+     O        E  1             E00006
+     O                                      '#'
+     O                         RGL,7 4
+     O                                      ':'
+     O                         RFP,7
+     O                                      '#07'
+     O                                      '#'
+     O                         RGL,8 4
+     O                                      ':'
+     O                         RFP,8
+     O                                      '#08'
+     O                                      '#'
+     O                         RGL,9 4
+     O                                      ':'
+     O                         RFP,9
+     O                                      '#09'
+     O        E  1             E00006
+     O                                      '#'
+     O                         RGL,104
+     O                                      ':'
+     O                         RFP,10
+     O                                      '#10'
+     O                                      '#'
+     O                         RGL,114
+     O                                      ':'
+     O                         RFP,11
+     O                                      '#11'
+     O                                      '#'
+     O                         RGL,124
+     O                                      ':'
+     O                         RFP,12
+     O                                      '#12'
+     O        E  1             E00006
+     O                                      '#'
+     O                         RGL,134
+     O                                      ':'
+     O                         RFP,13
+     O                                      '#13'
+     O                                      '#'
+     O                         RGL,144
+     O                                      ':'
+     O                         RFP,14
+     O                                      '#14'
+     O                                      '#'
+     O                         RGL,154
+     O                                      ':'
+     O                         RFP,15
+     O                                      '#15'
+     O        E  1             E00006
+     O                                      '#'
+     O                         RGL,164
+     O                                      ':'
+     O                         RFP,16
+     O                                      '#16'
+     O                                      '#'
+     O                         RGL,174
+     O                                      ':'
+     O                         RFP,17
+     O                                      '#17'
+     O                                      '#'
+     O                         RGL,184
+     O                                      ':'
+     O                         RFP,18
+     O                                      '#18'
+     * S00007
+     O        E  1             E00007
+     O                                      '#'
+     O                         PDSPDF2
+     O                                      '#PDSPDF KG'
+     * S00009
+     O        E  1             E00009
+     O                                      '#'
+     O                         MARSB1
+     O                                      '# MARSB1'
+     *
+     O        E  1             E00009
+     O                                      '#'
+     O                         MARSL1
+     O                                      '#MARSL1'
+     O        E  1             E00009
+     O                                      '#'
+     O                         MARSB2
+     O                                      '# MARSB2'
+     *
+     O        E  1             E00009
+     O                                      '#'
+     O                         MARSL2
+     O                                      '#MARSL2'
+     O        E  1             E00009
+     O                                      '#'
+     O                         COD7
+     O                                      '#CODE 7'
+     *
+     * S00011
+     O        E  1             E00011
+     O                                      '#'
+     O                         VCOD1
+     O                                      '# VCOD1'
+     *
+     * S00012
+     O        E  1             E00012
+     O                                      '#'
+     O                         GNINL
+     O                                      '# GNINL'
+     O        E  1             E00012
+     O                                      '#'
+     O                         GNIN
+     O                                      '# GNIN'
+     O        E  1             E00012
+     O                                      '#'
+     O                         GNSSL
+     O                                      '# GNSSL'
+     O        E  1             E00012
+     O                                      '#'
+     O                         GNSS
+     O                                      '# GNSS'
+     O        E  1             E00012
+     O                                      '#'
+     O                         GNUBD
+     O                                      '# GNUBD'
+     O                         GAUBD
+     O                                      '# GAUBD'
+     * S00014
+     O        E  1             E00014
+     O                                      '#'
+     O                         CLAY
+     O                                      '#CLAY'
+     O        E  1             E00014
+     O                                      '#'
+     O                         BLOC1
+     O                                      '#BLOC1'
+     * S00015
+     O        E  1             E00015
+     O                                      '#'
+     O                         AGCO
+     O                                      '#RUY'
+     * S00017
+     O        E  1             E00017
+     O                                      '#'
+     O                         RUYL1
+     O                                      '# RUYL1'
+     *
+     O        E  1             E00017
+     O                                      '#'
+     O                         RUYCB1
+     O                                      '# RUYCB1'
+     *
+     * S00018
+     O        E  1             E00018
+     O                                      '#'
+     O                         HENNEL
+     O                                      '# HENNEL'
+     O        E  1             E00018
+     O                                      '#'
+     O                         HENNOK
+     O                                      '# HENNE'
+     O        E  1             E00018
+     O                                      '#'
+     O                         HENNDM
+     O                                      '# HENNDM'
+     *
+     * S00021
+     O        E  1             E00021
+     O                                      '#'
+     O                         CABEUR
+     O                                      '# CABEUR'
+     * S00023
+     O        E  1             E00023
+     O                                      '#'
+     O                         CHIFR1
+     O                         CODEAN
+     O                                      '#CODEAN'
+     O                         BRI
+     O                                      '#BRIDM'
+     O        E  1             E00023
+     O                                      '#'
+     O                         DLOREA
+     O                                      '#DESIG'
+     * S00024
+     O        E  1             E00024
+     O                                      '#'
+     O                         SYNUTR
+     O                                      '#SYNUCB#'
+     O                         DLUBP
+     O                                      '#DLUBP'
+     * S00025
+     O        E  1             E00025
+     O                                      '#'
+     O                         SCHMI
+     O                                      '#SCHMIDT CB'
+     O        E  1             E00025
+     O                                      '#'
+     O                         SCHMIL
+     O                                      '#SCHMIDT LIB'
+     * S00026
+     O        E  1             E00026
+     O                                      '#'
+     O                         SIMAH
+     O                                      '#SIMAH'
+     * S00027
+     O        E  1             E00027
+     O                                      '#'
+     O                         HAGER
+     O                                      '#HAGER'
+     * S00028
+     O        E  1             E00028
+     O                                      '#'
+     O                         LINCB1
+     O                                      '#'
+     O                         LINLB1
+     O                                      '#LINDT CB1'
+     O        E  1             E00028
+     O                                      '#'
+     O                         LINCB2
+     O                                      '#'
+     O                         LINLB2
+     O                                      '#LINDT CB2#PCE#'
+     * S00029
+     O        E  1             E00029
+     O                                      '# DLU: '
+     O                         DATF6M       '  /  /    '
+     O                                      '# DATE FAB 6M#'
+     O                         DAT66M
+     * S00030
+     O        E  1             E00030
+     O                                      '#'
+     O                         CAUDDM
+     O                                      '#CAUDALIE DM'
+     O        E  1             E00030
+     O                                      '#'
+     O                         CAUDQT
+     O                                      '#CAUDALIE QT#'
+     O                         COQTB14
+     O                                      '#'
+     O                         COQTU14
+     O                                      '#'
+     O                         COQTB24
+     O                                      '#'
+     O                         COQTU24
+     O                                      '#FIN DET#'
+     * S00031
+     O        E  1             E00031
+     O                                      '#'
+     O                         YANBAL
+     O                                      '#'
+     O                         YANBA2
+     O                                      '#YANBAL CB#'
+     *
+     * S00032
+     O        E  1             E00032
+     O                                      '#'
+     O                         NEBOB
+     O                                      '#BOB NEUTRE#'
+     O                         PAPI
+     O                                      ' '
+     O                         GRAMM
+     O                                      ' '
+     O                         REFOUR
+     O                                      ' '
+     O                         GRAREL
+     O                                      '#QUAL NEUTRE'
+     O        E  1             E00032
+     O                                      '#'
+     O                         ECHANG
+     O                                      '#ECHANGEUR#'
+     O        E  1     39      E00032
+     O                                      '#'
+     O                         DMTY3
+     O                                      '#DM TY3#'
+     *
+     * S00033
+     O        E  1             E00033
+     O                                      '#'
+     O                         COTY
+     O                                      '#COTY DM/CAB#'
+     O        E  1             E00033
+     O                                      '#'
+     O                         COTYL
+     O                                      '#COTY LIBELLE#'
+     * S00034
+     O        E  1             E00034
+     O                                      '#'
+     O                         PDSPDF2
+     O                                      '#PDSPDF'
+     O        E  1             E00034
+     O                                      '#'
+     O                         REMYDM
+     O                                      '#RÉMY MARTIN DM'
+     * S00036
+     O        E  1             E00036
+     O                                      '#'
+     O                         MHCSS2
+     O                                      '# MHCS2'
+     O                                      '#'
+     O                         MHCSL2
+     O                                      '# MHCSL2'
+     O                                      '#'
+     * S00038
+     O        E  1             E00038
+     O                                      '#'
+     O                         SEBDM
+     O                                      '# SEBDM #'
+     O        E  1             E00038
+     O                                      '#'
+     O                         PDSPDF2
+     O                                      ' KG #PDSPDF# '
+     O                         WGERBA
+     O                                      '#GERBABLE'
+     * S00042
+     O        E  1             E00042
+     O                                      '#'
+     O                         COUDM
+     O                                      '# COUDM'
+     O        E  1             E00042
+     O                                      '#'
+     O                         COLDM
+     O                                      '# COLDM'
+     O        E  1             E00042
+     O                                      '#'
+     O                         BLOC1
+     O                                      '# BLOC1'
+     * S00043
+     O        E  1             E00043
+     O                                      '#'
+     O                         GUENBC4
+     O                         GUEMU
+     O                         GUEQTC4
+     O                         GUEEQ
+     O                         GUEQTT4
+     O                                      '# DÉTAIL QTE'
+     * S00044
+     O        E  1             E00044
+     O                                      '#'
+     O                         KONDM
+     O                                      '# KONDM'
+     O        E  1             E00044
+     O                                      '#'
+     O                         BLOC1
+     O                                      '#BLOC1'
+     * S00045
+     O        E  1             E00045
+     O                                      '#'
+     O                         MONDE1
+     O                                      '# MONDE1'
+     O        E  1             E00045
+     O                                      '#'
+     O                         MONDL1
+     O                                      '# MONDL1'
+     O        E  1             E00045
+     O                                      '#'
+     O                         MONDE2
+     O                                      '# MONDE2'
+     O        E  1             E00045
+     O                                      '#'
+     O                         MONDL2
+     O                                      '# MONDL2'
+     O        E  1             E00045
+     O                                      '#'
+     O                         MONDDM
+     O                                      '# MONDDM'
+     * S00046
+     O        E  1             E00046
+     O                                      '#'
+     O                         MARSB3
+     O                                      '# MARSB3'
+     O        E  1             E00046
+     O                                      '#'
+     O                         MARSL3
+     O                                      '# MARSL3'
+     *
+     O        E  1             E00046
+     O                                      '#'
+     O                         MARSB4
+     O                                      '# MARSB4'
+     O        E  1             E00046
+     O                                      '#'
+     O                         MARSL4
+     O                                      '# MARSL4'
+     *
+     O        E  1             E00046
+     O                                      '#'
+     O                         MARSB5
+     O                                      '# MARSB5'
+     O        E  1             E00046
+     O                                      '#'
+     O                         MARSL5
+     O                                      '# MARSL5'
+     O        E  1             E00046
+     O                                      '#'
+     O                         BLOC1
+     O                                      '# BLOC1'
+     O        E  1             E00046
+     O                                      '#'
+     O                         DATEXP       '  /  /    '
+     O                                      '#DATE D EXPIRATION'
+     *
+     * S00047
+     O        E  1             E00047
+     O                                      '#'
+     O                         TX2411
+     O                                      '# TEXTIL'
+     *
+     O        E  1             E00047
+     O                                      '#'
+     O                         TX371
+     O                                      '# TEXTI2'
+     *
+**
+DS SMITH PACKAGING CONSUMER
+DS SMITH PACKAGING
+**
+
+87600 - ROCHECHOUART-FRANCE
+28310 - TOURY - FRANCE
+45170 - NEUVILLE - FRANCE
+16150 - CHABANAIS - FRANCE
+
+67640 - FEGERSHEIM - FRANCE
+**
+CONTROLE GAMME
+ NON CONFORME
+RETOUR CLIENT
+**
+ASSURANCE QUALITE
+**
+FOR FOOD CONTACT

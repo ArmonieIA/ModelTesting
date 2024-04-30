@@ -1,0 +1,3511 @@
+     ************************************************************
+     * INTERROGATION DU CARNET DE COMMANDES CLIENTS             *
+     *                                                          *
+     *          02/87 MARTINE                                   *
+     *                                                          *
+     *     ATTENTION LE STOCK NE VIENT PLUS DE PRODUI2          *
+     *                                                          *
+     * 02/2000: GESTION USINE CHABANAIS                         *
+     *                                                          *
+     ************************************************************
+     FCDEC20D CF  E                    WORKSTN
+     F                                        RECNO KSFILE BSF
+     F                                        RECNO KSFILE DSF
+     F                                        RECNO KSFILE ESF
+     F                                        RECNO KSFILE FSF
+     F                                        RECNO KSFILE GSF
+     F                                        RECNO KSFILE ISF
+     F                                        RECNO KSFILE APSF
+     F                                        RECNOJKSFILE JSF
+     F                                        RECNOKKSFILE KSF
+     F                                        RECNOLKSFILE LSF
+     F                                        RECNO KSFILE NSF
+     F                                        RECNO KSFILE OPSF
+     F                                        RECNO KSFILE QSF
+     F                                        RECNORKSFILE RSF
+     F                                        RECNOSKSFILE SSF
+     F                                        RECNOTKSFILE TSF
+     F                                        RECNO KSFILE USF
+     F                                        RECNOVKSFILE VSF
+     F                                        RECNO KSFILE WAGS
+     F                                        LIG3  KSFILE FMT3S
+     *
+     FPRODAL8 IF  E           K        DISK
+     *
+     FCLIENTS1IF  E           K        DISK
+     FCLIENTS3IF  E           K        DISK
+     F            CLIENTF1                          KRENAMECLIENTF2
+     *
+     FCARCDELAIF  E           K        DISK
+     FCARCDELBIF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDEF2
+     FCARCDELCIF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDEF3
+     FCARCDELDIF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDEF4
+     FCARCDEL1IF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDF1
+     FCARCDELRIF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDFR
+     FCARCDEZ5IF  E           K        DISK
+     F            CARCDEF1                          KRENAMECARCDFZ5
+     * UNIQUEMENT LES RE
+     FCDESL27 IF  E           K        DISK
+     F            CDESF1                            KRENAMECDESF5
+     FCDESL1  IF  E           K        DISK
+     FCDESL5  IF  E           K        DISK
+     F            CDESF1                            KRENAMECDESF2
+     FCDESL6  IF  E           K        DISK
+     F            CDESF1                            KRENAMECDESF3
+     FCDESL16 IF  E           K        DISK
+     F            CDESF1                            KRENAMECDESF4
+     FCDESLC  IF  E           K        DISK
+     FFAB10L30IF  E           K        DISK
+     *
+     FCAROBSL1IF  E           K        DISK
+     *
+     FMAJCDEL1IF  E           K        DISK
+     FMAJCDEL9IF  E           K        DISK
+     F            MAJCDEF1                          KRENAMEMAJCDEF9
+     *
+     FENCFACL5IF  E           K        DISK
+     *
+     FCDEMATL1IF  E           K        DISK
+     *
+     FPREIMP2 IF  E           K        DISK
+     *
+     FMVTIMPLFIF  E           K        DISK
+     *
+     FRESPAPL0IF  E           K        DISK
+     *
+     FRESIMPL6IF  E           K        DISK
+     *
+     FARTPAPL3IF  E           K        DISK
+     *
+     FPRLANCLKIF  E           K        DISK
+     *
+     FPRLANCX2IF  E           K        DISK
+     F            PRLANCF1                          KRENAMEPRLANCF2
+     *
+     FCALENAL4IF  E           K        DISK
+     *
+     FPARAME  IF  E           K        DISK
+     *
+     FOBSPROL1IF  E           K        DISK
+     FLIEUST03IF  E           K        DISK
+     FFORDECL1IF  E           K        DISK
+     FFORINTL3IF  E           K        DISK
+     FPALETTL1IF  E           K        DISK
+     FMNUDIRL1IF  E           K        DISK
+     FREFSTKL1IF  E           K        DISK
+     FPRCHARL6IF  E           K        DISK
+     FCAMCDELCIF  E           K        DISK
+     FCAMCDEL1IF  E           K        DISK
+     F            CAMCDEF1                          KRENAMECAMCDEF2
+     *
+     FCAMOBSL1IF  E           K        DISK
+     FCODBARL2IF  E           K        DISK
+     FGAMMREL3IF  E           K        DISK
+     FPRODSTL5IF  E           K        DISK
+     FPRODS3L1IF  E           K        DISK
+     **
+     E                    R          20  1
+     E                    E          20  1
+     E                    EE         20  1
+    E******************  TABLEAU - LIBELLES CDES PART.******
+     E                    CDE     1   5 14
+    E******************  TABLEAU - LIBELLES (STOCK) ********
+     E                    LIB     1   9 10
+    E******************  TABLEAU - MESSAGES ****************
+     E                    MSG     1   1 79
+     **
+     IMVTIMPF1
+     I              STE                             STMVT
+     I              NOCLI                           NCMVT
+     I              NOPRO                           NPMVT
+     I              USEXP                           UXMVT
+     IRECAPTF1
+     I              NCONF                           PR1
+     I              AGENT                           RE2
+    I*
+     IPRODUIF1
+     I              NCONF                           PR1
+     I              AGENT                           PR2
+     I              QTFAB                           PR4
+     I              QTPRE                           PR5
+     I              QTREN                           PR6
+     I              STOCK2                          PTOCK2
+     I              STOCK3                          PTOCK3
+     I              STOCK4                          PTOCK4
+     I              STOCK5                          PTOCK5
+     I              STOCK6                          PTOCK6
+     I              DATAR                           DATNWE
+     IPRODARF1
+     I              NCONF                           PR1
+     I              AGENT                           PR2
+     I              QTFAB                           PR4
+     I              QTPRE                           PR5
+     I              QTREN                           PR6
+     I              STOCK2                          PTOCK2
+     I              STOCK3                          PTOCK3
+     I              STOCK4                          PTOCK4
+     I              STOCK5                          PTOCK5
+     I              STOCK6                          PTOCK6
+     I              DATAR                           DATAWE
+    I*
+     IPRODSTF2
+     I              NOPRO                           AFPRO
+     I              BLOC1                           AFOC1
+     I              BLOC2                           AFOC2
+     I              BLOC4                           AFOC4
+     I              SUPOR                           AFPOR
+     I              REFA                            AFREFA
+     *
+     ILIEUSTF1
+     I              NCONF                           LICONF
+     I              SEQFAB                          LISEQF
+     I              LIEUST                          LILIEU
+     I              EXPEDM                          LIPEDM
+     I              EXPEDJ                          LIPEDJ
+     I              USINE                           LIUSIN
+     I              NBCAIS                          LINBCA
+     *
+     IENCFACF1
+     I              ABRCLI                          ENC1
+     I              USINE                           USFAC
+     I              STE                             STEFAC
+     *
+     IRESPAPF1
+     I              USFA                            RES0
+     I              PAPI                            RES1
+     I              GRAMM                           RES2
+     I              REFOUR                          RES3
+     I              GRAREL                          RES4
+     I              FOUB                            RES5
+     I              LAIZE                           RES6
+     I              FORL                            RES7
+     I              FORH                            RES8
+     I              NCONF                           RES9
+     I              SEQFAB                          RES10
+     I              ABRCLI                          RES100
+     I              SDERSO                          RSS101
+     I              ADERSO                          RES101
+     I              MDERSO                          RES102
+     I              JDERSO                          RES103
+     I              SSDEL                           RSS104
+     I              ANDEL                           RES104
+     I              JSDEL                           RES105
+     I              SEDEL                           RES106
+     I              ANDEV                           RES107
+     I              CLIPRO                          RES108
+     I              CONFS                           RSS109
+     I              CONFA                           RES109
+     I              CONFM                           RES110
+     I              CONFJ                           RES111
+     I              ETUDE                           RES112
+     I              LMINI                           RES113
+     I              SEQDE                           RES114
+     I              SEQIMP                          RES115
+     I              CODEL                           RES116
+     *
+     IRESIMPF1
+     I              USFA                            RESI0
+     I              STE                             RESI1
+     I              NOCLI                           RESI2
+     I              NOPRO                           RESI3
+     I              SUIMP                           RESI4
+     I              CONFS                           RSSI5
+     I              CONFA                           RESI5
+     I              CONFM                           RESI6
+     I              CONFJ                           RESI7
+     I              NCONF                           RESI8
+     I              SEQFAB                          RESI9
+     I              FOUB                            RESI10
+     I              SSBESO                          RSSI11
+     I              ANBESO                          RESI11
+     I              MMBESO                          RESI12
+     I              JJBESO                          RESI13
+     I              SEBESO                          RESI14
+     I              JSBESO                          RESI15
+     I              KGBESO                          RESI16
+     I              FEBESO                          RESI17
+     I              KGSORT                          RESI18
+     I              FEUSOR                          RESI19
+     I              SOBESO                          RESI20
+     I              CODEL                           RESI21
+     I              ABRCLI                          RESI22
+     I              CLIPRO                          RESI23
+     I              PRIORI                          RESI24
+     I              NBJEXP                          RESI25
+     I              SSDEL                           RSSI26
+     I              ANDEL                           RESI26
+     I              SEDEL                           RESI27
+     I              JSDEL                           RESI28
+     I              POTENT                          RESI29
+     I              SDERSO                          RSSI30
+     I              ADERSO                          RESI30
+     I              MDERSO                          RESI31
+     I              JDERSO                          RESI32
+     I              QTFAC                           RESI33
+     *
+     IARTPAPF1
+     I              SUIVI                           SUIV
+     *
+     IPRLANCF1
+     I              SSDDEL                          PRS01
+     I              ADEDEL                          PRL01
+     I              SDEDEL                          PRL02
+     I              JDEDEL                          PRL03
+     I              JSDEL                           PRL04
+     I              SEDEL                           PRL05
+     I              SSDEL                           PRS06
+     I              ANDEL                           PRL06
+     I              MMDEL                           PRL07
+     I              JJDEL                           PRL08
+     I              NOJOUR                          PRL09
+     I              CODEL                           PRL10
+     I              QTFAB                           PRL11
+     *
+     IPRLANCF2
+     I              NOPRO                           AFPRO
+     I              SSDDEL                          PRS01
+     I              ADEDEL                          PRL01
+     I              SDEDEL                          PRL02
+     I              JDEDEL                          PRL03
+     I              JSDEL                           PRL04
+     I              SEDEL                           PRL05
+     I              SSDEL                           PRS06
+     I              ANDEL                           PRL06
+     I              MMDEL                           PRL07
+     I              JJDEL                           PRL08
+     I              NOJOUR                          PRL09
+     I              CODEL                           PRL10
+     I              QTFAB                           PRL11
+     *
+     IFORDECF1
+     I              USINE                           FUSI
+     *
+     IPRCHARF1
+     I              USINE                           PUSI
+     *
+     ICAMCDEF1
+     I              TOTPAL                          CAMCX1
+     ICAMCDEF2
+     I              TOTPAL                          CAMCX1
+     *
+     IPRODSTF1
+     I              AMALG                           AMALX1
+     *
+     I            DS
+     I                                        1   20CONFJ
+     I                                        3   40CONFM
+     I                                        5   60CONFS
+     I                                        7   80CONFA
+     I                                        1   80DATCDE
+     *
+     I            DS
+     I                                        1   20CONFJJ
+     I                                        3   40CONFMM
+     I                                        5   60CONFAA
+     I                                        1   60DACOM
+     *
+     I            DS
+     I                                        1  20 CLIREF
+     I                                       21  250NCONF
+     I                                       26  290NOPRO
+     I                                       21  290CONFPR
+     I                                        1  29 CLIFPR
+     I                                       30  30 FIN10L
+     I                                       21  30 DSMAJ
+     I                                       31  38 MDP10L
+     I                                       21  38 DS10L
+     *
+     I            DS
+     I                                        1   50CONFN
+     I                                        6   90PRONO
+     I                                        1   90REFPRO
+     *
+     I            DS
+     I                                        1   20EXPEDA
+     I                                        3   40EXPEDM
+     I                                        5   60EXPEDJ
+     I                                        1   60EXPDAT
+     *
+     I            DS
+     I                                        1   20REFA
+     I                                        3   40REFM
+     I                                        5   60REFJ
+     I                                        1   60REFDAT
+     *
+     I            DS
+     I                                        1   20DATEXJ
+     I                                        3   40DATEXM
+     I                                        5   60DATEXA
+     I                                        1   60DATEXP
+     *
+     I            DS
+     I                                        1   20SSDDEL
+     I                                        3   40ADEDEL
+     I                                        5   60SDEDEL
+     I                                        7   70JDEDEL
+     I                                        1   70DEDEL
+     I                                        3   70DEDEL1
+     *
+     I            DS
+     I                                        1   20SSDEL
+     I                                        3   40ANDEL
+     I                                        5   60SEDEL
+     I                                        7   70JSDEL
+     I                                        1   70UTDEL
+     I                                        3   70UTDEL1
+     I I            0                         3   70ASBES
+     I                                        5   70SBES
+     *
+     I            DS
+     I I            0                         1   60DATLIV
+     I                                        1   20JJDEL
+     I                                        3   40MMDEL
+    I*                                       5   60SLDEL
+     I                                        5   60AADEL
+     *
+     I            DS
+     I                                        1   20DEREJ
+     I                                        3   40DEREM
+     I                                        1   40DEREXP
+     *
+     I            DS
+     I                                        1   20ARJ
+     I                                        3   40ARM
+     I                                        5   60ARS
+     I                                        7   80ARA
+     I                                        1   80DATAR
+     *
+     I            DS
+     I                                        1   20COMCLJ
+     I                                        3   40COMCLM
+     I                                        5   60COMCLA
+     I                                        1   60DATCOM
+     *
+     I            DS
+     I                                        1   20JJMAJ
+     I                                        3   40MMMAJ
+     I                                        5   60ANMAJ
+     I                                        1   60DATMAJ
+     *
+     I            DS
+     I                                        1   20HHMAJ
+     I                                        3   40MNMAJ
+     I                                        1   40HEUMAJ
+     *
+     I            DS
+     I                                        1   20JOUSS
+     I                                        3   40JOUAA
+     I                                        5   60JOUNOS
+     I                                        7   70JOUNJ
+     I                                        1   70DATJOU
+     I                                        5   70SEMJ
+     *
+     IABRCLI      DS
+     I                                        1  10 ABRC
+     *
+     I            DS
+     I                                        1   1 W10£
+     I                                        2   2 ST10£
+     I                                        3   6 NOC10£
+     I                                        7  10 NOP10£
+     I                                        1  10 DS10£
+     *
+     I            DS
+     I                                        1   10ST28£
+     I                                        2   50NOC28£
+     I                                        6   90NOP28£
+     I                                       10  160QTE28£
+     I                                      143 1450PAL28£
+     I                                      146 1460USI28£
+     I                                        1 148 DS28£
+     *
+     IDSCOMM      DS
+     I                                        1   10STE
+     I                                        2   50NOCLI
+     I                                       16  190DSPRO
+     I                                       22  22 ZONE95
+     I                                       24  24 MODIF
+     I                                       40  41 DSGAR
+     I                                       42  460DSCNF
+     I                                       47  51 DSFOR
+     I                                      100 100 Z100
+     I                                      101 101 Z101
+     I                                      102 102 Z102
+     I                                      103 110 ZMDP
+     *
+     I            DS
+     I                                        1 100 PARM1
+     I                                        1   1 BIDON
+     I                                        2   20STEFAC
+     I                                        3   60CLIE
+     I                                        7  100PROD
+     I                                       11  150CONF
+     I                                       16  170SEQ
+     I                                       19  200SSLANC
+     I                                       21  260DTLANC
+     I                                       27  280SSSYS
+     I                                       29  300AASYS
+     I                                       31  320MMSYS
+     I                                       33  340JJSYS
+     I                                       27  340DTSYS
+     *
+     I            DS
+     I                                        1   10USINE
+     I                                        2   4 PAPI
+     I                                        5   70GRAMM
+     I                                        8  13 REFOUR
+     I                                       14  160GRAREL
+     I                                       17  17 FOUB
+     I                                       18  211LAIZE
+     I                                       22  250FORL
+     I                                       26  290FORH
+     I                                        1  29 DSREF
+     *
+     I            DS
+     I                                        1   10RES0
+     I                                        2   4 RES1
+     I                                        5   70RES2
+     I                                        8  13 RES3
+     I                                       14  160RES4
+     I                                       17  17 RES5
+     I                                       18  211RES6
+     I                                       22  250RES7
+     I                                       26  290RES8
+     I                                        1  29 DSLECT
+     *
+     I            DS
+     I                                        1   10USINEP
+     I                                        2   20NIMP1
+     I                                        3   60NIMP2
+     I                                        7  100NIMP3
+     I                                        2  10 D2RESI
+     I                                        1  10 DSRESI
+     *
+     IDSENTR      DS
+     I                                        1   10USI
+     I                                        2   2 IDPG
+     I                                        3  30 DSE2
+     *
+     IDSMAT       DS
+     I                                        1   10ST
+     I                                        2   50NOC
+     I                                        6   90NOP
+     I                                       10  140NCO
+     I                                       15  160NOS
+     I                                       17  24 BLC
+     I                                       25  25 PGID
+     *
+     IDS35        DS
+     I                                        1   10US35
+     I                                        2   60NCO35
+     I                                        7   80NOS35
+     I                                        9  120NOP35
+     *
+     IDS51        DS
+     I                                        1   10US51
+     I                                        2   20STE51
+     I                                        3   60CLI51
+     I                                        7  100PRO51
+     I            DS
+     I                                        1  20 DSINDP
+     I                                        1   3 PAPCPL
+     I                                        5   7 GRAMCP
+     I                                        9  14 REFCPL
+     I                                       16  18 GRARCP
+     I                                       20  20 FOUBCP
+     *
+     I            DS
+     I I            'AA'                      1   2 AA10
+     I                                        3   60NOC10
+     I                                        7  100NOP10
+     I                                        1  10 PARM10
+     *
+     I            DS
+     I                                        1   2 PLATF
+     I                                        1   1 FABD
+     I                                        2   2 EXPD
+     *
+     I            DS
+     I                                        1  32 LIBAMA
+     I                                        1  20 REFCO
+     I                                       21  40 CLICO
+     *
+     IDSLIV       DS
+     I                                        1   10£STE
+     I                                        2   50£NOCLI
+     I                                       12  130£SVLIV
+     I                                       22  22 £ONE95
+     I                                       51  51 £YPMAJ
+     *
+     I            DS
+     I                                        1   60SECIE
+     I                                        1   32PRDEC
+     I                                        4   62PRFEN
+     *
+     I            DS
+     I                                        1   60SECII
+     I                                        1   32PRAS1
+     I                                        4   62PRAS2
+     *
+     *DS externe pour récupération du nom de l'utilisateur
+     I           SDS
+     I                                      254 263 £USER
+     ** clés
+     *
+     C           KANPR     KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           ANPRO
+     C           CLEPRO    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     *
+     C           CLEPF     KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           WORD    10
+     *
+     C           CLEPR2    KLIST
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     *
+     C           CLEPR3    KLIST
+     C                     KFLD           STMVT
+     C                     KFLD           NCMVT
+     C                     KFLD           NPMVT
+     *
+     C           CLEPR4    KLIST
+     C                     KFLD           NIMP2
+     C                     KFLD           NIMP3
+     *
+     C           CLECA1    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     *
+     C           CLECD1    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NCONF
+     *
+     C           CLECD2    KLIST
+     C                     KFLD           PR1
+     C                     KFLD           NOPRO
+     *
+     C           CLECD3    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NCONF
+     C                     KFLD           NOPRO
+     *
+     C           CLECAL    KLIST
+     C                     KFLD           CALJJ
+     C                     KFLD           CALMM
+     C                     KFLD           CALAA
+     *
+     C           CLEMAT    KLIST
+     C                     KFLD           NCONF
+     C                     KFLD           NOPRO
+     *
+     C           CLEOBS    KLIST
+     C                     KFLD           NCONF
+     C                     KFLD           NOPRO
+     C                     KFLD           SEQFAB
+     *
+     C           CLEPAR    KLIST
+     C                     KFLD           PXARGU
+     C                     KFLD           PXVALE
+     *
+     C           CLEART    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           PAPI
+     C                     KFLD           GRAMM
+     C                     KFLD           REFOUR
+     C                     KFLD           GRAREL
+     C                     KFLD           FOUB
+     C                     KFLD           LAIZE
+     C                     KFLD           FORL
+     C                     KFLD           FORH
+     *
+     C           CLEPRL    KLIST
+     C                     KFLD           NCONF
+     C                     KFLD           SEQFAB
+     C                     KFLD           SECPAP
+     C                     KFLD           NOPRO
+     C                     KFLD           SUPOR
+     C                     KFLD           PRIORI
+     *
+     C           CLEPRA    KLIST
+     C                     KFLD           NCONF
+     C                     KFLD           AFPRO
+     C                     KFLD           SEQFAB
+     *
+     C           CL2OBS    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           DEST
+     C                     KFLD           EMET
+     C                     KFLD           SEQOBS
+     *
+     C           CLECB     KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     C                     KFLD           NBEXP
+     *
+     C           CLEPAL    KLIST
+     C                     KFLD           USINE
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           NOPRO
+     *
+     C           CLEFI     KLIST
+     C                     KFLD           NOFOR
+     C                     KFLD           CODINT
+     *
+     C           CLRSTK    KLIST
+     C                     KFLD           STE
+     C                     KFLD           NOCLI
+     C                     KFLD           RGLIV
+     *
+     C           KCAM      KLIST
+     C                     KFLD           USEXP
+     C                     KFLD           SS
+     C                     KFLD           AA
+     C                     KFLD           MM
+     C                     KFLD           JJ
+     C                     KFLD           NOFOU
+     C                     KFLD           SEQCAM
+     C                     KFLD           SITEXP
+     *
+     C           KPRCA     KLIST
+     C                     KFLD           USEXP
+     C                     KFLD           NCONF
+     C                     KFLD           SEQFAB
+     *
+     C           KOBS      KLIST
+     C                     KFLD           USEXP
+     C                     KFLD           SS
+     C                     KFLD           AA
+     C                     KFLD           MM
+     C                     KFLD           JJ
+     C                     KFLD           NOCOM
+     C                     KFLD           SEQCOM
+     C                     KFLD           TYPOBS
+     **
+     C           *ENTRY    PLIST
+     C                     PARM           DSCOMM
+     *
+     C                     Z-ADD0         USINE
+     *
+D1  C           Z102      IFNE '*'
+     C                     MOVE *BLANK    MDP10L
+X1  C                     ELSE
+     C                     MOVE ZMDP      MDP10L
+F1  C                     END
+     *
+     C                     MOVEL*YEAR     JOUSS
+     C                     MOVE UYEAR     CALAA
+     C                     MOVE UMONTH    CALMM
+     C                     MOVE UDAY      CALJJ
+     C           CLECAL    CHAINCALENAL4             98
+     C                     MOVE CALAA     JOUAA
+     C                     MOVE CALNOS    JOUNOS
+     C                     MOVE CALNJ     JOUNJ
+     *
+     * Si Programme appelé par un autre programme
+     * ------------------------------------------
+D1  C           ZONE95    IFEQ '1'
+     C                     MOVE '1'       *IN40
+D2  C           DSFOR     IFNE *BLANK
+     C                     MOVE DSFOR     NOFOR
+    C                     GOTO AFFQB
+F2  C                     END
+     C                     MOVE DSPRO     NOPRO
+D2  C           STE       IFNE 0
+     C           CLECA1    CHAINCLIENTS1             21
+D3  C           DSGAR     IFEQ 'RE'
+     C                     MOVE '1'       *IN39
+     C                     MOVE DSGAR     GARNT
+     C                     MOVE DSCNF     NCONF
+     C           CLECD1    CHAINCDESL5               99
+     C                     SETOF                     99
+    C                     GOTO AFFAP
+F3  C                     END
+X2  C                     ELSE
+     C           CLEPR2    CHAINPREIMP2              99
+     C           CLEPRO    CHAINCDESL6               99
+    C           *IN99     CABEQ'1'       FINPG
+D3  C           *IN99     DOWEQ'0'
+     C           CLEPRO    READECDESL6                   99
+F3  C                     END
+     C                     MOVE CDE,1     CDPART
+     C                     MOVE *BLANK    NOMCLI
+     C                     MOVEL'STOCKÉ'  NOMCLI
+     C                     MOVE *BLANK    BLOC1
+     C                     MOVE *BLANK    BLOC2
+     C                     MOVELDPRIMP    BLOC1
+     C                     MOVE 'DEFINI'  DEST
+     C                     MOVE 'BM    '  EMET
+     C                     Z-ADD1         SEQOBS
+     C           CL2OBS    CHAINOBSPROL1             99
+D3  C           *IN99     IFEQ '0'
+     C                     MOVE OBSLIB    BLOC2
+F3  C                     END
+     C                     MOVEA'11'      *IN,41
+     C                     MOVE NOCLI     CLI     40
+     C                     MOVE NOPRO     PRO     40
+     C                     Z-ADDCONFJ     CONFJJ
+     C                     Z-ADDCONFM     CONFMM
+     C                     Z-ADDCONFA     CONFAA
+    C*                    MOVE DATCDE    DACOM
+     C                     MOVE NCONF     PR1
+F2  C                     END
+     C                     Z-ADD0         NCONF
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     **********************
+     * Affichage Format A *
+     **********************
+     C           AFFA      TAG
+     C                     Z-ADD0         STE
+     C                     Z-ADD0         NOCLI
+     C                     Z-ADD0         NCONF
+     C                     SETOF                     959642
+     C                     SETOF                     90
+     C                     MOVE *BLANK    CDPART
+     C           AFFA2     TAG
+     C   22 24             WRITEFMTA
+     C                     EXFMTFMTA
+     C                     MOVE '0'       *IN41
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN07     CABEQ'1'       AFFM       070741
+     *
+     * Recensement des Commandes par N° de Forme
+     *
+D1  C           *IN08     IFEQ '1'
+     **********************************************
+     * Affichage Format Q  (RECENSEMENT/N° FORME) *
+     **********************************************
+     C                     Z-ADD0         NOFOR
+     C           AFFQ      TAG
+     C                     EXFMTFMTQ
+    C           NOFOR     CABEQ0         AFFA
+     C           AFFQB     TAG
+     C                     MOVE '0'       *IN27
+     C   40                WRITEFMTQ
+     C                     MOVE '1'       *IN93
+     C                     WRITEQCTL
+     C                     MOVE *BLANK    CHXQ
+     C                     MOVE '0'       *IN93
+     C           NOFOR     CHAINCARCDELR             99
+     * Si pas de CDE
+D2  C           *IN40     IFEQ '1'
+    C           *IN99     ANDEQ'1'
+     C                     MOVE 'N'       MODIF
+    C                     GOTO FINPG
+F2  C                     END
+    C           *IN99     CABEQ'1'       AFFQ           11
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFQ
+     * ----------------------------
+     C           SFQ       TAG
+     C                     Z-ADD0         CTR     20
+D2  C           *IN99     DOUEQ'1'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLECA1    CHAINCLIENTS1             99
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         RECNO
+D3  C           UTDEL     IFNE 0
+     C                     MOVE '1'       *IN32
+X3  C                     ELSE
+     C                     MOVE '0'       *IN32
+F3  C                     END
+     C                     WRITEQSF
+     C           NOFOR     READECARCDELR                 99
+F2  C                     END
+     C                     EXFMTQCTL
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELQ      TAG
+     C                     READCQSF                      91
+    C  N91      CHXQ      CABEQ*BLANKS   SELQ
+    C  N40      *IN91     CABEQ'1'       AFFA
+    C           *IN91     CABEQ'1'       FINPG
+     C           CLECD3    CHAINCDESL5               99
+     C                     MOVE '0'       *IN08
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+D1  C           *IN10     IFEQ '1'
+     ****************************************************
+     * Affichage Format Q  (RECENSEMENT/AGENT/N° FORME) *
+     ****************************************************
+     C                     Z-ADD0         AGENT
+     C           AFFV      TAG
+     C                     MOVE *BLANK    PXABRG
+     C                     EXFMTFMTV
+    C           *IN04     CASEQ'1'       FENAG
+    C                     END
+    C           AGENT     CABEQ0         AFFA
+     C           AFFVB     TAG
+     C                     MOVE '0'       *IN27
+     C   40                WRITEFMTV
+     C                     MOVE '1'       *IN93
+     C                     WRITEVCTL
+     C                     MOVE *BLANK    CHXV
+     C                     MOVE '0'       *IN93
+     C                     MOVE 'TVRP'    PXARGU
+     C                     MOVE *BLANK    PXVALE
+     C                     MOVE AGENT     PXVALE
+     C           CLEPAR    CHAINPARAME               99
+     C           AGENT     CHAINCARCDEZ5             87
+     * Si pas de CDE
+D2  C           *IN40     IFEQ '1'
+    C           *IN87     ANDEQ'1'
+     C                     MOVE 'N'       MODIF
+    C                     GOTO FINPG
+F2  C                     END
+    C           *IN87     CABEQ'1'       AFFV           11
+     C                     Z-ADD0         RECNOV
+     C                     Z-ADD0         RECREF
+     C                     Z-ADDAGENT     AGREF   20
+     *
+     * Ecriture du sous-fichier SFV
+     * ----------------------------
+     C           SFV       TAG
+     C                     Z-ADD0         CTR     20
+     C                     Z-ADDAGREF     AGENT
+     C                     Z-ADDRECREF    RECNOV
+D2  C           *IN87     DOWEQ'0'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLECA1    CHAINCLIENTS1             99
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         RECNOV  40
+     C                     ADD  1         CTR
+     C                     MOVE *BLANK    CHXV
+D3  C           UTDEL     IFNE 0
+     C                     MOVE '1'       *IN32
+X3  C                     ELSE
+     C                     MOVE '0'       *IN32
+F3  C                     END
+     C                     WRITEVSF
+     C           AGENT     READECARCDEZ5                 87
+     C                     Z-ADDRECNOV    RECREF  40
+    C           CTR       CABEQ15        AFFV2
+F2  C                     END
+     C           AFFV2     TAG
+     *          -----     ---
+     C                     Z-ADDRECNOV    AFFNOV
+     C                     Z-ADDAGENT     AGREF   20
+     C                     WRITEFMTV
+     C                     EXFMTVCTL
+     *
+    C           *IN09     CABEQ'1'       SFV
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELV      TAG
+     *          ----      ---
+     C                     MOVE '0'       *IN88
+     C                     READCVSF                      91
+    C  N91      CHXV      CABEQ*BLANKS   SELV
+    C  N40      *IN91     CABEQ'1'       AFFA
+    C           *IN91     CABEQ'1'       FINPG
+     C           CLECA1    CHAINCLIENTS1             21
+     C           CLECD1    CHAINCDESL5               99
+     C                     MOVE '0'       *IN10
+     C                     MOVE '1'       *IN88
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     * Recensement des Commandes SOFHUNIC/USINE
+     *
+D1  C           *IN05     IFEQ '1'
+     **********************************************
+     * Affichage Format U  (SOFHUNIC/USINE)       *
+     **********************************************
+     C                     Z-ADD0         USSOF
+     C           AFFU      TAG
+     C                     EXFMTFMTU
+    C           USSOF     CABEQ0         AFFA
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USSOF     PXVALE
+     C           CLEPAR    CHAINPARAME               73
+    C   73                GOTO AFFU
+     C           AFFUB     TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEUCTL
+     C                     MOVE *BLANK    CHXU
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD1         STE
+     C                     Z-ADD8928      NOCLI
+     C           CLECA1    CHAINCDESL5               99
+     * Si pas de CDE
+    C           *IN99     CABEQ'1'       AFFU           11
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFU
+     * ----------------------------
+     C           SFU       TAG
+     C                     Z-ADD0         CTR     20
+D2  C           *IN99     DOUEQ'1'
+D3  C           CDEPRE    IFNE *BLANK
+     C                     MOVE 'PRÉVI'   TYPCDE
+X3  C                     ELSE
+D4  C           PRESER    IFNE *BLANK
+     C                     MOVE 'PRÉ-S'   TYPCDE
+X4  C                     ELSE
+     C                     MOVE *BLANK    TYPCDE
+F4  C                     END
+F3  C                     END
+D3  C           USINE     IFEQ USSOF
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         RECNO
+     C                     WRITEUSF
+F3  C                     END
+     C           CLECA1    READECDESL5                   99
+F2  C                     END
+    C           RECNO     CABEQ0         AFFU           11
+     C                     EXFMTUCTL
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELU      TAG
+     C                     READCUSF                      91
+    C  N91      CHXU      CABEQ*BLANKS   SELU
+    C           *IN91     CABEQ'1'       AFFA
+     C           CLECD1    CHAINCDESL5               99
+     C                     MOVE '0'       *IN05
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+D1  C           NCONF     IFEQ 0
+    C           NOCLI     CABEQ0         AFFB           24
+    C           STE       CABEQ0         AFFA           20
+     C                     MOVE 'NOSO'    PXARGU
+     C                     MOVE *BLANK    PXVALE
+     C                     MOVE STE       PXVALE
+     C           CLEPAR    CHAINPARAME               20
+    C           *IN20     CABEQ'1'       AFFA
+X1  C                     ELSE
+     C           NCONF     CHAINCDESL1               23
+    C           *IN23     CABEQ'1'       AFFA2
+D2  C           STE       IFEQ 0
+     C           CLEPR2    CHAINPREIMP2              99
+     C           CLEPRO    CHAINCDESL6               99
+D3  C           *IN99     DOWEQ'0'
+     C           CLEPRO    READECDESL6                   99
+F3  C                     END
+     C                     MOVE CDE,1     CDPART
+     C                     MOVE *BLANK    NOMCLI
+     C                     MOVEL'STOCKÉ'  NOMCLI
+     C                     MOVE *BLANK    BLOC1
+     C                     MOVE *BLANK    BLOC2
+     C                     MOVELDPRIMP    BLOC1
+     C                     MOVE 'DEFINI'  DEST
+     C                     MOVE 'BM    '  EMET
+     C                     Z-ADD1         SEQOBS
+     C           CL2OBS    CHAINOBSPROL1             99
+D3  C           *IN99     IFEQ '0'
+     C                     MOVE OBSLIB    BLOC2
+F3  C                     END
+     C                     MOVEA'11'      *IN,41
+     C                     MOVE NOCLI     CLI     40
+     C                     MOVE NOPRO     PRO     40
+     C                     Z-ADDCONFJ     CONFJJ
+     C                     Z-ADDCONFM     CONFMM
+     C                     Z-ADDCONFA     CONFAA
+    C*                    MOVE DATCDE    DACOM
+     C                     MOVE NCONF     PR1
+     C                     Z-ADD0         NCONF
+    C                     GOTO AFFJ
+F2  C                     END
+F1  C                     END
+     * Controle N° Client
+     C           CLECA1    CHAINCLIENTS1             21
+    C           *IN21     CABEQ'1'       AFFA2
+     * Controle si Commande
+D1  C           NCONF     IFEQ 0
+     C           CLECA1    SETLLCARCDELB                 99
+    C           *IN99     CABEQ'0'       AFFA2          22
+     * Controle N° Confirmation
+X1  C                     ELSE
+     C           CLECD1    CHAINCDESL5               23
+    C           *IN23     CABEQ'1'       AFFA2
+     * Recherche si garniture
+     * ----------------------
+     C           NCONF     SETLLCDESL27                  31
+    C           *IN31     CABEQ'1'       AFFAP
+    C*          GARNT     CABEQ'RE'      AFFAP
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+    C                     GOTO AFFC
+     ***********************
+     * Affichage Format A' *
+     ***********************
+     C           AFFAP     TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEAPCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXA
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFAP
+     * -----------------------------
+     C           SFAP      TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEAPSF
+     C           CLECD1    READECDESL5                   99
+    C           CTR       CABEQ4         AFFAP2
+F1  C                     END
+     C           AFFAP2    TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     WRITEFMTAP
+     C                     EXFMTAPCTL
+    C           *IN12     CABEQ'1'       AFFA
+    C           *IN09     CABEQ'1'       SFAP
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELAP     TAG
+     C                     READCAPSF                     91
+    C  N91      CHXA      CABEQ*BLANKS   SELAP
+D1  C           *IN91     IFEQ '1'
+    C           *IN39     CABEQ'1'       FINPG
+    C                     GOTO AFFA
+F1  C                     END
+    C                     GOTO AFFJ
+     **********************
+     * Affichage Format B *
+     **********************
+     C           AFFB      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEBCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXB
+     C                     MOVE '0'       *IN93
+     C                     MOVE *BLANK    ABRCLI
+     C                     WRITEFMTB
+     C                     WRITEBBIS
+     C                     READ FMTB                     99
+    C           *IN12     CABEQ'1'       AFFA
+     C           ABRCLI    SETLLCLIENTS3                 99
+     C                     READ CLIENTS3                 99
+    C           *IN99     CABEQ'1'       AFFB           20
+     C                     Z-ADD0         RECNO   40
+     *
+     * Ecriture du sous-fichier
+     * ------------------------
+     C           SFB       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEBSF
+     C                     READ CLIENTS3                 99
+    C           CTR       CABEQ11        AFFB2
+F1  C                     END
+     C           AFFB2     TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     WRITEBBIS
+     C                     EXFMTBCTL
+    C           *IN12     CABEQ'1'       AFFA
+    C           *IN09     CABEQ'1'       SFB
+     *
+     * Recherche si Client sélectionné
+     * -------------------------------
+     C           SELB      TAG
+     C                     READCBSF                      91
+    C  N91      CHXB      CABEQ*BLANKS   SELB
+    C           *IN91     CABEQ'1'       AFFA
+     * Controle si Commande
+     C           CLECA1    SETLLCARCDELB                 99
+    C           *IN99     CABEQ'0'       AFFA2          22
+     **********************
+     * Affichage Format C *
+     **********************
+     C           AFFC      TAG
+     C                     EXFMTFMTC
+    C           *IN12     CABEQ'1'       AFFA
+    C           CHXC      CABEQ'1'       AFFD
+    C           CHXC      CABEQ'2'       AFFE
+    C           CHXC      CABEQ'3'       AFFF
+    C           CHXC      CABEQ'4'       AFFG           04
+    C           CHXC      CABEQ'5'       AFFG       0404
+    C           CHXC      CABEQ'6'       AFFH
+    C           CHXC      CABEQ'7'       AFFH2      0808
+    C           CHXC      CABEQ'8'       AFFH2          08
+    C           CHXC      CABEQ'9'       AFFI
+     **********************************
+     * PLANNING LIVRAISONS CONFIRMÉES *  09/2004
+     **********************************
+D1  C           CHXC      IFEQ '0'
+     C           AFMT3     TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEFMT3C
+     C                     MOVEA'00'      *IN,93
+     C                     MOVEA'00000'   *IN,81
+     C                     MOVE *BLANK    SEL3
+     C                     Z-ADD*ZERO     LIG3    40
+     C           CLECA1    CHAINCARCDELA             99
+     C                     Z-ADD*ZEROS    SVDAT   50
+D2  C           *IN99     DOWEQ'0'
+     * GARNT "RE" ATTENTION AU PRODUIT TYPE "PP"
+D3  C           GARNT     IFEQ 'RE'
+     C           CLEPRO    SETLLGAMMREL3                 50
+    C           *IN50     CABEQ'0'       LCAR
+F3  C                     END
+D3  C           GARNT     IFNE 'RE'
+    C           GARNT     ANDNE*BLANK
+     C           CLEPRO    SETLLGAMMREL3                 50
+    C           *IN50     CABEQ'1'       LCAR
+F3  C                     END
+     *
+     C                     Z-ADDSSDEL     SLDEL   20
+     *
+D3  C           CODEL     IFEQ 'CO'
+    C           QTDEXP    ANDGTTOTEXP
+D4  C           ASBES     IFEQ SVDAT
+    C           RGLIV     ANDEQSVLIV
+    C           IMPD      ANDEQSVUS
+     C                     Z-ADD*ZEROS    DATLIV
+     C                     Z-ADD*ZEROS    SJLIV
+X4  C                     ELSE
+     C                     Z-ADDRGLIV     SVLIV
+     C                     MOVE IMPD      SVUS
+     C                     Z-ADDASBES     SJLIV
+     C                     Z-ADDASBES     SVDAT
+     C                     Z-ADDANDEL     AADEL
+     C                     Z-ADD*ZEROS    TOTPAL
+F4  C                     END
+     C                     Z-ADD*ZEROS    PALLIV
+     C           QTDEXP    SUB  TOTEXP    QTEY
+     C           CLEPRO    CHAINPRODAL8              50
+     C           CLEPR2    SETLLPRODSTL5                 50
+     * AMALGAMES VENDU COMME UN TOUT ==> NB PALETTE DE CHAQUE ELEMENT
+D4  C           *IN50     IFEQ '1'
+     C                     MOVE STE       ST28£
+     C                     MOVE NOCLI     NOC28£
+     C                     MOVE NOPRO     NOP28£
+     C                     Z-ADDQTEY      QTE28£
+     C                     Z-ADD0         PAL28£
+     C                     MOVE IMPD      USI28£
+     C                     CALL 'PRF028£'
+     C                     PARM           DS28£
+     C                     Z-ADDPAL28£    PALLIV
+X4  C                     ELSE
+     C           CLEPAL    CHAINPALETTL1             90
+D5  C           *IN90     IFEQ '0'
+D6  C           NBDECP    IFNE *ZEROS
+     * BOBINETTES
+D7  C           FACON     IFGT 0
+    C           FACON     ANDLT3
+     C                     Z-ADD0         QTEYNB  70
+D8  C           NBRBOB    IFNE 0
+     C           NBRBOB    DIV  QTDEXP    RAPBOB  66
+     C           QTEY      MULT RAPBOB    QTEYNB
+X8  C                     ELSE
+D9  C           UVENT     IFEQ 2
+    C           DECL      ANDGT0
+    C           DECH      ANDGT0
+     C           DECL      DIV  1000      DECLM   43
+     C           QTEY      DIV  DECLM     QTEYNB
+     C           QTEYNB    DIV  DECH      QTEYNB
+F9  C                     END
+D9  C           UVENT     IFEQ 3
+    C           DECH      ANDGT0
+     C           QTEY      DIV  DECH      QTEYNB
+F9  C                     END
+F8  C                     END
+     C           QTEYNB    DIV  NBDECP    PALLIV
+     C                     MVR            RESTE   72
+X7  C                     ELSE
+     C           QTEY      DIV  NBDECP    PALLIV
+     C                     MVR            RESTE   72
+F7  C                     END
+D7  C           RESTE     IFNE *ZEROS
+     C                     ADD  1         PALLIV
+F7  C                     END
+F6  C                     END
+F5  C                     END
+F4  C                     END
+     C                     ADD  PALLIV    TOTPAL
+     C                     ADD  1         LIG3
+     C           IMPD      COMP '3'                  838182
+     C   83      IMPD      COMP '5'                  85  84
+     C                     MOVE '1'       *IN94
+     C                     Z-ADD0         USEXP
+     C                     Z-ADD0         SS
+     C                     Z-ADD0         AA
+     C                     Z-ADD0         MM
+     C                     Z-ADD0         JJ
+     C                     MOVE *BLANK    NOFOU
+     C                     Z-ADD0         SEQCAM
+     C                     EXSR PREPCA
+     C                     WRITEFMT3S
+     C                     MOVEA'00000'   *IN,81
+F3  C                     END
+     C           LCAR      TAG
+     C           CLECA1    READECARCDELA                 99
+F2  C                     END
+     C                     Z-ADD1         AFFN3
+     C                     WRITEF3B
+     C  N94                WRITEF3N94
+     C                     EXFMTFMT3C
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN94     CABEQ'0'       AFFC
+     * recherche si sélection
+     *-----------------------
+     C           LECT3     TAG
+     C                     READCFMT3S                    50
+    C   50                GOTO AFFC
+    C           SEL3      CABEQ' '       LECT3
+D2  C           SEL3      IFEQ 'L'
+     C                     MOVE STE       £STE
+     C                     MOVE NOCLI     £NOCLI
+     C                     MOVE SVLIV     £SVLIV
+     C                     MOVE '1'       £ONE95
+     C                     MOVE 'V'       £YPMAJ
+     C                     CALL 'CLIE15£'
+     C                     PARM           DSLIV
+    C                     GOTO AFMT3
+F2  C                     END
+     * OBSERVATIONS/TRANSPORT
+D2  C           SEL3      IFEQ 'T'
+     C                     EXSR TRTOBS
+    C                     GOTO AFMT3
+F2  C                     END
+     *
+    C                     GOTO AFFJ
+F1  C                     END
+    C                     GOTO AFFA
+     **********************************
+     * Affichage Format D  (option 1) *
+     **********************************
+     C           AFFD      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEDCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXD
+     C                     MOVE '0'       *IN93
+     C                     SETOF                     99
+     C           CLECA1    CHAINCARCDELA             30
+     * Si pas de délai confirmé
+    C           *IN30     CABEQ'1'       AFFD2
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFD
+     * ----------------------------
+     C           SFD       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOWEQ'0'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+D2  C           UTDEL     IFNE 0
+     C                     MOVE '1'       *IN32
+X2  C                     ELSE
+     C                     MOVE '0'       *IN32
+F2  C                     END
+     C                     MOVE *BLANK    L6TYCD
+     C           CLECD3    CHAINCDESLC               99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE STOND     PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXABRG    L6TYCD
+F2  C                     END
+     C                     WRITEDSF
+     C           CLECA1    READECARCDELA                 99
+    C           CTR       CABEQ6         AFFD2
+F1  C  N99                END
+     C           AFFD2     TAG
+     C                     Z-ADDRECNO     AFFND
+     C                     WRITEFMTD
+D1  C           *IN30     IFNE '1'
+     C                     EXFMTDCTL
+X1  C                     ELSE
+     C                     EXFMTDBIS
+F1  C                     END
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN30     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFD
+    C           *IN09     CABEQ'1'       SFD
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELD      TAG
+     C                     READCDSF                      91
+    C  N91      CHXD      CABEQ*BLANKS   SELD
+    C           *IN91     CABEQ'1'       AFFC
+    C                     GOTO AFFJ
+     **********************************
+     * Affichage Format E  (option 2) *
+     **********************************
+     C           AFFE      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEECTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXE
+     C                     MOVE '0'       *IN93
+     C           CLECA1    CHAINCARCDELB             99
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFE
+     * ----------------------------
+     C           SFE       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     MOVE *BLANK    L6TYCD
+     C           CLECD3    CHAINCDESLC               99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE STOND     PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXABRG    L6TYCD
+F2  C                     END
+     C                     WRITEESF
+     C                     MOVE CLIFPR    REFCFP 29
+     C           LECE      TAG
+     C           CLECA1    READECARCDELB                 99
+    C  N99      CLIFPR    CABEQREFCFP    LECE
+    C           CTR       CABEQ6         AFFE2
+F1  C                     END
+     C           AFFE2     TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     WRITEFMTE
+     C                     EXFMTECTL
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFE
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELE      TAG
+     C                     READCESF                      91
+    C  N91      CHXE      CABEQ*BLANKS   SELE
+    C           *IN91     CABEQ'1'       AFFC
+    C                     GOTO AFFJ
+     **********************************
+     * Affichage Format F  (option 3) *
+     **********************************
+     C           AFFF      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEFCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXF
+     C                     MOVE '0'       *IN93
+     C           CLECA1    CHAINCARCDELC             99
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFF
+     * ----------------------------
+     C           SFF       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     MOVE *BLANK    L6TYCD
+     C           CLECD3    CHAINCDESLC               99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE STOND     PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXABRG    L6TYCD
+F2  C                     END
+     C                     ADD  1         RECNO
+     C                     WRITEFSF
+     C                     MOVE CONFPR    REFPRO
+     C           LECF      TAG
+     C           CLECA1    READECARCDELC                 99
+    C  N99      CONFPR    CABEQREFPRO    LECF
+    C           CTR       CABEQ6         AFFF2
+F1  C                     END
+     C           AFFF2     TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     WRITEFMTF
+     C                     EXFMTFCTL
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFF
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELF      TAG
+     C                     READCFSF                      91
+    C  N91      CHXF      CABEQ*BLANKS   SELF
+    C           *IN91     CABEQ'1'       AFFC
+    C                     GOTO AFFJ
+     **************************************
+     * Affichage Format G  (option 4 & 5) *
+     **************************************
+     C           AFFG      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEGCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXG
+     C                     MOVE '0'       *IN93
+     C   04      CLECA1    CHAINCDESL5               30
+     C  N04      CLECA1    CHAINCDESL16              30
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFG
+     * ----------------------------
+     C           SFG       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+D2  C           CDEPRE    IFNE *BLANK
+     C                     MOVE 'PRÉVI'   TYPCDE
+X2  C                     ELSE
+D3  C           PRESER    IFNE *BLANK
+     C                     MOVE 'PRÉ-S'   TYPCDE
+X3  C                     ELSE
+     C                     MOVE *BLANK    TYPCDE
+F3  C                     END
+F2  C                     END
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     MOVE *BLANK    L6TYCD
+     C           CLECD3    CHAINCDESLC               99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE STOND     PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXABRG    L6TYCD
+F2  C                     END
+     C                     ADD  1         RECNO
+     C                     WRITEGSF
+     C   04      CLECA1    READECDESL5                   99
+     C  N04      CLECA1    READECDESL16                  99
+    C           CTR       CABEQ6         AFFG2
+F1  C                     END
+     C           AFFG2     TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     WRITEFMTG
+     C                     EXFMTGCTL
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFG
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELG      TAG
+     C                     READCGSF                      91
+    C  N91      CHXG      CABEQ*BLANKS   SELG
+    C           *IN91     CABEQ'1'       AFFC
+    C                     GOTO AFFJ
+     **********************************
+     * Affichage Format H  (option 6) *
+     **********************************
+     C           AFFH      TAG
+     C                     Z-ADD0         NOPRO
+     C                     EXFMTFMTH
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           NOPRO     CABEQ0         AFFH           11
+     C           CLEPRO    CHAINPRODAL8              99
+    C           *IN99     CABEQ'1'       AFFH           07
+     C           CLEPRO    SETLLCARCDELD                 99
+    C           *IN99     CABEQ'0'       AFFH           13
+    C                     GOTO AFFJ
+     ***************************************
+     * Affichage Format H'  (option 7 & 8) *
+     ***************************************
+     C           AFFH2     TAG
+     C                     EXFMTFMTH2
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           RECHER    CABEQ*BLANK    AFFH2          11
+     *
+     * Recherche
+     * ---------
+     C                     MOVEARECHER    R,1
+     C                     Z-ADD0         I       20
+D1  C           1         DO   20        I
+D2  C           R,I       IFEQ ' '
+    C           I         ANDGT1
+     C                     MOVEA*BLANKS   R,I
+    C                     GOTO OKRECH
+F2  C                     END
+F1  C                     END
+     C           OKRECH    TAG
+     *
+     * Recherche sur le N° Commande-Client
+     * -----------------------------------
+D1  C           *IN08     IFEQ '0'
+     C                     MOVE '1'       *IN93
+     C                     WRITEECTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXE
+     C                     MOVE '0'       *IN93
+     C           CLECA1    CHAINCARCDELB             99
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFE
+     * ----------------------------
+     C           SFE6      TAG
+     C                     Z-ADD0         CTR     20
+D2  C           *IN99     DOUEQ'1'
+     C                     MOVEACLIREF    E,1
+     C                     Z-ADD0         J       20
+D3  C           1         DO   20        J
+    C           J         CABEQ1         J1
+D4  C           E,J       IFEQ ' '
+     C           ADD1      TAG
+     C                     ADD  1         J
+    C           J         CABGE20        LECTE
+     C           J1        TAG
+    C           E,J       CABEQ' '       ADD1
+     C                     MOVEAE,J       EE,1
+D5  C           I         IFLT 20
+     C                     MOVEA*BLANKS   EE,I
+F5  C                     END
+     C                     MOVEAEE,1      EE1    20
+     C                     MOVEAR         R1     20
+    C           EE1       CABEQR1        RECHOK
+F4  C                     END
+F3  C                     END
+    C                     GOTO LECTE
+     C           RECHOK    TAG
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEESF
+     C           LECTE     TAG
+     C                     MOVE CLIFPR    REFCFP
+     C           CLECA1    READECARCDELB                 99
+    C  N99      CLIFPR    CABEQREFCFP    LECTE
+    C           CTR       CABEQ6         AFFE6
+F2  C                     END
+     C           AFFE6     TAG
+     C                     Z-ADDRECNO     AFFNO
+D2  C           RECNO     IFNE 0
+     C                     WRITEFMTE
+     C                     EXFMTECTL
+X2  C                     ELSE
+     C                     MOVE '1'       *IN07
+    C                     GOTO AFFH2
+F2  C                     END
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFE6
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELE6     TAG
+     C                     READCESF                      91
+    C  N91      CHXE      CABEQ*BLANKS   SELE6
+    C           *IN91     CABEQ'1'       AFFC
+    C                     GOTO AFFJ
+     *
+F1  C                     END
+     *
+     * Recherche sur le Code Produit Client
+     * ------------------------------------
+D1  C           *IN08     IFEQ '1'
+     C                     MOVE '1'       *IN93
+     C                     WRITEFCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXF
+     C                     MOVE '0'       *IN93
+     C           CLECA1    CHAINCARCDELC             99
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFF
+     * ----------------------------
+     C           SFF7      TAG
+     C                     Z-ADD0         CTR     20
+D2  C           *IN99     DOUEQ'1'
+     C                     MOVEACLIPRO    E,1
+     C                     Z-ADD0         J
+D3  C           1         DO   20        J
+    C           J         CABEQ1         J1F
+D4  C           E,J       IFEQ ' '
+     C           ADD1F     TAG
+     C                     ADD  1         J
+    C           J         CABGE20        LECTF
+     C           J1F       TAG
+    C           E,J       CABEQ' '       ADD1F
+     C                     MOVEAE,J       EE,1
+D5  C           I         IFLT 20
+     C                     MOVEA*BLANKS   EE,I
+F5  C                     END
+     C                     MOVEAEE,1      EE1
+     C                     MOVEAR         R1
+    C           EE1       CABEQR1        OK7
+F4  C                     END
+F3  C                     END
+    C                     GOTO LECTF
+     C           OK7       TAG
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEFSF
+     C           LECTF     TAG
+     C                     MOVE CONFPR    REFPRO
+     C           CLECA1    READECARCDELC                 99
+    C  N99      CONFPR    CABEQREFPRO    LECTF
+    C           CTR       CABEQ6         AFFF7
+F2  C                     END
+     C           AFFF7     TAG
+     C                     Z-ADDRECNO     AFFNO
+D2  C           RECNO     IFNE 0
+     C                     WRITEFMTF
+     C                     EXFMTFCTL
+X2  C                     ELSE
+     C                     MOVE '1'       *IN07
+    C                     GOTO AFFH2
+F2  C                     END
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFF7
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELF7     TAG
+     C                     READCFSF                      91
+    C  N91      CHXF      CABEQ*BLANKS   SELF7
+    C           *IN91     CABEQ'1'       AFFC
+F1  C                     END
+     *
+    C                     GOTO AFFJ
+     **********************************
+     * Affichage Format I  (option 9) *
+     **********************************
+     C           AFFI      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEICTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXI
+     C                     MOVE '0'       *IN93
+     C           CLECA1    CHAINCARCDELD             99
+     C                     Z-ADD0         RECNO
+     *
+     * Ecriture du sous-fichier SFI
+     * ----------------------------
+     C           SFI       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+     C                     Z-ADD0         QTECDE
+     C                     Z-ADD0         QTECFM
+     C                     Z-ADD0         QTEEXP
+D2  C           UVENT     IFEQ 1
+     C                     MOVE '1000'    UA
+     C                     MOVE '  '      UB
+X2  C                     ELSE
+D3  C           UVENT     IFEQ 2
+     C                     MOVE ' 100'    UA
+     C                     MOVE 'M2'      UB
+X3  C                     ELSE
+D4  C           UVENT     IFEQ 3
+     C                     MOVE ' 100'    UA
+     C                     MOVE 'ML'      UB
+X4  C                     ELSE
+D5  C           UVENT     IFEQ 4
+     C                     MOVE ' 100'    UA
+     C                     MOVE 'KG'      UB
+X5  C                     ELSE
+D6  C           UVENT     IFEQ 5
+     C                     MOVE 'UNIT'    UA
+     C                     MOVE 'UN'      UB
+F6  C                     END
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+     C                     MOVE CONFPR    REFPRO
+     C                     MOVE CLIPRO    PROCLI
+     C                     MOVE GARNT     NTGAR
+     C                     MOVE EXPDAT    REFDAT
+     C           LECI      TAG
+D2  C           EXPDAT    IFGT REFDAT
+     C                     MOVE EXPDAT    REFDAT
+F2  C                     END
+     C                     ADD  QTDEXP    QTECDE
+D2  C           CODEL     IFEQ 'CO'
+    C           CODEL     OREQ 'CE'
+     C                     ADD  QTDEXP    QTECFM
+F2  C                     END
+     C                     ADD  TOTEXP    QTEEXP
+     C           CLECA1    READECARCDELD                 99
+    C  N99      CONFPR    CABEQREFPRO    LECI
+     C                     MOVE REFA      DATEXA
+     C                     MOVE REFM      DATEXM
+     C                     MOVE REFJ      DATEXJ
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     MOVE *BLANK    L6TYCD
+     C           CLECD3    CHAINCDESLC               90
+D2  C           *IN90     IFEQ '0'
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE STOND     PXVALE    P
+     C           CLEPAR    CHAINPARAME               90
+     C  N90                MOVELPXABRG    L6TYCD
+F2  C                     END
+     C                     WRITEISF
+    C           CTR       CABEQ6         AFFI2
+F1  C                     END
+     C           AFFI2     TAG
+     C                     Z-ADDRECNO     AFFNO
+     C                     WRITEFMTI
+     C                     EXFMTICTL
+    C           *IN12     CABEQ'1'       AFFC
+    C           *IN03     CABEQ'1'       FINPG
+    C           *IN09     CABEQ'1'       SFI
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELI      TAG
+     C                     READCISF                      91
+    C  N91      CHXI      CABEQ*BLANKS   SELI
+    C           *IN91     CABEQ'1'       AFFC
+     C                     MOVE PRONO     NOPRO
+     C                     MOVE NTGAR     GARNT
+     **********************
+     * Affichage Format J *
+     **********************
+     C           AFFJ      TAG
+     *          ----      ---
+     C                     MOVE '0'       *IN26
+     C                     MOVE '0'       *IN27
+     C                     MOVE '0'       *IN44
+     C                     MOVE '0'       *IN63
+     C   40      MODIF     COMP 'M'                  4040
+     *
+     C                     MOVE *BLANKS   CDPART
+D1  C           IMPSTO    IFEQ 'P'
+     C                     MOVE CDE,1     CDPART
+F1  C                     END
+D1  C           PRESER    IFEQ 'P'
+     C                     MOVE CDE,2     CDPART
+F1  C                     END
+D1  C           CDEPRE    IFEQ 'P'
+     C                     MOVE CDE,3     CDPART
+F1  C                     END
+D1  C           STASS     IFEQ ' *'
+     C                     MOVE CDE,5     CDPART
+F1  C                     END
+D1  C           PROTO     IFNE '  '
+    C           MICLI     ORNE *ZEROS
+    C           MACLI     ORNE *ZEROS
+     C                     MOVE CDE,4     CDPART
+F1  C                     END
+     *
+     * recherche si autres cdes/prod sur même n°forme
+     *
+     C           CLEPRO    CHAINPRODAL8              99
+D1  C           *IN42     IFEQ '0'
+    C           NOFOR     ANDGT0
+    C           GARNT     ANDNE'RE'
+     C                     Z-ADD0         CTR
+     C                     MOVE STE       STEREF  10
+     C                     MOVE NOCLI     NOCREF  40
+     C                     MOVE NOPRO     NOPREF  40
+     C           NOFOR     CHAINCARCDELR             99
+D2  C           *IN99     DOWEQ'0'
+D3  C           NOPRO     IFNE NOPREF
+    C           NOCLI     ORNE NOCREF
+     C                     ADD  1         CTR
+F3  C                     END
+     C           NOFOR     READECARCDELR                 99
+F2  C                     END
+     C           CTR       COMP 0                    27
+     C                     Z-ADD0         CTR
+     C                     MOVE STEREF    STE
+     C                     MOVE NOCREF    NOCLI
+     C                     MOVE NOPREF    NOPRO
+     C           CLECA1    CHAINCLIENTS1             21
+F1  C                     END
+     *
+     C                     MOVE '1'       *IN93
+     C                     WRITEJCTL
+     C                     WRITEKCTL
+     C                     Z-ADD0         AFFNK
+     C                     MOVE *BLANK    CHXJ
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNOJ  30
+     C                     Z-ADD0         RECNOK  30
+     C                     Z-ADD0         QTOT
+     C                     Z-ADD0         QTFAB
+     C                     Z-ADD0         QTPRE
+     C                     Z-ADD0         QTREN
+     C                     Z-ADD0         NBLIV
+     C                     Z-ADD0         FRLIV
+     C                     Z-ADD0         PRIUNS
+     C                     Z-ADD0         PRIMET
+     C                     MOVE *BLANKS   CODMON
+     C                     Z-ADD0         PXS
+     C                     Z-ADD0         FRAIS
+     C                     Z-ADD0         WAGON
+     C                     Z-ADD0         STKPRO
+     C                     Z-ADD0         IMPEXT
+     C                     Z-ADD0         IMPINT
+     C                     Z-ADD0         DATAR
+     C                     MOVE *BLANKS   LIBEXT
+     C                     MOVE *BLANKS   LIBINT
+     C                     SETOF                     90
+D1  C           *IN42     IFEQ '1'
+     C                     MOVE '1'       *IN26
+     C           CLEPRO    CHAINMVTIMPLF             99
+D2  C           *IN99     DOWEQ'0'
+     C                     ADD  PDSBOB    STKPRO
+     C           CLEPRO    READEMVTIMPLF                 99
+F2  C                     END
+    C                     GOTO QTETAG
+F1  C                     END
+     *
+     * Lignes 1 à 11 (JKL)
+     * -------------------
+D1  C           STE       IFEQ 0
+     C                     Z-ADD1         STE
+F1  C                     END
+     C                     MOVE '0'       *IN47
+     C                     Z-ADD0         ANPRO
+     C           CLEPRO    CHAINPRODAL8              99
+     C  N99      ANNUL     COMP ' '                  9696
+D1  C           GARNT     IFNE 'RE'
+     C  N99      PTOCK5    COMP 0                    43
+     C  N99      SECIE     COMP 0                    59
+     C  N99      SECII     COMP 0                    60
+X1  C                     ELSE
+     C                     MOVE '0'       *IN43
+     C                     MOVEA'00'      *IN,59
+F1  C                     END
+     * QTE PAR PALETTE VALIDEE
+     C           APLA1     COMP 'O'                      86
+     C                     MOVE *BLANKS   FORML1
+     * INFO/FORME
+     C           NOFOR     CHAINFORDECL1             92
+D1  C           *IN92     IFEQ '0'
+    C           MODIFO    ANDNE' '
+     C                     MOVEL'Forme SU'FORML1
+     C                     MOVE 'SP'      FORML1
+X1  C                     ELSE
+     C                     MOVE 'PR'      CODINT
+     C           CLEFI     SETLLFORINTL3                 92
+D2  C           *IN92     IFEQ '1'
+     C                     MOVEL'Réacteur'FORML1
+F2  C                     END
+F1  C                     END
+     C           FORML1    COMP *BLANK               9595
+     * QTÉ/PALETTE
+     C           CLEPAL    CHAINPALETTL1             92
+     C  N92                Z-ADDNBDECP    QTEPAL
+     C   92                Z-ADD0         QTEPAL
+    C*
+     C                     Z-ADD1         SEQOBS
+     C                     MOVE 'CLIREF'  DEST
+     C                     MOVE 'BM    '  EMET
+     C           CL2OBS    SETLLOBSPROL1                 89
+     *
+     * STOCK PRODUITS FINIS
+     C                     MOVEA'00'      *IN,33
+     C                     MOVEA'000'     *IN,36
+     C                     Z-ADD0         STOCK1  90
+     C                     Z-ADD0         STOCK2  90
+     C                     Z-ADD0         STOCK3  90
+     C                     Z-ADD0         STOCK4  90
+     C                     Z-ADD0         STOCK5  90
+     C                     Z-ADD0         STOCK6  90
+     C                     Z-ADD0         STOCK7  90
+     C                     Z-ADD0         STOCK8  90
+     * SUR ANCIEN PRODUIT ?
+D1  C           ANPRO     IFGT 0
+     C           KANPR     SETLLLIEUST03                 47
+     C  N47      KANPR     SETLLMVTIMPLF                 47
+F1  C                     END
+     *
+D1  C           *IN99     IFEQ '0'
+     C           CLEPF     CHAINLIEUST03             99
+D2  C           *IN99     DOWEQ'0'
+D3  C           LILIEU    IFEQ 1
+     C                     ADD  STOLIE    STOCK1
+F3  C                     END
+D3  C           LILIEU    IFEQ 2
+     C                     ADD  STOLIE    STOCK2
+     C                     MOVEA'1'       *IN,37
+F3  C                     END
+D3  C           LILIEU    IFEQ 3
+     C                     ADD  STOLIE    STOCK3
+     C   37                MOVEA'1'       *IN,36
+     C                     MOVEA'1'       *IN,37
+F3  C                     END
+D3  C           LILIEU    IFEQ 4
+     C                     ADD  STOLIE    STOCK4
+     C   37                MOVEA'1'       *IN,36
+     C                     MOVEA'1'       *IN,37
+F3  C                     END
+D3  C           LILIEU    IFEQ 5
+     C                     ADD  STOLIE    STOCK5
+     C   37                MOVEA'1'       *IN,36
+     C                     MOVEA'1'       *IN,37
+F3  C                     END
+D3  C           LILIEU    IFEQ 7
+     C                     ADD  STOLIE    STOCK7
+     C   37                MOVEA'1'       *IN,36
+     C                     MOVEA'1'       *IN,37
+F3  C                     END
+D3  C           LILIEU    IFEQ 8
+     C                     MOVE 'CEXT'    PXARGU
+     C                     MOVE *BLANK    PXVALE
+     C                     MOVE CODEXT    PXVALE
+     C           CLEPAR    CHAINPARAME               99
+D4  C           *IN99     IFEQ '1'
+    C           PXMONT    OREQ 0
+     C                     ADD  STOLIE    STOCK8
+X4  C                     ELSE
+     C                     MOVE '1'       *IN34
+F4  C                     END
+F3  C                     END
+D3  C           LILIEU    IFEQ 6
+     C                     MOVE 'CEXT'    PXARGU
+     C                     MOVE *BLANK    PXVALE
+     C                     MOVE CODEXT    PXVALE
+     C           CLEPAR    CHAINPARAME               99
+D4  C           *IN99     IFEQ '1'
+    C           PXMONT    OREQ 0
+     C                     ADD  STOLIE    STOCK6
+     C                     MOVEA'1'       *IN,38
+X4  C                     ELSE
+     C                     MOVE '1'       *IN34
+F4  C                     END
+F3  C                     END
+     C           CLEPF     READELIEUST03                 99
+F2  C        N99          END
+F1  C                     END
+     *
+     C                     MOVE '0'       *IN58
+D1  C           GARNT     IFEQ 'RE'
+     C           CLEPRO    SETLLGAMMREL3                 46
+F1  C                     END
+     *
+D1  C           GARNT     IFNE 'RE'
+    C           GARNT     OREQ 'RE'
+    C           *IN46     ANDEQ'1'
+     C           STOCK1    COMP 0                    33
+     C   38 37             SETON                     36
+     C                     ADD  STOCK2    STKPRO
+     C                     ADD  STOCK3    STKPRO
+     C                     ADD  STOCK4    STKPRO
+     C                     ADD  STOCK5    STKPRO
+     C                     ADD  STOCK6    STKPRO
+     C                     ADD  STOCK7    STKPRO
+     C                     ADD  STOCK8    STKPRO
+F1  C                     END
+     *
+     * Si Cde Interne de COMPLEXE
+D1  C           NOCLI     IFEQ 8928
+     C                     MOVE INDPCL    DSINDP
+     C                     TESTN          GRAMCP     99
+     C   99                TESTN          GRARCP     99
+D2  C           *IN99     IFEQ '1'
+     C                     MOVE PAPCPL    PAPI
+     C                     MOVE GRAMCP    GRAMM
+     C                     MOVE REFCPL    REFOUR
+     C                     MOVE GRARCP    GRAREL
+     C                     MOVE FOUBCP    FOUB
+     C                     Z-ADD0         LAIZE
+     C                     Z-ADD0         FORL
+     C                     Z-ADD0         FORH
+D3  C           FOUB      IFNE 'F'
+     C                     MOVE DECL      LAIZE
+X3  C                     ELSE
+     C                     MOVE DECL      FORL
+     C                     MOVE DECH      FORH
+F3  C                     END
+     C           CLEART    CHAINARTPAPL3             99
+D3  C           *IN99     IFEQ '0'
+     C                     Z-ADDQTSTOC    STKPRO
+     C                     MOVE '1'       *IN44
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+D1  C           UVENT     IFEQ 1
+     C                     MOVE '1000'    UA
+     C                     MOVE '  '      UB
+X1  C                     ELSE
+D2  C           UVENT     IFEQ 2
+     C                     MOVE ' 100'    UA
+     C                     MOVE 'M2'      UB
+X2  C                     ELSE
+D3  C           UVENT     IFEQ 3
+     C                     MOVE ' 100'    UA
+     C                     MOVE 'ML'      UB
+X3  C                     ELSE
+D4  C           UVENT     IFEQ 4
+     C                     MOVE ' 100'    UA
+     C                     MOVE 'KG'      UB
+X4  C                     ELSE
+D5  C           UVENT     IFEQ 5
+     C                     MOVE 'UNIT'    UA
+     C                     MOVE 'UN'      UB
+F5  C                     END
+F4  C                     END
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     C           GARNT     COMP *BLANK               1111
+     C                     MOVE GARNT     NTGAR
+    C           GARNT     CABEQ'RE'      QTETAG     1414
+     *
+     * Recherche si produit en-cours de fabrication
+     * ---------------------------------------------
+     C                     MOVE *BLANK    MSGJ
+     C           CLEPRO    SETLLFAB10L30                 99
+     C   99                MOVE MSG,1     MSGJ
+     C           CLEPR2    SETLLENCFACL5                 13
+     C                     MOVE '0'       *IN58
+     *
+     * Calcul Stock Papier Imprimé
+     * ---------------------------
+     *
+     * Test si plus d'une Impréssion
+     *
+     C                     Z-ADD0         EX      10
+     C                     Z-ADD0         IN      10
+     C                     MOVE *BLANKS   LIBEXT
+     C                     MOVE *BLANKS   LIBINT
+     *
+D1  C           TIMP3     IFGT 0
+    C           TIMP3     ANDNE3
+     C                     Z-ADD3         EX
+X1  C                     ELSE
+D2  C           TIMP2     IFGT 0
+    C           TIMP2     ANDNE3
+     C                     Z-ADD2         EX
+X2  C                     ELSE
+D3  C           TIMP1     IFGT 0
+    C           TIMP1     ANDNE3
+     C                     Z-ADD1         EX
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+D1  C           TIMP4     IFGT 0
+    C           TIMP4     ANDNE3
+     C                     Z-ADD4         IN
+X1  C                     ELSE
+D2  C           TIMP5     IFGT 0
+    C           TIMP5     ANDNE3
+     C                     Z-ADD5         IN
+X2  C                     ELSE
+D3  C           TIMP6     IFGT 0
+    C           TIMP6     ANDNE3
+     C                     Z-ADD6         IN
+X3  C                     ELSE
+D4  C           TIMP7     IFGT 0
+     C                     Z-ADD7         IN
+F4  C                     END
+F3  C                     END
+F2  C                     END
+F1  C                     END
+D1  C           EX        IFGT 0
+     C                     MOVE LIB,1     LIBEXT
+F1  C                     END
+D1  C           IN        IFGT 0
+     C                     MOVELLIB,2     LIBINT
+F1  C                     END
+     C                     Z-ADD0         IMPEXT
+     C                     Z-ADD0         IMPINT
+     C           CLEPRO    CHAINMVTIMPLF             99
+D1  C           *IN99     DOWEQ'0'
+D2  C           SUIMP     IFEQ EX
+D3  C           IMPEXT    IFNE 0
+    C           USINE     ANDNEUSREF1
+     C                     MOVE LIB,6     LIBEXT
+F3  C                     END
+     C                     ADD  PROFIN    IMPEXT
+     C                     MOVE USINE     USREF1  10
+X2  C                     ELSE
+D3  C           IMPINT    IFNE 0
+    C           USINE     ANDNEUSREF2
+     C                     MOVE LIB,6     LIBEXT
+F3  C                     END
+     C                     ADD  PROFIN    IMPINT
+     C                     MOVE USINE     USREF2  10
+F2  C                     END
+     C           CLEPRO    READEMVTIMPLF                 99
+F1  C                     END
+     *
+     * si Produit faisant appel à du pré-imprimé stocké
+     *
+     C                     MOVE '0'       *IN26
+     *
+D1  C           NIMPE1    IFNE *BLANK
+     C                     MOVE '1'       *IN26
+     C                     Z-ADD0         STMVT
+     C                     MOVE NIMPE1    NCMVT
+     C                     MOVE NIMPE2    NPMVT
+     C                     MOVE LIB,3     LIBEXT
+     C                     Z-ADD0         IMPEXT
+     C           CLEPR3    CHAINMVTIMPLF             99
+D2  C           *IN99     DOWEQ'0'
+     C                     ADD  PDSBOB    IMPEXT
+     C           CLEPR3    READEMVTIMPLF                 99
+F2  C                     END
+F1  C                     END
+     *
+D1  C           NIMPI1    IFNE *BLANK
+D2  C           NIMPI1    IFNE NIMPE1
+    C           NIMPI2    ORNE NIMPE2
+     C                     MOVE '1'       *IN26
+     C                     Z-ADD0         STMVT
+     C                     MOVE NIMPI1    NCMVT
+     C                     MOVE NIMPI2    NPMVT
+     C                     Z-ADD0         IMPINT
+     C                     MOVELLIB,4     LIBINT
+     C           CLEPR3    CHAINMVTIMPLF             99
+D3  C           *IN99     DOWEQ'0'
+     C                     ADD  PDSBOB    IMPINT
+     C           CLEPR3    READEMVTIMPLF                 99
+F3  C                     END
+X2  C                     ELSE
+     C                     MOVE LIB,5     LIBEXT
+F2  C                     END
+F1  C                     END
+     * Affiches Imprimées en stock ?
+     C                     Z-ADDNOPRO     SVPRO   40
+     C                     MOVEL'8'       NOPRO
+     C           CLEPRO    CHAINMVTIMPLF             99
+D1  C           *IN99     DOWEQ'0'
+D2  C           LIBEXT    IFNE *BLANK
+     C                     MOVE LIB,6     LIBEXT
+X2  C                     ELSE
+     C                     MOVE LIB,9     LIBEXT
+F2  C                     END
+     C                     ADD  PROFIN    IMPEXT
+     C           CLEPRO    READEMVTIMPLF                 99
+F1  C                     END
+     C                     MOVEL'9'       NOPRO
+     C           CLEPRO    CHAINMVTIMPLF             99
+D1  C           *IN99     DOWEQ'0'
+D2  C           LIBEXT    IFNE *BLANK
+     C                     MOVE LIB,6     LIBEXT
+X2  C                     ELSE
+     C                     MOVE LIB,9     LIBEXT
+F2  C                     END
+     C                     ADD  PROFIN    IMPEXT
+     C           CLEPRO    READEMVTIMPLF                 99
+F1  C                     END
+     C                     Z-ADDSVPRO     NOPRO   40
+     *
+     * si Produit fabrication papier SOf
+     *
+     * Calcul de la Quantité Actuelle
+     * ------------------------------
+     C           QTETAG    TAG
+     C           CLECD2    CHAINCARCDEL1             99
+     C                     Z-ADD0         ACTQTE
+D1  C           *IN99     DOWEQ'0'
+     C                     ADD  QTDEXP    ACTQTE
+     C           CLECD2    READECARCDEL1                 99
+F1  C                     END
+     * Recherche Lignes Matériel
+     * -------------------------
+     C                     Z-ADD0         FRAIS
+D1  C           PR1       IFNE 0
+     C           CLEMAT    SETLLCDEMATL1
+D2  C                     DO   *HIVAL
+     C           CLEMAT    READECDEMATL1                 99
+     C  N99                ADD  FRINCS    FRAIS
+F2  C  N99                END
+F1  C                     END
+     *
+     * En-tête Commande
+     * ----------------
+     C           CLECD2    CHAINCDESL1               99
+     *
+     C                     MOVE '0'       *IN63
+D1  C           STASS     IFEQ ' *'
+     C                     MOVE '1'       *IN63
+F1  C                     END
+     * Lignes 14 à 20 (JSF)
+     * --------------------
+     C           LIBEXT    COMP *BLANKS              1515
+     C           LIBINT    COMP *BLANKS              1616
+     C           IMPEXT    COMP 0                    25
+     C  N25      IMPINT    COMP 0                    25
+     C           CLEPRO    CHAINCARCDELD             66
+     *
+     * Ecriture du sous-fichier SFJ
+     * ----------------------------
+     C           SFJ       TAG
+     C                     Z-ADD0         CTRJ    20
+     C                     MOVEA'00000000'*IN,50
+D1  C           *IN66     DOWEQ'0'
+     C                     Z-ADD*ZEROS    PRIXUN
+D2  C           CODMON    IFEQ 'EUR'
+    C           CODMON    OREQ '   '
+     C                     Z-ADDPUNIT     PRIXUN
+X2  C                     ELSE
+     C                     Z-ADDPRIETR    PRIXUN
+F2  C                     END
+     C                     MOVE EXPEDJ    DEREJ
+     C                     MOVE EXPEDM    DEREM
+     C                     ADD  1         CTRJ
+     C                     ADD  1         RECNOJ
+     C                     ADD  1         RECNOK
+     C           CLEOBS    SETLLCAROBSL1                 29
+     C                     EXSR TRTOF
+     C                     EXSR PREPCA
+     C   13 54             MOVE '1'       *IN58
+D2  C           UTDEL     IFNE 0
+     C                     MOVE '1'       *IN32
+X2  C                     ELSE
+     C                     MOVE '0'       *IN32
+F2  C                     END
+D2  C           DEDEL     IFNE 0
+     C                     MOVE '1'       *IN35
+X2  C                     ELSE
+     C                     MOVE '0'       *IN35
+F2  C                     END
+     C                     MOVE USINE     USBL    1
+D2  C           USBL      IFNE IMPD
+     C                     SETON                     61
+X2  C                     ELSE
+     C                     SETOF                     61
+F2  C                     END
+     C                     MOVEL*BLANKS   LIBEXP
+D2  C           IMPD      IFNE '6'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE IMPD      PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXLIBE    LIBEXP
+X2  C                     ELSE
+     C                     MOVE 'CEXT'    PXARGU
+     C                     MOVE PLATF     PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXABRG    LIBEXP
+F2  C                     END
+     C                     MOVEL*BLANKS   AMALG
+     C                     MOVEL*BLANKS   LIBAMA
+     C                     SETOF                     45
+D2  C           NBEXP     IFNE 0
+     C                     SETON                     45
+     C           CLECB     CHAINCODBARL2             99
+     C                     MOVELLIB,8     AMALG
+F2  C                     END
+     C                     MOVE *BLANK    LTYPCD
+     C           CLECD3    CHAINCDESLC               99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE 'NCDE'    PXARGU
+     C                     MOVE STOND     PXVALE    P
+     C           CLEPAR    CHAINPARAME               99
+     C  N99                MOVELPXABRG    LTYPCD
+F2  C                     END
+     C                     WRITEJSF
+     C                     SETOF                     31
+     C           CLRSTK    CHAINREFSTKL1             99
+     C  N99                SETON                     31
+     C                     WRITEKSF
+     C           CLEPRO    READECARCDELD                 66
+F1  C                     END
+D1  C           RECNOJ    IFEQ 0
+    C  N41                GOTO AFFC
+    C                     GOTO AFFM
+F1  C                     END
+D1  C           CODMON    IFEQ 'EUR'
+    C           CODMON    OREQ '   '
+     C                     MOVE '0'       *IN75
+X1  C                     ELSE
+     C                     MOVE '1'       *IN75
+F1  C                     END
+     C                     MOVE NTGAR     GARNT
+     C                     WRITEJKL
+     C           AFFSFJ    TAG
+     C  N21N22N28          WRITEFMTJ
+     C                     EXFMTJCTL
+     *
+     * Interrogation du Produit (DEV015£)
+     * ----------------------------------
+D1  C           *IN20     IFEQ '1'
+D2  C           STE       IFEQ 0
+     C                     MOVE 'N'       BIDON
+     C                     Z-ADDSTE       STEFAC
+     C                     Z-ADDNOCLI     CLIE
+     C                     Z-ADDNOPRO     PROD
+     C                     CALL 'LAN017£'
+     C                     PARM           PARM1
+X2  C                     ELSE
+     C                     MOVE NOCLI     NOC10
+     C                     MOVE NOPRO     NOP10
+     C                     CALL 'DEV015£'
+     C                     PARM           PARM10
+F2  C                     END
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     * Consultation Stock Produits Finis
+     * ---------------------------------
+D1  C           *IN05     IFEQ '1'
+     C                     MOVE '1'       ZONE95
+     C                     MOVE NOPRO     DSPRO
+     C                     CALL 'PROD32L'              97
+     C                     PARM           DSCOMM
+     C                     MOVE '0'       ZONE95
+     C   97                WRITEJKL
+    C           *IN97     CABEQ'1'       AFFSFJ
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     * Consultation ENCOURS en Contrôle QUALITÉ
+     * ----------------------------------------
+D1  C           *IN23     IFEQ '1'
+     C           CLEPRO    SETLLFAB10L30                 99
+    C  N99                GOTO AFFSFJ
+     C                     MOVE 'N'       AUT10£  1
+     C                     MOVE '0'       W10£
+     C                     MOVE STE       ST10£
+     C                     MOVE NOCLI     NOC10£
+     C                     MOVE NOPRO     NOP10£
+     C                     CALL 'FAB010£'
+     C                     PARM           DS10£
+     C                     PARM           AUT10£
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     * Historique des Livraisons (STAT400£)
+     * ------------------------------------
+D1  C           *IN01     IFEQ '1'
+     C                     MOVE '1'       ZONE95
+     C                     MOVE NOPRO     DSPRO
+     C                     CALL 'STAT400£'
+     C                     PARM           DSCOMM
+     C                     MOVE '0'       ZONE95
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     * Consultation Stock Imprimé (STOC51£)
+     * ------------------------------------
+D1  C           *IN11     IFEQ '1'
+     C                     Z-ADD1         US51
+     C                     MOVE STE       STE51
+     C                     MOVE NOCLI     CLI51
+     C                     MOVE NOPRO     PRO51
+     C                     CALL 'STOC51£'
+     C                     PARM           DS51
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     * Affichage des Cdes/même N°forme & autre produit
+     * -----------------------------------------------
+D1  C           *IN17     IFEQ '1'
+     C                     MOVE STE       STEREF
+     C                     MOVE NOCLI     NOCREF
+     C                     MOVE NOPRO     NOPREF
+     C                     WRITEFMTQ
+     C                     MOVE '1'       *IN93
+     C                     WRITEQCTL
+     C                     MOVE '0'       *IN93
+     C           NOFOR     CHAINCARCDELR             99
+     C                     Z-ADD0         RECNO
+     *
+     C                     Z-ADD0         CTR     20
+D2  C           *IN99     DOUEQ'1'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLECA1    CHAINCLIENTS1             99
+     C           CLEPRO    CHAINPRODAL8              99
+     C                     ADD  1         RECNO
+D3  C           UTDEL     IFNE 0
+     C                     MOVE '1'       *IN32
+X3  C                     ELSE
+     C                     MOVE '0'       *IN32
+F3  C                     END
+     C                     WRITEQSF
+     C           NOFOR     READECARCDELR                 99
+F2  C                     END
+     C                     EXFMTQCTL
+     C                     MOVE STEREF    STE
+     C                     MOVE NOCREF    NOCLI
+     C                     MOVE NOPREF    NOPRO
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+    C           *IN04     CABEQ'1'       AFFS
+    C           *IN08     CABEQ'1'       AFFK
+    C           *IN10     CABEQ'1'       AFFL
+     *
+     * Recherche des Reservations de STOCKE / SOF
+     * ------------------------------------------
+D1  C           *IN18     IFEQ '1'
+     *
+D2  C           *IN63     IFEQ '1'                        SOF
+     C                     MOVE INDPCL    DSINDP
+     C                     TESTN          GRAMCP     99
+     C   99                TESTN          GRARCP     99
+D3  C           *IN99     IFEQ '1'
+     C                     MOVE PAPCPL    PAPI
+     C                     MOVE GRAMCP    GRAMM
+     C                     MOVE REFCPL    REFOUR
+     C                     MOVE GRARCP    GRAREL
+     C                     MOVE FOUBCP    FOUB
+     C                     Z-ADD0         LAIZE
+     C                     Z-ADD0         FORL
+     C                     Z-ADD0         FORH
+D4  C           FOUB      IFNE 'F'
+     C                     MOVE DECL      LAIZE
+X4  C                     ELSE
+     C                     MOVE DECL      FORL
+     C                     MOVE DECH      FORH
+F4  C                     END
+     C           £USER     CHAINMNUDIRL1             50
+     C                     MOVE DIRUSI    USI
+D4  C           USI       IFEQ 1
+     C                     Z-ADD2         USI
+F4  C                     END
+     C                     MOVE DSREF     DSE2
+     C                     CALL 'STOK61£'              97
+     C                     PARM           DSENTR
+    C           *IN97     CABEQ'1'       FN18
+F3  C                     END
+     *
+X2  C                     ELSE
+    C*
+D3  C           *IN42     IFEQ '0'
+     C           CLEPRO    CHAINRESIMPL6             99
+    C           *IN99     CABEQ'1'       AFFSFJ         28
+     C           CLEPR4    CHAINPREIMP2              97
+     C                     CALL 'STOC60£'
+     C                     PARM           DSRESI
+     C                     MOVE D2RESI    REFD2R  9
+D4  C           *IN99     DOWEQ'0'
+D5  C           D2RESI    IFNE REFD2R
+     C           CLEPR4    CHAINPREIMP2              99
+     C                     CALL 'STOC60£'
+     C                     PARM           DSRESI
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+     C                     MOVE D2RESI    REFD2R  9
+F5  C                     END
+     C           CLEPRO    READERESIMPL6                 99
+F4  C                     END
+X3  C                     ELSE
+     C                     Z-ADDUSEXT     USINEP
+     C                     Z-ADD0         NIMP1
+     C                     Z-ADDNOCLI     NIMP2
+     C                     Z-ADDNOPRO     NIMP3
+     C                     CALL 'STOC60£'
+     C                     PARM           DSRESI
+F3  C                     END
+F2  C                     END
+     C           FN18      TAG
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELJ      TAG
+     C                     READCJSF                      91
+    C  N91      CHXJ      CABEQ*BLANKS   SELJ
+D1  C           *IN91     IFEQ '1'
+D2  C           *IN40     IFEQ '1'
+    C           MODIF     OREQ 'M'
+    C           *IN39     CABEQ'1'       SELAP
+    C                     GOTO FINPG
+F2  C                     END
+    C           *IN02     CABEQ'1'       AFFJ
+    C           *IN41     CABEQ'1'       AFFM
+    C           *IN88     CABEQ'1'       AFFV2
+    C                     GOTO AFFC
+F1  C                     END
+     *
+     * Mise-à-Jour
+     * -----------
+D1  C           *IN07     IFEQ '1'
+     C                     MOVE ' '       FIN10L
+     C                     CALL 'CDEC10L'
+     C                     PARM           DS10L
+    C           FIN10L    CABNE' '       FINPG
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     * Interrogation Dossier Matériel
+     * ------------------------------
+D1  C           *IN06     IFEQ '1'
+D2  C           SEQLIV    IFEQ '*'
+     C                     MOVE 'I'       PGID
+     C                     Z-ADDSTE       ST
+     C                     Z-ADDNOCLI     NOC
+     C                     Z-ADDNOPRO     NOP
+     C                     Z-ADDNCONF     NCO
+     C                     Z-ADDSEQFAB    NOS
+     C                     CALL 'PLAN05£'
+     C                     PARM           DSMAT
+F2  C                     END
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     * Aide à la Gestion des O.F.
+     * --------------------------
+D1  C           *IN09     IFEQ '1'
+     C                     Z-ADDUSINE     US35
+     C                     Z-ADDNCONF     NCO35
+     C                     Z-ADDSEQFAB    NOS35
+     C                     Z-ADDNOPRO     NOP35
+     C                     CALL 'PLAN59£'
+     C                     PARM           DS35
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     *
+     * INTERRO HISTORIQUE DE FACONNAGE
+     * --------------------------
+D1  C           *IN02     IFEQ '1'
+     C                     Z-ADDSTE       STEFAC
+     C                     Z-ADDNOCLI     CLIE
+     C                     Z-ADDNOPRO     PROD
+     C                     Z-ADDNCONF     CONF
+     C                     Z-ADDSEQFAB    SEQ
+     C                     Z-ADD0         DTLANC
+     C                     Z-ADD0         DTSYS
+     C                     MOVE 'A'       BIDON
+     C                     CALL 'PROD21L'
+     C                     PARM           PARM1
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     *
+     * Interrogation OBSERVATIONS/Séq.
+     * -------------------------------
+D1  C           *IN19     IFEQ '1'
+     C                     MOVE '1'       *IN93
+     C                     WRITETCTL
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNOT  30
+     *
+     C           CLEOBS    CHAINCAROBSL1             99
+D2  C           *IN99     DOWEQ'0'
+     C                     ADD  1         RECNOT
+     C                     WRITETSF
+     C           CLEOBS    READECAROBSL1                 99
+F2  C                     END
+D2  C           RECNOT    IFGT 0
+     C                     WRITEFMTT
+     C                     EXFMTTCTL
+F2  C                     END
+    C                     GOTO AFFJ
+F1  C                     END
+     *
+     * Information sur la commande
+     * ---------------------------
+     C   40                MOVE 'I'       FIN10L
+     C                     CALL 'CDEC06'
+     C                     PARM           DSMAJ
+    C           FIN10L    CABNE' '       FINPG
+D1  C           CODMON    IFEQ 'EUR'
+    C           CODMON    OREQ '   '
+     C                     MOVE '0'       *IN75
+X1  C                     ELSE
+     C                     MOVE '1'       *IN75
+F1  C                     END
+     *
+     C                     WRITEJKL
+     C                     MOVE '1'       *IN93
+     C                     WRITEJCTL
+     C                     WRITEKCTL
+     C                     MOVE *BLANK    CHXJ
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNOK  30
+     C                     Z-ADD0         RECNOJ  30
+     C           CLEPRO    CHAINCARCDELD             66
+    C                     GOTO SFJ
+     **********************
+     * Affichage Format K *
+     **********************
+     C           AFFK      TAG
+     *
+     C                     Z-ADD1         AFFNK
+     C           AFFSFK    TAG
+     C                     WRITEFMTK
+     C                     EXFMTKCTL
+     *
+     * Accès adresses de livraison
+     * ---------------------------
+D1  C           *IN04     IFEQ '1'
+     C                     MOVE '1'       Z100
+     C                     MOVE '5'       Z101
+     C                     CALL 'CLIE09£'
+     C                     PARM           DSCOMM
+     C                     WRITEJKL
+    C                     GOTO AFFSFK
+F1  C                     END
+     *
+     * Accès adresses de facturation
+     * -----------------------------
+D1  C           *IN06     IFEQ '1'
+     C                     MOVE '1'       Z100
+     C                     MOVE '4'       Z101
+     C                     CALL 'CLIE09£'
+     C                     PARM           DSCOMM
+     C                     WRITEJKL
+    C                     GOTO AFFSFK
+F1  C                     END
+     *
+    C                     GOTO AFFSFJ
+     **********************
+     * Affichage Format L *
+     **********************
+     C           AFFL      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITELCTL
+     C                     Z-ADD0         AFFNL
+     C                     MOVE '0'       *IN93
+     C                     MOVE '0'       *IN21
+     C                     Z-ADD0         RECNOL  40
+     *
+     * Lignes 14 à 20 (LSF)
+     * --------------------
+     C  N77      CLEPRO    CHAINMAJCDEL1             99
+     C   77      CLEPRO    CHAINMAJCDEL9             99
+    C           *IN99     CABEQ'1'       AFFL2
+     *
+     * Ecriture du sous-fichier SFL
+     * ----------------------------
+     C           SFL       TAG
+     C                     Z-ADD0         CTRL    20
+D1  C           *IN99     DOUEQ'1'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C                     ADD  1         CTRL
+     C                     ADD  1         RECNOL
+D2  C           UTDEL     IFNE 0
+     C                     MOVE '1'       *IN32
+X2  C                     ELSE
+     C                     MOVE '0'       *IN32
+F2  C                     END
+D2  C           DEDEL     IFNE 0
+     C                     MOVE '1'       *IN35
+X2  C                     ELSE
+     C                     MOVE '0'       *IN35
+F2  C                     END
+     C                     WRITELSF
+     C  N77      CLEPRO    READEMAJCDEL1                 99
+     C   77      CLEPRO    READEMAJCDEL9                 99
+    C           CTRL      CABGE8         AFFL2
+F1  C                     END
+     C           AFFL2     TAG
+     C                     Z-ADDRECNOL    AFFNL
+D1  C           RECNOL    IFNE 0
+     C                     WRITEFMTL
+     C                     EXFMTLCTL
+X1  C                     ELSE
+     C                     MOVE '0'       *IN77
+     C                     MOVE '1'       *IN21
+    C                     GOTO AFFSFJ
+F1  C                     END
+    C           *IN09     CABEQ'1'       SFL
+     C                     MOVE '0'       *IN77
+    C           *IN10     CABEQ'1'       AFFL           77
+    C                     GOTO AFFSFJ
+     *
+     **********************
+     * Affichage Format R *
+     **********************
+     * Historique des En-Cours Façonnage
+     * ---------------------------------
+     *
+     C           AFFR      TAG
+     C                     MOVEL*YEAR     SSSYS
+     C                     Z-ADDUYEAR     AASYS
+     C                     Z-ADDUMONTH    MMSYS
+     C                     Z-ADDUDAY      JJSYS
+     C                     MOVE '1'       *IN93
+     C                     WRITERCTL
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNOR  30
+     *
+     * Lignes 14 à 20 (LSF)
+     * --------------------
+     C           CLEPR2    CHAINENCFACL5             99
+     *
+     * Ecriture du sous-fichier SFR
+     * ----------------------------
+     C           SFR       TAG
+D1  C           *IN99     DOWEQ'0'
+     C                     ADD  1         RECNOR
+     C                     WRITERSF
+     C           CLEPR2    READEENCFACL5                 99
+F1  C                     END
+D1  C           RECNOR    IFNE 1
+     C                     WRITEFMTR
+     C                     EXFMTRCTL
+     C           SELR      TAG
+     C                     READCRSF                      99
+    C           *IN99     CABEQ'1'       AFFSFJ
+    C           CHXR      CABEQ*BLANKS   SELR
+     C                     MOVE 'A'       BIDON
+     C                     CALL 'PROD21L'
+     C                     PARM           PARM1
+     C                     WRITEJKL
+    C                     GOTO SELR
+X1  C                     ELSE
+     C                     MOVE 'A'       BIDON
+     C                     CALL 'PROD21L'
+     C                     PARM           PARM1
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     **********************
+     * Affichage Format S *
+     **********************
+     * Stock prévisionnel/articles réservés pour ce produit
+     * ----------------------------------------------------
+     *
+     C           AFFS      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITESCTL
+     C                     MOVE '0'       *IN93
+     C                     MOVE '0'       *IN22
+     C                     Z-ADD0         RECNOS  30
+     *
+     * Lignes 14 à 20 (SSF)
+     * --------------------
+     C                     Z-ADDNOPRO     NOPRX   40
+     C           CLEPRO    CHAINRESPAPL0             99
+    C           *IN99     CABEQ'1'       AFFS21
+     C                     MOVE DSLECT    DSREF
+     *
+     * Ecriture du sous-fichier SFS
+     * ----------------------------
+     C           SFS       TAG
+D1  C           *IN99     DOWEQ'0'
+D2  C           DSREF     IFNE DSLECT
+     *
+     C           CLEART    CHAINARTPAPL3             99
+D3  C           *IN99     IFNE '1'
+     C                     ADD  1         RECNOS
+     C                     WRITESSF
+F3  C                     END
+     C                     MOVE DSLECT    DSREF
+F2  C                     END
+     C           CLEPRO    READERESPAPL0                 99
+F1  C                     END
+     C           CLEART    CHAINARTPAPL3             99
+D1  C           *IN99     IFNE '1'
+     C                     ADD  1         RECNOS
+     C                     WRITESSF
+F1  C                     END
+    C           NATMAI    CABEQ' '       AFFS2
+     * SI AFFICHES
+     C           AFFS21    TAG
+     C                     MOVEL'8'       NOPRO
+     C           CLEPRO    CHAINRESPAPL0             99
+    C           *IN99     CABEQ'1'       AFFS22
+     C                     MOVE DSLECT    DSREF
+     *
+     * Ecriture du sous-fichier SFS
+     * ----------------------------
+D1  C           *IN99     DOWEQ'0'
+D2  C           DSREF     IFNE DSLECT
+     *
+     C           CLEART    CHAINARTPAPL3             99
+D3  C           *IN99     IFNE '1'
+     C                     ADD  1         RECNOS
+     C                     WRITESSF
+F3  C                     END
+     C                     MOVE DSLECT    DSREF
+F2  C                     END
+     C           CLEPRO    READERESPAPL0                 99
+F1  C                     END
+     C           CLEART    CHAINARTPAPL3             99
+D1  C           *IN99     IFNE '1'
+     C                     ADD  1         RECNOS
+     C                     WRITESSF
+F1  C                     END
+     *
+     C           AFFS22    TAG
+     C                     MOVEL'9'       NOPRO
+     C           CLEPRO    CHAINRESPAPL0             99
+    C           *IN99     CABEQ'1'       AFFS2
+     C                     MOVE DSLECT    DSREF
+     *
+     * Ecriture du sous-fichier SFS
+     * ----------------------------
+D1  C           *IN99     DOWEQ'0'
+D2  C           DSREF     IFNE DSLECT
+     *
+     C           CLEART    CHAINARTPAPL3             99
+D3  C           *IN99     IFNE '1'
+     C                     ADD  1         RECNOS
+     C                     WRITESSF
+F3  C                     END
+     C                     MOVE DSLECT    DSREF
+F2  C                     END
+     C           CLEPRO    READERESPAPL0                 99
+F1  C                     END
+     C           CLEART    CHAINARTPAPL3             99
+D1  C           *IN99     IFNE '1'
+     C                     ADD  1         RECNOS
+     C                     WRITESSF
+F1  C                     END
+     *
+     C           AFFS2     TAG
+     C                     Z-ADDNOPRX     NOPRO
+D1  C           RECNOS    IFNE 0
+     C                     WRITEFMTS
+     C                     EXFMTSCTL
+     C           SELS      TAG
+     C                     READCSSF                      99
+D2  C           *IN99     IFEQ '1'
+     C                     WRITEJKL
+    C                     GOTO AFFSFJ
+F2  C                     END
+    C           CHXS      CABEQ*BLANKS   SELS
+     *
+     * Consultation Stock Prévisionnel (STOK61£)
+     * -----------------------------------------
+     C                     MOVE USINE     USI
+     C                     MOVE DSREF     DSE2
+     C                     CALL 'STOK61£'              97
+     C                     PARM           DSENTR
+    C   97                GOTO SELS
+    C                     GOTO SELS
+X1  C                     ELSE
+     C                     MOVE '1'       *IN22
+    C                     GOTO AFFSFJ
+F1  C                     END
+     *
+     ********************************************************
+     * Affichage Format M - (Choix commandes Particulières) *
+     ********************************************************
+     C           AFFM      TAG
+     C                     MOVE '0'       *IN42
+     C                     SETOF                     9596
+     C                     EXFMTFMTM
+    C           *IN12     CABEQ'1'       AFFA
+    C           *IN03     CABEQ'1'       FINPG
+D1  C           NOCLI     IFGT 0
+    C           NOPRO     ANDGT0
+     C                     Z-ADD0         STE
+     C           CLEPR2    CHAINPREIMP2              99
+    C           *IN99     CABEQ'1'       AFFM           14
+     C           CLEPRO    CHAINCDESL6               99
+    C           *IN99     CABEQ'1'       AFFM           15
+     *
+D2  C           *IN99     DOWEQ'0'
+     C           CLEPRO    READECDESL6                   99
+F2  C                     END
+     C                     MOVE CDE,1     CDPART
+     C                     MOVE *BLANK    NOMCLI
+     C                     MOVEL'STOCKÉ'  NOMCLI
+     C                     MOVE *BLANK    BLOC1
+     C                     MOVE *BLANK    BLOC2
+     C                     MOVELDPRIMP    BLOC1
+     C                     MOVE 'DEFINI'  DEST
+     C                     MOVE 'BM    '  EMET
+     C                     Z-ADD1         SEQOBS
+     C           CL2OBS    CHAINOBSPROL1             99
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE OBSLIB    BLOC2
+F2  C                     END
+     C                     MOVE '1'       *IN42
+     C                     MOVE NOCLI     CLI     40
+     C                     MOVE NOPRO     PRO     40
+     C                     MOVE NCONF     PR1
+     C                     Z-ADDCONFJ     CONFJJ
+     C                     Z-ADDCONFM     CONFMM
+     C                     Z-ADDCONFA     CONFAA
+    C*                    MOVE DATCDE    DACOM
+    C                     GOTO AFFJ
+F1  C                     END
+    C           CHXM      CABEQ'1'       AFFN
+    C           CHXM      CABEQ'2'       AFFO
+    C           CHXM      CABEQ'3'       AFFP
+    C           CHXM      CABEQ'4'       AFFSOF
+    C                     GOTO AFFA
+     ***************************************
+     * Affichage Format N - (PRÉ-IMPRIMÉ)  *
+     ***************************************
+     C           AFFN      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITENCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXN
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNO
+     C           *LOVAL    SETLLCDESL6                   99
+     C                     READ CDESL6                   99
+    C           *IN99     CABEQ'1'       AFFN2
+     C                     MOVE 'IMPR'    PXARGU
+     *
+     * Ecriture du sous-fichier SFN
+     * ----------------------------
+     C           SFN       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+D2  C           IMPSTO    IFNE ' '
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLEPR2    CHAINPREIMP2              99
+     C                     MOVE *BLANK    PXVALE
+     C                     MOVE TIMPS     PXVALE
+     C           CLEPAR    CHAINPARAME               99
+     C                     MOVELPXABRG    IMPR
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITENSF
+F2  C                     END
+     C                     READ CDESL6                   99
+D2  C           IMPSTO    IFNE ' '
+    C           CTR       ANDGE6
+    C                     GOTO AFFN2
+F2  C                     END
+F1  C                     END
+     C           AFFN2     TAG
+     C                     Z-ADDRECNO     AFFNO
+D1  C           RECNO     IFNE 0
+     C                     WRITEFMTN
+     C                     EXFMTNCTL
+X1  C                     ELSE
+     C                     MOVE '1'       *IN11
+    C                     GOTO AFFM
+F1  C                     END
+    C           *IN09     CABEQ'1'       SFN
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELN      TAG
+     C                     READCNSF                      91
+    C  N91      CHXN      CABEQ*BLANKS   SELN
+    C           *IN91     CABEQ'1'       AFFM
+     C                     MOVE CDE,1     CDPART
+     C                     MOVE *BLANK    NOMCLI
+     C                     MOVE *BLANK    BLOC1
+     C                     MOVE *BLANK    BLOC2
+     C                     MOVELDPRIMP    BLOC1
+     C                     MOVE 'DEFINI'  DEST
+     C                     MOVE 'BM    '  EMET
+     C                     Z-ADD1         SEQOBS
+     C           CL2OBS    CHAINOBSPROL1             99
+D1  C           *IN99     IFEQ '0'
+     C                     MOVE OBSLIB    BLOC2
+F1  C                     END
+     C                     MOVE '1'       *IN42
+     C                     MOVE NOCLI     CLI     40
+     C                     MOVE NOPRO     PRO     40
+     C                     MOVE NCONF     PR1
+     C                     Z-ADDCONFJ     CONFJJ
+     C                     Z-ADDCONFM     CONFMM
+     C                     Z-ADDCONFA     CONFAA
+    C*                    MOVE DATCDE    DACOM
+     *
+     * Recherche du dernier N° de Commande
+     C           RESF      TAG
+     C                     ADD  1         RECNO
+     C           RECNO     CHAINNSF                  99
+D1  C           *IN99     IFNE '1'
+    C           NOCLI     ANDEQCLI
+    C           NOPRO     ANDEQPRO
+     C                     MOVE NCONF     PR1
+     C                     Z-ADDCONFJ     CONFJJ
+     C                     Z-ADDCONFM     CONFMM
+     C                     Z-ADDCONFA     CONFAA
+    C*                    MOVE DATCDE    DACOM
+    C                     GOTO RESF
+F1  C                     END
+     C                     MOVE CLI       NOCLI
+     C                     MOVE PRO       NOPRO
+    C                     GOTO AFFJ
+     **************************************************
+     * Affichage Format O - (Commandes de Pré-Séries) *
+     **************************************************
+     C           AFFO      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEOPCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXOP
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNO
+     C           *LOVAL    SETLLCDESL6                   99
+     C                     READ CDESL6                   99
+    C           *IN99     CABEQ'1'       AFFO2
+     *
+     * Ecriture du sous-fichier OPSF
+     * -----------------------------
+     C           SFO       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+D2  C           PRESER    IFNE ' '
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLEPRO    CHAINPRODAL8              99
+     * Recherche Nom abrégé du Client
+     C           CLECA1    CHAINCLIENTS1             99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEOPSF
+F2  C                     END
+     C                     READ CDESL6                   99
+D2  C           PRESER    IFNE ' '
+    C           CTR       ANDGE6
+    C                     GOTO AFFO2
+F2  C                     END
+F1  C                     END
+     C           AFFO2     TAG
+     C                     Z-ADDRECNO     AFFNO
+D1  C           RECNO     IFNE 0
+     C                     WRITEFMTO
+     C                     EXFMTOPCTL
+X1  C                     ELSE
+     C                     MOVE '1'       *IN07
+    C                     GOTO AFFM
+F1  C                     END
+    C           *IN09     CABEQ'1'       SFO
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELO      TAG
+     C                     READCOPSF                     91
+    C  N91      CHXOP     CABEQ*BLANKS   SELO
+    C           *IN91     CABEQ'1'       AFFM
+D1  C           PR1       IFEQ 0
+     C                     Z-ADDNCONF     PR1
+F1  C                     END
+     C                     MOVE CDE,2     CDPART
+    C                     GOTO AFFJ
+     ****************************************************
+     * Affichage Format P - (Commandes Prévisionnelles) *
+     ****************************************************
+     C           AFFP      TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEOPCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXOP
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNO
+     C           *LOVAL    SETLLCDESL6                   99
+     C                     READ CDESL6                   99
+    C           *IN99     CABEQ'1'       AFFP2
+     *
+     * Ecriture du sous-fichier OPSF
+     * -----------------------------
+     C           SFP       TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+D2  C           CDEPRE    IFNE ' '
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLEPRO    CHAINPRODAL8              99
+     * Recherche Nom abrégé du Client
+     C           CLECA1    CHAINCLIENTS1             99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEOPSF
+F2  C                     END
+     C                     READ CDESL6                   99
+D2  C           CDEPRE    IFNE ' '
+    C           CTR       ANDGE6
+    C                     GOTO AFFP2
+F2  C                     END
+F1  C                     END
+     C           AFFP2     TAG
+     C                     Z-ADDRECNO     AFFNO
+D1  C           RECNO     IFNE 0
+     C                     WRITEFMTP
+     C                     EXFMTOPCTL
+X1  C                     ELSE
+     C                     MOVE '1'       *IN13
+    C                     GOTO AFFM
+F1  C                     END
+    C           *IN09     CABEQ'1'       SFP
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELP      TAG
+     C                     READCOPSF                     91
+    C  N91      CHXOP     CABEQ*BLANKS   SELP
+    C           *IN91     CABEQ'1'       AFFM
+     C                     MOVE CDE,3     CDPART
+D1  C           PR1       IFEQ 0
+     C                     Z-ADDNCONF     PR1
+F1  C                     END
+    C                     GOTO AFFJ
+     **************************************************
+     * Affichage Format O - (Commandes de de papier SOF
+     **************************************************
+     C           AFFSOF    TAG
+     C                     MOVE '1'       *IN93
+     C                     WRITEOPCTL
+     C                     Z-ADD0         AFFNO
+     C                     MOVE *BLANK    CHXOP
+     C                     MOVE '0'       *IN93
+     C                     Z-ADD0         RECNO
+     C           *LOVAL    SETLLCDESL6                   99
+     C                     READ CDESL6                   99
+    C           *IN99     CABEQ'1'       AFFSF2
+     *
+     * Ecriture du sous-fichier OPSF
+     * -----------------------------
+     C           SFSOF     TAG
+     C                     Z-ADD0         CTR     20
+D1  C           *IN99     DOUEQ'1'
+D2  C           STASS     IFEQ ' *'
+     C                     MOVE 'USDE'    PXARGU
+     C                     MOVE *BLANKS   PXVALE
+     C                     MOVE USINE     PXVALE
+     C           CLEPAR    CHAINPARAME               41
+     C                     MOVELPXABRG    LIBUS
+     C           CLEPRO    CHAINPRODAL8              99
+     * Recherche Nom abrégé du Client
+     C           CLECA1    CHAINCLIENTS1             99
+     C                     ADD  1         CTR
+     C                     ADD  1         RECNO
+     C                     WRITEOPSF
+F2  C                     END
+     C                     READ CDESL6                   99
+D2  C           STASS     IFEQ ' *'
+    C           CTR       ANDGE6
+    C                     GOTO AFFSF2
+F2  C                     END
+F1  C                     END
+     C           AFFSF2    TAG
+     C                     Z-ADDRECNO     AFFNO
+D1  C           RECNO     IFNE 0
+     C                     WRITEFMTSOF
+     C                     EXFMTOPCTL
+X1  C                     ELSE
+     C                     MOVE '1'       *IN07
+    C                     GOTO AFFM
+F1  C                     END
+    C           *IN09     CABEQ'1'       SFSOF
+     *
+     * Recherche si Commande sélectionnée
+     * ----------------------------------
+     C           SELSF1    TAG
+     C                     READCOPSF                     91
+    C  N91      CHXOP     CABEQ*BLANKS   SELSF1
+    C           *IN91     CABEQ'1'       AFFM
+D1  C           PR1       IFEQ 0
+     C                     Z-ADDNCONF     PR1
+F1  C                     END
+     C                     MOVE CDE,2     CDPART
+    C                     GOTO AFFJ
+     *
+     *********  FIN DE PROGRAMME  ********************************
+     *
+     C           FINPG     TAG
+D1  C           Z102      IFEQ '*'
+     C                     MOVE MDP10L    ZMDP
+F1  C                     END
+     C                     MOVE '1'       *INLR
+     *
+     * Recherche si O.F. En Cours ou Lancé
+     * -----------------------------------
+    C           TRTOF     BEGSR
+     C                     MOVEA'000000'  *IN,50
+     C                     Z-ADD0         SEMIN
+     C                     Z-ADD0         SEMEX
+     C                     Z-ADD0         SEMF1
+     C                     Z-ADD0         SEMF2
+     *
+D1  C           USINT     IFNE 0
+     C                     MOVE 'I'       SECPAP
+     C                     MOVE 'I'       SUPOR
+     C                     Z-ADD31        PRIORI
+     C           CLEPRL    CHAINPRLANCLK             99
+     C  N99      OFETA     COMP 'LC'                     50
+     C  N99      OFETA     COMP 'EC'                     51
+     C  N99      OFETA     COMP 'TR'                     52
+     * Recherche n° semaine d'impréssion
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE AAFABD    CALAA
+     C                     MOVE MMFABD    CALMM
+     C                     MOVE JJFABD    CALJJ
+     C           CLECAL    CHAINCALENAL4             98
+     C  N98                MOVE CALNOS    SEMEX
+F2  C                     END
+F1  C                     END
+     *
+D1  C           USEXT     IFNE 0
+D2  C           NATMAI    IFNE ' '
+    C           QTIMP     ANDNE0
+     C           CLEPR2    CHAINPRODS3L1             98
+D3  C           *IN98     IFEQ '0'
+     C           CLEPRA    CHAINPRLANCX2             99
+D4  C           *IN99     DOWEQ'0'
+     C  N50      OFETA     COMP 'LC'                     50
+     C  N51      OFETA     COMP 'EC'                     51
+     C  N51      OFETA     COMP 'TR'                     51
+     C           CLEPRA    READEPRLANCX2                 99
+     C   99      OFETA     COMP 'TR'                     52
+     C   99 52             SETOF                     5051
+F4  C  N99                END
+    C                     GOTO SUIAFF
+F3  C                     END
+F2  C                     END
+     C                     MOVE 'I'       SECPAP
+     C                     MOVE 'E'       SUPOR
+     C                     Z-ADD62        PRIORI
+     C           CLEPRL    CHAINPRLANCLK             99
+     C  N99N50   OFETA     COMP 'LC'                     50
+     C  N99N51   OFETA     COMP 'EC'                     51
+     C  N99N52   OFETA     COMP 'TR'                     52
+     * SI IMPRESSION INTERIEUR TERMINÉE
+     * IMPRESSION EXTERIEUR NON COMMENCÉE => EN-COURS
+D2  C           USINT     IFNE 0
+    C           *IN99     ANDEQ'0'
+    C           OFETA     ANDNE'TR'
+    C           *IN52     ANDEQ'1'
+     C                     MOVE '0'       *IN52
+     C                     MOVE '1'       *IN51
+F2  C                     END
+     * Recherche n° semaine d'impréssion
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE AAFABD    CALAA
+     C                     MOVE MMFABD    CALMM
+     C                     MOVE JJFABD    CALJJ
+     C           CLECAL    CHAINCALENAL4             98
+     C  N98                MOVE CALNOS    SEMIN
+F2  C                     END
+F1  C                     END
+     * MASSICOT POUR IMPRESSION ?
+     * SI ENCOURS OU TERMINÉ ==> IMPRESSION EN COURS
+D1  C           USINT     IFNE 0
+    C           USEXT     ORNE 0
+D2  C           *IN51     IFEQ '0'
+    C           *IN52     ANDEQ'0'
+     C                     MOVE 'C'       SECPAP
+     C                     MOVE ' '       SUPOR
+     C                     Z-ADD50        PRIORI
+     C           CLEPRL    CHAINPRLANCLK             99
+     C  N99N50   OFETA     COMP 'LC'                     50
+     C  N99N51   OFETA     COMP 'EC'                     51
+     C  N99N51   OFETA     COMP 'TR'                     51
+F2  C                     END
+F1  C                     END
+     C           SUIAFF    TAG
+     *
+D1  C           USINE     IFNE 0
+     C                     MOVE 'F'       SECPAP
+     C                     MOVE ' '       SUPOR
+     C                     Z-ADD90        PRIORI
+     C           CLEPRL    CHAINPRLANCLK             99
+D2  C           *IN99     IFEQ '0'
+     C           OFETA     COMP 'LC'                     53
+     C           OFETA     COMP 'EC'                     54
+     C           OFETA     COMP 'TR'                     55
+     * Recherche n° semaine de fabrication
+     C                     MOVE AAFABD    CALAA
+     C                     MOVE MMFABD    CALMM
+     C                     MOVE JJFABD    CALJJ
+     C           CLECAL    CHAINCALENAL4             98
+     C  N98                MOVE CALNOS    SEMF1
+X2  C                     ELSE
+     C                     Z-ADD95        PRIORI
+     C           CLEPRL    CHAINPRLANCLK             99
+D3  C           *IN99     IFEQ '0'
+     * Recherche n° semaine de fabrication
+     C                     MOVE AAFABD    CALAA
+     C                     MOVE MMFABD    CALMM
+     C                     MOVE JJFABD    CALJJ
+     C           CLECAL    CHAINCALENAL4             98
+     C  N98                MOVE CALNOS    SEMF2
+D4  C           OFETA     IFEQ 'TR'
+     C                     MOVE '1'       *IN55
+X4  C                     ELSE
+     C                     Z-ADD80        PRIORI
+     C           CLEPRL    CHAINPRLANCLK             99
+     * Recherche n° semaine de fabrication
+D5  C           *IN99     IFEQ '0'
+     C                     MOVE AAFABD    CALAA
+     C                     MOVE MMFABD    CALMM
+     C                     MOVE JJFABD    CALJJ
+     C           CLECAL    CHAINCALENAL4             98
+     C  N98                MOVE CALNOS    SEMF1
+F5  C                     END
+     C           OFETA     COMP 'LC'                     53
+     C           OFETA     COMP 'EC'                     54
+     C           OFETA     COMP 'TR'                     54
+F4  C                     END
+F3  C                     END
+F2  C                     END
+F1  C                     END
+     *
+     C   50
+     COR 53                MOVE '1'       *IN56
+     C   51
+     COR 54                MOVE '1'       *IN57
+    C                     ENDSR
+     *
+     *
+     * Recherche si O.F. En Cours ou Lancé
+     * -----------------------------------
+    C           FENAG     BEGSR
+     C                     MOVE '1'       *IN93
+     C                     WRITEWAGC
+     C                     MOVEA'00'      *IN,93
+     C                     MOVE *BLANK    CHXAG
+     C                     Z-ADD0         RECNO
+     C                     MOVE 'TVRP'    PXARGU
+     C           PXARGU    CHAINPARAME               99
+D1  C           *IN99     DOWEQ'0'
+     C                     MOVE '1'       *IN94
+     C                     ADD  1         RECNO
+     C                     MOVE PXVALE    AGENT
+     C                     WRITEWAGS
+     C           PXARGU    READEPARAME                   99
+F1  C                     END
+     C                     EXFMTWAGC
+     C           SELAG     TAG
+     *          -----     ---
+     C   94                READCWAGS                     99
+    C  N99      CHXAG     CABEQ*BLANK    SELAG
+D1  C           *IN99     IFEQ '1'
+     C                     Z-ADD0         AGENT
+F1  C                     END
+    C                     ENDSR
+     *--------------------------------------------------------*
+     * S/PROGRAMME : PREPARATION ET CHARGEMENT CAMION         *
+     *--------------------------------------------------------*
+    C           PREPCA    BEGSR
+     *          ---------------
+     C                     MOVE '0'       *IN62
+     C                     MOVE '0'       *IN64
+     C                     Z-ADDNOPRO     NOPSV   40
+     C                     MOVE IMPD      USEXP   10
+D1  C           USEXP     IFEQ 4
+     C                     Z-ADD3         USEXP
+F1  C                     END
+D1  C           SOLDE     IFNE 'S'
+     C           KPRCA     CHAINPRCHARL6             99
+D2  C           *IN99     DOWEQ'0'
+    C           NOPRO     ANDNENOPSV
+     C           KPRCA     READEPRCHARL6                 99
+F2  C                     END
+     C                     Z-ADDNOPSV     NOPRO
+D2  C           *IN99     IFEQ '0'
+     C                     MOVE '1'       *IN62
+     C           KCAM      SETLLCAMCDELC                 99
+D3  C           *IN99     IFEQ '1'
+     C                     MOVE '0'       *IN62
+     C                     MOVE '1'       *IN64
+F3  C                     END
+     C   62                MOVE '1'       *IN56
+     C   64                MOVE '1'       *IN57
+F2  C                     END
+     *
+F1  C                     END
+    C*
+    C                     ENDSR
+    C*
+    C           TRTOBS    BEGSR
+     C                     MOVE IMPD      USEXP   10
+D1  C           USEXP     IFEQ 4
+     C                     Z-ADD3         USEXP
+F1  C                     END
+     C           KCAM      CHAINCAMCDEL1             99
+    C           *IN99     CABEQ'1'       FOBS
+     C                     MOVE *BLANK    OBS1
+     C                     MOVE *BLANK    OBS2
+     C                     MOVE *BLANK    OBS3
+     C                     MOVE *BLANK    OBS4
+     C                     MOVE *BLANK    OBS5
+     C                     MOVE *BLANK    OBS6
+     C                     Z-ADD1         SEQCOM
+     C                     MOVE 'T'       TYPOBS
+     C           KOBS      CHAINCAMOBSL1             99
+D1  C           *IN99     DOWEQ'0'
+D2  C           SEQOBS    IFEQ 1
+     C                     MOVELLIBOBS    OBS1      P
+F2  C                     END
+D2  C           SEQOBS    IFEQ 2
+     C                     MOVELLIBOBS    OBS2      P
+F2  C                     END
+D2  C           SEQOBS    IFEQ 3
+     C                     MOVELLIBOBS    OBS3      P
+F2  C                     END
+D2  C           SEQOBS    IFEQ 4
+     C                     MOVELLIBOBS    OBS4      P
+F2  C                     END
+D2  C           SEQOBS    IFEQ 5
+     C                     MOVELLIBOBS    OBS5      P
+F2  C                     END
+D2  C           SEQOBS    IFEQ 6
+     C                     MOVELLIBOBS    OBS6      P
+F2  C                     END
+     C           KOBS      READECAMOBSL1                 99
+F1  C                     END
+     C                     EXFMTWOBS
+    C           FOBS      ENDSR
+**
+PRÉ-IMPRIMÉ
+PRÉ-SÉRIES
+PRÉVISIONNELLE
+Tolérances
+Interne SOF
+**
+Imp. Ext.:
+Imp.Int.:
+Stocké Ext
+StockéINT
+Stocké.I/E
+Imp. Ext**
+Imp.Int**
+Amalgame:
+Imp. Aff.:
+**
+F23= Stock d'Encours en contrôle QUALITÉ
