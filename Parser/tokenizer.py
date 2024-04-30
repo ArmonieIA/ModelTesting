@@ -231,4 +231,4 @@ def tokenize_rpgiii_code(code_line):
         tokens.update({
             "comments": code_line[start_pos+2:].strip()
             })                                                               
-    pass tokens
+    return tokens
