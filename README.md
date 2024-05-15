@@ -192,7 +192,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements
 
-This project is maintained by [Your Name](https://github.com/yourusername). Special thanks to all the contributors who have helped improve the project.
+This project is maintained by [ArmonieIA]([https://github.com/ArmonieIA]). Special thanks to all the contributors who have helped improve the project.
 
 ---
 
