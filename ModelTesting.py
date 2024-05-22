@@ -6,7 +6,8 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, Dense, LayerNormalization, Dropout
 from tensorflow.keras.layers import MultiHeadAttention, GlobalAveragePooling1D
 from sklearn.model_selection import train_test_split
-from Parser.tokenizer import tokenize_rpgiii_code
+from module.tokenizer import tokenize_rpgiii_code
+from module.dashboard import panel
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,6 +43,10 @@ def process_file(filepath):
     # Load the dataset and tokenize each line of RPG III code
     df['tokens'] = df['sentence'].apply(lambda x: list(tokenize_rpgiii_code(x).values()))
     return df
+
+# Run the panel only if this file is executed as a script
+if __name__ == '__main__':
+    panel.run_server(debug=True)
 
 # Check if GPU is available
 if tf.config.list_physical_devices('GPU'):
@@ -128,7 +133,8 @@ train_data, test_data, train_labels, test_labels = train_test_split(
 # Train the autoencoder with a smaller batch size and mixed precision
 history = autoencoder.fit(train_data, train_labels,
                           epochs=epoch,
-                          batch_size=batch_size)
+                          batch_size=batch_size,
+                          callbacks=[progress_callback])
 
 # Plot the loss over epochs
 plt.plot(history.history['loss'], label='Training loss')
